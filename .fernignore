@@ -4,5 +4,5 @@
 # Protect licensing
 LICENSE
 
-# Let Fern generate README
-# README.md
+# Protect custom made docs
+README.md
