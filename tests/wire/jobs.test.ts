@@ -9,9 +9,8 @@ describe("JobsClient", () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
-            query: "Tech company earnings this quarter",
-            schema: "Company [NAME] earned [REVENUE] in [QUARTER]",
-            context: "Focus on revenue and profit margins",
+            query: "AI company acquisitions",
+            context: "Focus on deal size and acquiring company details",
         };
         const rawResponseBody = { job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3" };
         server
@@ -24,9 +23,8 @@ describe("JobsClient", () => {
             .build();
 
         const response = await client.jobs.createJob({
-            query: "Tech company earnings this quarter",
-            schema: "Company [NAME] earned [REVENUE] in [QUARTER]",
-            context: "Focus on revenue and profit margins",
+            query: "AI company acquisitions",
+            context: "Focus on deal size and acquiring company details",
         });
         expect(response).toEqual({
             job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
@@ -190,7 +188,9 @@ describe("JobsClient", () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = [{ job_id: "job_id", query: "query" }];
+        const rawResponseBody = [
+            { job_id: "job_id", query: "query", created_at: "2025-12-16T11:15:38Z", status: "completed" },
+        ];
         server
             .mockEndpoint()
             .get("/catchAll/jobs/user")
@@ -204,6 +204,8 @@ describe("JobsClient", () => {
             {
                 job_id: "job_id",
                 query: "query",
+                created_at: "2025-12-16T11:15:38Z",
+                status: "completed",
             },
         ]);
     });
@@ -217,6 +219,7 @@ describe("JobsClient", () => {
             query: "Tech company earnings this quarter.",
             context: "Focus on revenue and profit margins.",
             validators: ["is_current_quarter", "contains_financial_data"],
+            enrichments: ["company_name", "quarter_identifier", "revenue", "revenue_change", "profit_margin"],
             status: "job_completed",
             duration: "15m",
             candidate_records: 3200,
@@ -263,6 +266,7 @@ describe("JobsClient", () => {
             query: "Tech company earnings this quarter.",
             context: "Focus on revenue and profit margins.",
             validators: ["is_current_quarter", "contains_financial_data"],
+            enrichments: ["company_name", "quarter_identifier", "revenue", "revenue_change", "profit_margin"],
             status: "job_completed",
             duration: "15m",
             candidate_records: 3200,

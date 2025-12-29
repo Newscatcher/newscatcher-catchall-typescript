@@ -13,12 +13,9 @@ export interface CreateMonitorRequestDto {
     /** Job ID to use as template for scheduled runs. */
     reference_job_id: string;
     /**
-     * Natural language schedule description. Examples:
-     * - "every day at 12 PM UTC"
-     * - "every Monday at 9 AM EST"
-     * - "every 6 hours"
+     * Natural language schedule (e.g. 'every day at 12 AM EST').
      *
-     * **Warning**: Schedule validation is limited. Test carefully before production.
+     * **Minimum frequency:** Monitors must be scheduled at least 24 hours apart.
      */
     schedule: string;
     /** Optional webhook to receive notifications when jobs complete. */
