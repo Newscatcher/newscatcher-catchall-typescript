@@ -6,6 +6,3 @@ LICENSE
 
 # Protect custom made docs
 README.md
-
-# CI/CD
-.github/workflows/ci.yml
