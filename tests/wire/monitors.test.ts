@@ -7,7 +7,7 @@ import { mockServerPool } from "../mock-server/MockServerPool";
 describe("MonitorsClient", () => {
     test("createMonitor (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { reference_job_id: "reference_job_id", schedule: "every day at 12 PM UTC" };
         const rawResponseBody = { monitor_id: "monitor_id", status: "Monitor Created Successfully" };
         server
@@ -31,7 +31,7 @@ describe("MonitorsClient", () => {
 
     test("createMonitor (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { reference_job_id: "reference_job_id", schedule: "schedule" };
         const rawResponseBody = {};
         server
@@ -53,7 +53,7 @@ describe("MonitorsClient", () => {
 
     test("listMonitorJobs (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
             monitor_id: "monitor_id",
@@ -88,7 +88,7 @@ describe("MonitorsClient", () => {
 
     test("listMonitorJobs (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -108,7 +108,7 @@ describe("MonitorsClient", () => {
 
     test("listMonitorJobs (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -128,7 +128,7 @@ describe("MonitorsClient", () => {
 
     test("pullMonitorResults (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
             monitor_id: "7f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d",
@@ -224,7 +224,7 @@ describe("MonitorsClient", () => {
 
     test("pullMonitorResults (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -244,7 +244,7 @@ describe("MonitorsClient", () => {
 
     test("pullMonitorResults (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -264,7 +264,7 @@ describe("MonitorsClient", () => {
 
     test("disableMonitor (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = { success: true, message: "Monitor disabled successfully.", monitor_id: "monitor_id" };
         server
@@ -287,7 +287,7 @@ describe("MonitorsClient", () => {
 
     test("disableMonitor (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -307,7 +307,7 @@ describe("MonitorsClient", () => {
 
     test("disableMonitor (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -327,7 +327,7 @@ describe("MonitorsClient", () => {
 
     test("disableMonitor (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -347,7 +347,7 @@ describe("MonitorsClient", () => {
 
     test("enableMonitor (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = { success: true, message: "Monitor enabled successfully.", monitor_id: "monitor_id" };
         server
@@ -370,7 +370,7 @@ describe("MonitorsClient", () => {
 
     test("enableMonitor (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -390,7 +390,7 @@ describe("MonitorsClient", () => {
 
     test("enableMonitor (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -410,7 +410,7 @@ describe("MonitorsClient", () => {
 
     test("enableMonitor (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -430,7 +430,7 @@ describe("MonitorsClient", () => {
 
     test("listMonitors (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
             total_monitors: 3,
@@ -473,7 +473,7 @@ describe("MonitorsClient", () => {
 
     test("listMonitors (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server.mockEndpoint().get("/catchAll/monitors").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
@@ -485,7 +485,7 @@ describe("MonitorsClient", () => {
 
     test("listMonitors (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server.mockEndpoint().get("/catchAll/monitors").respondWith().statusCode(422).jsonBody(rawResponseBody).build();

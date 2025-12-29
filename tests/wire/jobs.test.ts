@@ -7,7 +7,7 @@ import { mockServerPool } from "../mock-server/MockServerPool";
 describe("JobsClient", () => {
     test("createJob (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
             query: "AI company acquisitions",
             context: "Focus on deal size and acquiring company details",
@@ -33,7 +33,7 @@ describe("JobsClient", () => {
 
     test("createJob (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
         server
@@ -54,7 +54,7 @@ describe("JobsClient", () => {
 
     test("createJob (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
         server
@@ -75,7 +75,7 @@ describe("JobsClient", () => {
 
     test("getJobStatus (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
             job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
@@ -146,7 +146,7 @@ describe("JobsClient", () => {
 
     test("getJobStatus (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -166,7 +166,7 @@ describe("JobsClient", () => {
 
     test("getJobStatus (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -186,7 +186,7 @@ describe("JobsClient", () => {
 
     test("getUserJobs", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = [
             { job_id: "job_id", query: "query", created_at: "2025-12-16T11:15:38Z", status: "completed" },
@@ -212,7 +212,7 @@ describe("JobsClient", () => {
 
     test("getJobResults (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
             job_id: "job_id",
@@ -304,7 +304,7 @@ describe("JobsClient", () => {
 
     test("getJobResults (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server
@@ -324,7 +324,7 @@ describe("JobsClient", () => {
 
     test("getJobResults (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ apiKey: "test", environment: server.baseUrl });
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
         server

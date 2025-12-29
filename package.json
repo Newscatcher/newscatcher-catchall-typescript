@@ -1,8 +1,11 @@
 {
     "name": "newscatcher-catchall-sdk",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "private": false,
-    "repository": "github:Newscatcher/newscatcher-catchall-typescript",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Newscatcher/newscatcher-catchall-typescript.git"
+    },
     "license": "MIT",
     "type": "commonjs",
     "main": "./dist/cjs/index.js",

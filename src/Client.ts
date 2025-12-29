@@ -4,22 +4,22 @@ import { JobsClient } from "./api/resources/jobs/client/Client.js";
 import { MetaClient } from "./api/resources/meta/client/Client.js";
 import { MonitorsClient } from "./api/resources/monitors/client/Client.js";
 import type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
-import { normalizeClientOptions } from "./BaseClient.js";
+import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "./BaseClient.js";
 
 export declare namespace CatchAllApiClient {
-    export interface Options extends BaseClientOptions {}
+    export type Options = BaseClientOptions;
 
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
 export class CatchAllApiClient {
-    protected readonly _options: CatchAllApiClient.Options;
+    protected readonly _options: NormalizedClientOptionsWithAuth<CatchAllApiClient.Options>;
     protected _jobs: JobsClient | undefined;
     protected _monitors: MonitorsClient | undefined;
     protected _meta: MetaClient | undefined;
 
     constructor(options: CatchAllApiClient.Options = {}) {
-        this._options = normalizeClientOptions(options);
+        this._options = normalizeClientOptionsWithAuth(options);
     }
 
     public get jobs(): JobsClient {

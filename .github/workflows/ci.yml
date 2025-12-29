@@ -8,16 +8,16 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Compile
         run: pnpm build
@@ -27,16 +27,16 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
                 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Test
         run: pnpm test
@@ -45,38 +45,29 @@ jobs:
     needs: [ compile, test ]
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    
-    # CRITICAL: Add OIDC permissions
     permissions:
+      contents: read   # Required for checkout
       id-token: write  # Required for OIDC
-      contents: read
-    
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          registry-url: 'https://registry.npmjs.org'
+        uses: actions/setup-node@v6
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build
 
-      # Ensure npm 11.5.1 or later for OIDC support
-      - name: Update npm
-        run: npm install -g npm@latest
-
       - name: Publish to npm
         run: |
-          publish() {
-            npm publish "$@"
+          publish() {  # use latest npm to ensure OIDC support
+            npx -y npm@latest publish "$@"
           }
           if [[ ${GITHUB_REF} == *alpha* ]]; then
             publish --access public --tag alpha
