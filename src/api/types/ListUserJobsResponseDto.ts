@@ -5,4 +5,8 @@ export interface ListUserJobsResponseDto {
     job_id: string;
     /** The natural language query for this job. */
     query: string;
+    /** Job creation timestamp in ISO 8601 format. */
+    created_at: string;
+    /** Current processing status of the job. */
+    status: string;
 }

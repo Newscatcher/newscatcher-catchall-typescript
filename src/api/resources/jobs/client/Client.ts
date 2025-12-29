@@ -35,9 +35,8 @@ export class JobsClient {
      *
      * @example
      *     await client.jobs.createJob({
-     *         query: "Tech company earnings this quarter",
-     *         schema: "Company [NAME] earned [REVENUE] in [QUARTER]",
-     *         context: "Focus on revenue and profit margins"
+     *         query: "AI company acquisitions",
+     *         context: "Focus on deal size and acquiring company details"
      *     })
      */
     public createJob(
