@@ -5,5 +5,5 @@
     "generatorConfig": {
         "namespaceExport": "CatchAllApi"
     },
-    "sdkVersion": "0.2.0"
+    "sdkVersion": "0.2.1"
 }
