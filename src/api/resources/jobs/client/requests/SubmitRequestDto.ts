@@ -5,9 +5,8 @@ import type * as CatchAllApi from "../../../../index.js";
 /**
  * @example
  *     {
- *         query: "Tech company earnings this quarter",
- *         schema: "Company [NAME] earned [REVENUE] in [QUARTER]",
- *         context: "Focus on revenue and profit margins"
+ *         query: "AI company acquisitions",
+ *         context: "Focus on deal size and acquiring company details"
  *     }
  */
 export interface SubmitRequestDto {

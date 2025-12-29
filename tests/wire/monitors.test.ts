@@ -135,8 +135,8 @@ describe("MonitorsClient", () => {
             cron_expression: "0 12 * * *",
             timezone: "UTC",
             reference_job: {
-                query: "Tech company earnings this quarter",
-                context: "Focus on revenue and profit margins",
+                query: "AI company acquisitions",
+                context: "Focus on deal size and acquiring company details",
             },
             run_info: { first_run: "2025-10-23T12:00:00Z", last_run: "2025-11-07T12:00:00Z" },
             records: 487,
@@ -155,6 +155,7 @@ describe("MonitorsClient", () => {
                     },
                     citations: [
                         {
+                            id: "8760624448e9815f9fb4abd114c75e76",
                             title: "Oracle Reports Strong Q1 2026 Results",
                             link: "https://example.com/article",
                             published_date: "2025-09-26T08:54:20Z",
@@ -183,8 +184,8 @@ describe("MonitorsClient", () => {
             cron_expression: "0 12 * * *",
             timezone: "UTC",
             reference_job: {
-                query: "Tech company earnings this quarter",
-                context: "Focus on revenue and profit margins",
+                query: "AI company acquisitions",
+                context: "Focus on deal size and acquiring company details",
             },
             run_info: {
                 first_run: "2025-10-23T12:00:00Z",
@@ -206,6 +207,7 @@ describe("MonitorsClient", () => {
                     },
                     citations: [
                         {
+                            id: "8760624448e9815f9fb4abd114c75e76",
                             title: "Oracle Reports Strong Q1 2026 Results",
                             link: "https://example.com/article",
                             published_date: "2025-09-26T08:54:20Z",
@@ -436,11 +438,13 @@ describe("MonitorsClient", () => {
                 {
                     monitor_id: "7f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d",
                     reference_job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
-                    reference_job_query: "Tech company earnings this quarter",
+                    reference_job_query: "AI company acquisitions",
                     enabled: true,
                     schedule: "0 12 * * *",
+                    schedule_human_readable: "Every 24 hours",
                     timezone: "UTC",
                     created_at: "2025-10-23T14:30:00Z",
+                    webhook: { url: "url" },
                 },
             ],
         };
@@ -453,11 +457,15 @@ describe("MonitorsClient", () => {
                 {
                     monitor_id: "7f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d",
                     reference_job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
-                    reference_job_query: "Tech company earnings this quarter",
+                    reference_job_query: "AI company acquisitions",
                     enabled: true,
                     schedule: "0 12 * * *",
+                    schedule_human_readable: "Every 24 hours",
                     timezone: "UTC",
                     created_at: "2025-10-23T14:30:00Z",
+                    webhook: {
+                        url: "url",
+                    },
                 },
             ],
         });

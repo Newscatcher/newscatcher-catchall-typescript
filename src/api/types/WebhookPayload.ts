@@ -3,11 +3,9 @@
 import type * as CatchAllApi from "../index.js";
 
 /**
- * Payload sent to webhook URL when a monitor job completes.
- * Content-Type: application/json
+ * **First execution:** The initial webhook after monitor creation includes all records from the reference job, providing immediate access to collected data.
  *
- * Note: Citations in webhook payloads include an additional 'id' field
- * (string, internal identifier) not present in API GET responses.
+ * **Subsequent executions:** Only new records (after deduplication) are included.
  */
 export interface WebhookPayload {
     /** Monitor identifier. */
