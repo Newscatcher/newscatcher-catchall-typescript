@@ -108,6 +108,111 @@ export class MonitorsClient {
     }
 
     /**
+     * Update webhook configuration for an existing monitor without recreating it.
+     *
+     * **Supported updates:**
+     * - Webhook URL
+     * - HTTP method (POST/PUT)
+     * - Headers and authentication
+     * - Query parameters
+     *
+     * **Note:** Schedule and reference job cannot be modified. To change these, create a new monitor.
+     *
+     * @param {CatchAllApi.UpdateMonitorRequestDto} request
+     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link CatchAllApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.monitors.updateMonitor({
+     *         monitor_id: "monitor_id",
+     *         webhook: {
+     *             url: "https://new-endpoint.com/webhook",
+     *             method: "POST",
+     *             headers: {
+     *                 "Authorization": "Bearer new_token_xyz"
+     *             }
+     *         }
+     *     })
+     */
+    public updateMonitor(
+        request: CatchAllApi.UpdateMonitorRequestDto,
+        requestOptions?: MonitorsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.UpdateMonitorResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__updateMonitor(request, requestOptions));
+    }
+
+    private async __updateMonitor(
+        request: CatchAllApi.UpdateMonitorRequestDto,
+        requestOptions?: MonitorsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.UpdateMonitorResponseDto>> {
+        const { monitor_id: monitorId, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId)}`,
+            ),
+            method: "PATCH",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as CatchAllApi.UpdateMonitorResponseDto, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 422:
+                    throw new CatchAllApi.UnprocessableEntityError(
+                        _response.error.body as CatchAllApi.ValidationErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "PATCH",
+            "/catchAll/monitors/{monitor_id}",
+        );
+    }
+
+    /**
      * Returns all jobs associated with a monitor, sorted by start_date.
      * Each job includes job_id, start_date, and end_date.
      *
@@ -134,11 +239,9 @@ export class MonitorsClient {
         requestOptions?: MonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListMonitorJobsResponse>> {
         const { monitor_id: monitorId, sort } = request;
-        const _queryParams: Record<string, string | string[] | object | object[] | null> = {};
-        if (sort != null) {
-            _queryParams.sort = sort;
-        }
-
+        const _queryParams: Record<string, unknown> = {
+            sort: sort != null ? sort : undefined,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,

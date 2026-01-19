@@ -24,6 +24,12 @@ export interface PullJobResponseDto {
     candidate_records?: number;
     /** Number of validated records extracted. */
     valid_records?: number;
+    /**
+     * Number of candidate records that have been validated during processing.
+     *
+     * The system process records in batches. This field tracks how many candidates have been checked against validation criteria so far.
+     */
+    progress_validated?: number;
     date_range?: PullJobResponseDto.DateRange;
     /** The current page number. */
     page?: number;
