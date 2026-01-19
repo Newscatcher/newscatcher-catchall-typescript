@@ -26,11 +26,11 @@ import { CatchAllApiClient } from "newscatcher-catchall-sdk";
 
 const client = new CatchAllApiClient({ apiKey: "YOUR_API_KEY" });
 
-// Create a job
+// Create a job with optional limit for testing
 const job = await client.jobs.createJob({
     query: "Tech company earnings this quarter",
     context: "Focus on revenue and profit margins",
-    schema: "Company [NAME] earned [REVENUE] in [QUARTER]",
+    limit: 10, // Start with 10 records for quick testing
 });
 console.log(`Job created: ${job.jobId}`);
 
@@ -38,10 +38,10 @@ console.log(`Job created: ${job.jobId}`);
 while (true) {
     const status = await client.jobs.getJobStatus(job.jobId);
 
-    // Check if completed
-    const completed = status.steps.some(s => s.status === "completed" && s.completed);
-    if (completed) {
-        console.log("Job completed!");
+    // Check if completed or enriching (early access)
+    const currentStatus = status.status;
+    if (currentStatus === "completed" || currentStatus === "enriching") {
+        console.log(`Job ${currentStatus}!`);
         break;
     }
 
@@ -54,12 +54,31 @@ while (true) {
     await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 60 seconds
 }
 
-// Retrieve results
+// Retrieve initial results (available during enriching stage)
 const results = await client.jobs.getJobResults(job.jobId);
-console.log(`Found ${results.validRecords} valid records from ${results.candidateRecords} candidates`);
+console.log(`Found ${results.validRecords} valid records`);
+console.log(`Progress: ${results.progressValidated}/${results.candidateRecords} validated`);
 
-for (const record of results.allRecords) {
-    console.log(record.recordTitle);
+// Continue job to process more records
+if (results.validRecords >= 10) {
+    const continued = await client.jobs.continueJob({
+        jobId: job.jobId,
+        newLimit: 50, // Increase to 50 records
+    });
+    console.log(`Job continued: ${continued.jobId}`);
+    
+    // Wait for completion
+    while (true) {
+        const status = await client.jobs.getJobStatus(job.jobId);
+        if (status.status === "completed") {
+            break;
+        }
+        await new Promise(resolve => setTimeout(resolve, 60000));
+    }
+    
+    // Get final results
+    const finalResults = await client.jobs.getJobResults(job.jobId);
+    console.log(`Final: ${finalResults.validRecords} records`);
 }
 ```
 
@@ -86,13 +105,35 @@ const monitor = await client.monitors.createMonitor({
 });
 console.log(`Monitor created: ${monitor.monitorId}`);
 
-// List all monitors
-const monitors = await client.monitors.listMonitors();
-console.log(`Total monitors: ${monitors.totalMonitors}`);
+// Update webhook configuration without recreating monitor
+const updated = await client.monitors.updateMonitor(monitor.monitorId, {
+    webhook: {
+        url: "https://new-endpoint.com/webhook",
+        method: "POST",
+        headers: { "Authorization": "Bearer NEW_TOKEN" },
+    },
+});
+
+// Pause monitor execution
+await client.monitors.disableMonitor(monitor.monitorId);
+console.log("Monitor paused");
+
+// Resume monitor execution
+await client.monitors.enableMonitor(monitor.monitorId);
+console.log("Monitor resumed");
+
+// List monitor execution history
+const jobs = await client.monitors.listMonitorJobs(monitor.monitorId, {
+    sort: "desc", // Most recent first
+});
+console.log(`Monitor has executed ${jobs.totalJobs} jobs`);
+for (const job of jobs.jobs) {
+    console.log(`  Job ${job.jobId}: ${job.startDate} to ${job.endDate}`);
+}
 
 // Get aggregated results
 const results = await client.monitors.pullMonitorResults(monitor.monitorId);
-console.log(`Collected ${results.records} records`);
+console.log(`Collected ${results.records} records across all executions`);
 ```
 
 Monitors run jobs on your schedule and send webhook notifications when complete. See the [Monitors documentation](https://www.newscatcherapi.com/docs/v3/catch-all/overview/monitors) for setup and configuration.

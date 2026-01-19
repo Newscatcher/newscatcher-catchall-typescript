@@ -66,6 +66,72 @@ await client.jobs.createJob({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">continueJob</a>({ ...params }) -> CatchAllApi.ContinueResponseDto</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Continue an existing job to process more records beyond the initial limit.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.continueJob({
+    job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+    new_limit: 100
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.ContinueRequestDto` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">getJobStatus</a>({ ...params }) -> CatchAllApi.StatusResponseDto</code></summary>
 <dl>
 <dd>
@@ -308,6 +374,86 @@ await client.monitors.createMonitor({
 <dd>
 
 **request:** `CatchAllApi.CreateMonitorRequestDto` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `MonitorsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">updateMonitor</a>({ ...params }) -> CatchAllApi.UpdateMonitorResponseDto</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update webhook configuration for an existing monitor without recreating it.
+
+**Supported updates:**
+- Webhook URL
+- HTTP method (POST/PUT)
+- Headers and authentication
+- Query parameters
+
+**Note:** Schedule and reference job cannot be modified. To change these, create a new monitor.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.monitors.updateMonitor({
+    monitor_id: "monitor_id",
+    webhook: {
+        url: "https://new-endpoint.com/webhook",
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer new_token_xyz"
+        }
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.UpdateMonitorRequestDto` 
     
 </dd>
 </dl>
