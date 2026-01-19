@@ -32,11 +32,11 @@ const job = await client.jobs.createJob({
     context: "Focus on revenue and profit margins",
     limit: 10, // Start with 10 records for quick testing
 });
-console.log(`Job created: ${job.jobId}`);
+console.log(`Job created: ${job.job_id}`);
 
 // Poll for completion with progress updates
 while (true) {
-    const status = await client.jobs.getJobStatus(job.jobId);
+    const status = await client.jobs.getJobStatus({ job_id: job.job_id });
 
     // Check if completed or enriching (early access)
     const currentStatus = status.status;
@@ -55,21 +55,21 @@ while (true) {
 }
 
 // Retrieve initial results (available during enriching stage)
-const results = await client.jobs.getJobResults(job.jobId);
-console.log(`Found ${results.validRecords} valid records`);
-console.log(`Progress: ${results.progressValidated}/${results.candidateRecords} validated`);
+const results = await client.jobs.getJobResults({ job_id: job.job_id });
+console.log(`Found ${results.valid_records} valid records`);
+console.log(`Progress: ${results.progress_validated}/${results.candidate_records} validated`);
 
 // Continue job to process more records
-if (results.validRecords >= 10) {
+if (results.valid_records >= 10) {
     const continued = await client.jobs.continueJob({
-        jobId: job.jobId,
-        newLimit: 50, // Increase to 50 records
+        job_id: job.job_id,
+        new_limit: 50, // Increase to 50 records
     });
-    console.log(`Job continued: ${continued.jobId}`);
+    console.log(`Job continued: ${continued.job_id}`);
     
     // Wait for completion
     while (true) {
-        const status = await client.jobs.getJobStatus(job.jobId);
+        const status = await client.jobs.getJobStatus({ job_id: job.job_id });
         if (status.status === "completed") {
             break;
         }
@@ -77,8 +77,8 @@ if (results.validRecords >= 10) {
     }
     
     // Get final results
-    const finalResults = await client.jobs.getJobResults(job.jobId);
-    console.log(`Final: ${finalResults.validRecords} records`);
+    const finalResults = await client.jobs.getJobResults({ job_id: job.job_id });
+    console.log(`Final: ${finalResults.valid_records} records`);
 }
 ```
 
@@ -95,7 +95,7 @@ const client = new CatchAllApiClient({ apiKey: "YOUR_API_KEY" });
 
 // Create a monitor from a completed job
 const monitor = await client.monitors.createMonitor({
-    referenceJobId: job.jobId,
+    reference_job_id: job.job_id,
     schedule: "every day at 12 PM UTC",
     webhook: {
         url: "https://your-endpoint.com/webhook",
@@ -103,10 +103,11 @@ const monitor = await client.monitors.createMonitor({
         headers: { "Authorization": "Bearer YOUR_TOKEN" },
     },
 });
-console.log(`Monitor created: ${monitor.monitorId}`);
+console.log(`Monitor created: ${monitor.monitor_id}`);
 
 // Update webhook configuration without recreating monitor
-const updated = await client.monitors.updateMonitor(monitor.monitorId, {
+const updated = await client.monitors.updateMonitor({
+    monitor_id: monitor.monitor_id,
     webhook: {
         url: "https://new-endpoint.com/webhook",
         method: "POST",
@@ -115,24 +116,25 @@ const updated = await client.monitors.updateMonitor(monitor.monitorId, {
 });
 
 // Pause monitor execution
-await client.monitors.disableMonitor(monitor.monitorId);
+await client.monitors.disableMonitor({ monitor_id: monitor.monitor_id });
 console.log("Monitor paused");
 
 // Resume monitor execution
-await client.monitors.enableMonitor(monitor.monitorId);
+await client.monitors.enableMonitor({ monitor_id: monitor.monitor_id });
 console.log("Monitor resumed");
 
 // List monitor execution history
-const jobs = await client.monitors.listMonitorJobs(monitor.monitorId, {
+const jobs = await client.monitors.listMonitorJobs({
+    monitor_id: monitor.monitor_id,
     sort: "desc", // Most recent first
 });
-console.log(`Monitor has executed ${jobs.totalJobs} jobs`);
+console.log(`Monitor has executed ${jobs.total_jobs} jobs`);
 for (const job of jobs.jobs) {
-    console.log(`  Job ${job.jobId}: ${job.startDate} to ${job.endDate}`);
+    console.log(`  Job ${job.job_id}: ${job.start_date} to ${job.end_date}`);
 }
 
 // Get aggregated results
-const results = await client.monitors.pullMonitorResults(monitor.monitorId);
+const results = await client.monitors.pullMonitorResults({ monitor_id: monitor.monitor_id });
 console.log(`Collected ${results.records} records across all executions`);
 ```
 
@@ -181,28 +183,26 @@ Retrieve large result sets with pagination:
 // Retrieve large result sets with pagination
 let page = 1;
 while (true) {
-    const results = await client.jobs.getJobResults(
-        jobId,
-        {
-            page: page,
-            pageSize: 100,
-        }
-    );
+    const results = await client.jobs.getJobResults({
+        job_id: jobId,
+        page: page,
+        page_size: 100,
+    });
     
-    console.log(`Page ${results.page}/${results.totalPages}: ${results.allRecords.length} records`);
+    console.log(`Page ${results.page}/${results.total_pages}: ${results.all_records.length} records`);
     
-    for (const record of results.allRecords) {
+    for (const record of results.all_records) {
         // Process each record
-        console.log(`  - ${record.recordTitle}`);
+        console.log(`  - ${record.record_title}`);
     }
     
-    if (results.page >= results.totalPages) {
+    if (results.page >= results.total_pages) {
         break;
     }
     page++;
 }
 
-console.log(`Processed ${results.validRecords} total records`);
+console.log(`Processed ${results.valid_records} total records`);
 ```
 
 ### Access raw response data
