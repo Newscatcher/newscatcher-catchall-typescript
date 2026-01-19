@@ -51,6 +51,108 @@ describe("MonitorsClient", () => {
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
 
+    test("updateMonitor (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            webhook: {
+                url: "https://new-endpoint.com/webhook",
+                method: "POST",
+                headers: { Authorization: "Bearer new_token_xyz" },
+            },
+        };
+        const rawResponseBody = {
+            monitor_id: "3fec5b07-8786-46d7-9486-d43ff67eccd4",
+            status: "Monitor updated Successfully",
+        };
+        server
+            .mockEndpoint()
+            .patch("/catchAll/monitors/monitor_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.monitors.updateMonitor({
+            monitor_id: "monitor_id",
+            webhook: {
+                url: "https://new-endpoint.com/webhook",
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer new_token_xyz",
+                },
+            },
+        });
+        expect(response).toEqual({
+            monitor_id: "3fec5b07-8786-46d7-9486-d43ff67eccd4",
+            status: "Monitor updated Successfully",
+        });
+    });
+
+    test("updateMonitor (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .patch("/catchAll/monitors/monitor_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.monitors.updateMonitor({
+                monitor_id: "monitor_id",
+            });
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("updateMonitor (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .patch("/catchAll/monitors/monitor_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.monitors.updateMonitor({
+                monitor_id: "monitor_id",
+            });
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
+    test("updateMonitor (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .patch("/catchAll/monitors/monitor_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.monitors.updateMonitor({
+                monitor_id: "monitor_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
+    });
+
     test("listMonitorJobs (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });

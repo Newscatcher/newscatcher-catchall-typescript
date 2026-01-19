@@ -5,7 +5,7 @@
  * Extends base citation with tracking information for job_id and timestamps.
  */
 export interface MonitorCitation {
-    /** Article identifier from News API v3 */
+    /** Article identifier from News API */
     id: string;
     /** Article title */
     title: string;
