@@ -105,6 +105,91 @@ export class JobsClient {
     }
 
     /**
+     * Continue an existing job to process more records beyond the initial limit.
+     *
+     * @param {CatchAllApi.ContinueRequestDto} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.jobs.continueJob({
+     *         job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+     *         new_limit: 100
+     *     })
+     */
+    public continueJob(
+        request: CatchAllApi.ContinueRequestDto,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.ContinueResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__continueJob(request, requestOptions));
+    }
+
+    private async __continueJob(
+        request: CatchAllApi.ContinueRequestDto,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.ContinueResponseDto>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                "catchAll/continue",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as CatchAllApi.ContinueResponseDto, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new CatchAllApi.BadRequestError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 422:
+                    throw new CatchAllApi.UnprocessableEntityError(
+                        _response.error.body as CatchAllApi.ValidationErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/catchAll/continue");
+    }
+
+    /**
      * Retrieve the current processing status of a job.
      *
      * @param {CatchAllApi.GetJobStatusRequest} request
@@ -263,15 +348,10 @@ export class JobsClient {
         requestOptions?: JobsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.PullJobResponseDto>> {
         const { job_id: jobId, page, page_size: pageSize } = request;
-        const _queryParams: Record<string, string | string[] | object | object[] | null> = {};
-        if (page != null) {
-            _queryParams.page = page.toString();
-        }
-
-        if (pageSize != null) {
-            _queryParams.page_size = pageSize.toString();
-        }
-
+        const _queryParams: Record<string, unknown> = {
+            page,
+            page_size: pageSize,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,

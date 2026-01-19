@@ -73,6 +73,103 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
 
+    test("continueJob (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3", new_limit: 100 };
+        const rawResponseBody = {
+            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            previous_limit: 10,
+            new_limit: 100,
+            status: "accepted",
+        };
+        server
+            .mockEndpoint()
+            .post("/catchAll/continue")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.continueJob({
+            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            new_limit: 100,
+        });
+        expect(response).toEqual({
+            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            previous_limit: 10,
+            new_limit: 100,
+            status: "accepted",
+        });
+    });
+
+    test("continueJob (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { job_id: "job_id", new_limit: 1 };
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .post("/catchAll/continue")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.continueJob({
+                job_id: "job_id",
+                new_limit: 1,
+            });
+        }).rejects.toThrow(CatchAllApi.BadRequestError);
+    });
+
+    test("continueJob (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { job_id: "job_id", new_limit: 1 };
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .post("/catchAll/continue")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.continueJob({
+                job_id: "job_id",
+                new_limit: 1,
+            });
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("continueJob (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { job_id: "job_id", new_limit: 1 };
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .post("/catchAll/continue")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.continueJob({
+                job_id: "job_id",
+                new_limit: 1,
+            });
+        }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
+    });
+
     test("getJobStatus (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
@@ -220,10 +317,11 @@ describe("JobsClient", () => {
             context: "Focus on revenue and profit margins.",
             validators: ["is_current_quarter", "contains_financial_data"],
             enrichments: ["company_name", "quarter_identifier", "revenue", "revenue_change", "profit_margin"],
-            status: "job_completed",
+            status: "completed",
             duration: "15m",
             candidate_records: 3200,
             valid_records: 156,
+            progress_validated: 50,
             date_range: { start_date: "2025-09-15T00:00:00Z", end_date: "2025-09-30T23:59:59Z" },
             page: 1,
             total_pages: 1,
@@ -267,10 +365,11 @@ describe("JobsClient", () => {
             context: "Focus on revenue and profit margins.",
             validators: ["is_current_quarter", "contains_financial_data"],
             enrichments: ["company_name", "quarter_identifier", "revenue", "revenue_change", "profit_margin"],
-            status: "job_completed",
+            status: "completed",
             duration: "15m",
             candidate_records: 3200,
             valid_records: 156,
+            progress_validated: 50,
             date_range: {
                 start_date: "2025-09-15T00:00:00Z",
                 end_date: "2025-09-30T23:59:59Z",

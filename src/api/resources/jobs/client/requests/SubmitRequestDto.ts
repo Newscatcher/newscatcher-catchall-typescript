@@ -13,4 +13,10 @@ export interface SubmitRequestDto {
     query: CatchAllApi.Query;
     schema?: CatchAllApi.Schema;
     context?: CatchAllApi.Context;
+    /**
+     * Maximum number of records to return. If not specified, defaults to your plan limit.
+     *
+     * Use /catchAll/continue to extend the limit after job completion without reprocessing.
+     */
+    limit?: number;
 }
