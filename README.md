@@ -1,290 +1,190 @@
-# Newscatcher CatchAll TypeScript Library
+# Newscatcher TypeScript Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2FNewscatcher%2Fnewscatcher-catchall-typescript)
 [![npm shield](https://img.shields.io/npm/v/newscatcher-catchall-sdk)](https://www.npmjs.com/package/newscatcher-catchall-sdk)
 
-The Newscatcher CatchAll TypeScript library provides access to the [CatchAll API](https://www.newscatcherapi.com/docs/v3/catch-all/overview/introduction), which transforms natural language queries into structured data extracted from web sources.
+The Newscatcher TypeScript library provides convenient access to the Newscatcher APIs from TypeScript.
+
+## Table of Contents
+
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Reference](#reference)
+- [Usage](#usage)
+- [Request and Response Types](#request-and-response-types)
+- [Exception Handling](#exception-handling)
+- [Advanced](#advanced)
+  - [Additional Headers](#additional-headers)
+  - [Additional Query String Parameters](#additional-query-string-parameters)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+  - [Aborting Requests](#aborting-requests)
+  - [Access Raw Response Data](#access-raw-response-data)
+  - [Logging](#logging)
+  - [Runtime Compatibility](#runtime-compatibility)
+- [Beta Status](#beta-status)
+- [Contributing](#contributing)
+- [Support](#support)
+
+## Documentation
+
+API reference documentation is available [here](https://www.newscatcherapi.com/docs/v3/catch-all/endpoints/create-job).
 
 ## Installation
 
 ```sh
-npm install newscatcher-catchall-sdk
+npm i -s newscatcher-catchall-sdk
 ```
 
 ## Reference
 
-A full reference for this library is available [here](./reference.md).
+A full reference for this library is available [here](https://github.com/Newscatcher/newscatcher-catchall-typescript/blob/HEAD/./reference.md).
 
 ## Usage
 
-### Jobs
-
-Submit a query and retrieve structured results:
+Instantiate and use the client with the following:
 
 ```typescript
 import { CatchAllApiClient } from "newscatcher-catchall-sdk";
 
 const client = new CatchAllApiClient({ apiKey: "YOUR_API_KEY" });
-
-// Create a job with optional limit for testing
-const job = await client.jobs.createJob({
-    query: "Tech company earnings this quarter",
-    context: "Focus on revenue and profit margins",
-    limit: 10, // Start with 10 records for quick testing
+await client.jobs.createJob({
+    query: "AI company acquisitions",
+    context: "Focus on deal size and acquiring company details"
 });
-console.log(`Job created: ${job.jobId}`);
-
-// Poll for completion with progress updates
-while (true) {
-    const status = await client.jobs.getJobStatus(job.jobId);
-
-    // Check if completed or enriching (early access)
-    const currentStatus = status.status;
-    if (currentStatus === "completed" || currentStatus === "enriching") {
-        console.log(`Job ${currentStatus}!`);
-        break;
-    }
-
-    // Show current processing step
-    const currentStep = status.steps.find(s => !s.completed);
-    if (currentStep) {
-        console.log(`Processing: ${currentStep.status} (step ${currentStep.order}/7)`);
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 60 seconds
-}
-
-// Retrieve initial results (available during enriching stage)
-const results = await client.jobs.getJobResults(job.jobId);
-console.log(`Found ${results.validRecords} valid records`);
-console.log(`Progress: ${results.progressValidated}/${results.candidateRecords} validated`);
-
-// Continue job to process more records
-if (results.validRecords >= 10) {
-    const continued = await client.jobs.continueJob({
-        jobId: job.jobId,
-        newLimit: 50, // Increase to 50 records
-    });
-    console.log(`Job continued: ${continued.jobId}`);
-    
-    // Wait for completion
-    while (true) {
-        const status = await client.jobs.getJobStatus(job.jobId);
-        if (status.status === "completed") {
-            break;
-        }
-        await new Promise(resolve => setTimeout(resolve, 60000));
-    }
-    
-    // Get final results
-    const finalResults = await client.jobs.getJobResults(job.jobId);
-    console.log(`Final: ${finalResults.validRecords} records`);
-}
 ```
 
-Jobs process asynchronously and typically complete in 10-15 minutes. To learn more, see the [Quickstart](https://www.newscatcherapi.com/docs/v3/catch-all/overview/quickstart).
+## Request and Response Types
 
-### Monitors
-
-Automate recurring queries with scheduled execution:
-
-```typescript
-import { CatchAllApiClient } from "newscatcher-catchall-sdk";
-
-const client = new CatchAllApiClient({ apiKey: "YOUR_API_KEY" });
-
-// Create a monitor from a completed job
-const monitor = await client.monitors.createMonitor({
-    referenceJobId: job.jobId,
-    schedule: "every day at 12 PM UTC",
-    webhook: {
-        url: "https://your-endpoint.com/webhook",
-        method: "POST",
-        headers: { "Authorization": "Bearer YOUR_TOKEN" },
-    },
-});
-console.log(`Monitor created: ${monitor.monitorId}`);
-
-// Update webhook configuration without recreating monitor
-const updated = await client.monitors.updateMonitor(monitor.monitorId, {
-    webhook: {
-        url: "https://new-endpoint.com/webhook",
-        method: "POST",
-        headers: { "Authorization": "Bearer NEW_TOKEN" },
-    },
-});
-
-// Pause monitor execution
-await client.monitors.disableMonitor(monitor.monitorId);
-console.log("Monitor paused");
-
-// Resume monitor execution
-await client.monitors.enableMonitor(monitor.monitorId);
-console.log("Monitor resumed");
-
-// List monitor execution history
-const jobs = await client.monitors.listMonitorJobs(monitor.monitorId, {
-    sort: "desc", // Most recent first
-});
-console.log(`Monitor has executed ${jobs.totalJobs} jobs`);
-for (const job of jobs.jobs) {
-    console.log(`  Job ${job.jobId}: ${job.startDate} to ${job.endDate}`);
-}
-
-// Get aggregated results
-const results = await client.monitors.pullMonitorResults(monitor.monitorId);
-console.log(`Collected ${results.records} records across all executions`);
-```
-
-Monitors run jobs on your schedule and send webhook notifications when complete. See the [Monitors documentation](https://www.newscatcherapi.com/docs/v3/catch-all/overview/monitors) for setup and configuration.
-
-## Request and response types
-
-The SDK exports all request and response types as TypeScript interfaces:
+The SDK exports all request and response types as TypeScript interfaces. Simply import them with the
+following namespace:
 
 ```typescript
 import { CatchAllApi } from "newscatcher-catchall-sdk";
 
 const request: CatchAllApi.SubmitRequestDto = {
-    query: "Tech company earnings this quarter",
-    context: "Focus on revenue and profit margins",
+    ...
 };
 ```
 
-## Exception handling
+## Exception Handling
 
-Handle API errors with the `CatchAllApiError` exception:
+When the API returns a non-success status code (4xx or 5xx response), a subclass of the following error
+will be thrown.
 
 ```typescript
 import { CatchAllApiError } from "newscatcher-catchall-sdk";
 
 try {
-    await client.jobs.createJob({
-        query: "Tech company earnings this quarter",
-    });
+    await client.jobs.createJob(...);
 } catch (err) {
     if (err instanceof CatchAllApiError) {
-        console.log(`Status: ${err.statusCode}`);
-        console.log(`Message: ${err.message}`);
-        console.log(`Body: ${JSON.stringify(err.body)}`);
+        console.log(err.statusCode);
+        console.log(err.message);
+        console.log(err.body);
+        console.log(err.rawResponse);
     }
 }
 ```
 
 ## Advanced
 
-### Pagination
+### Additional Headers
 
-Retrieve large result sets with pagination:
+If you would like to send additional headers as part of the request, use the `headers` request option.
 
 ```typescript
-// Retrieve large result sets with pagination
-let page = 1;
-while (true) {
-    const results = await client.jobs.getJobResults(
-        jobId,
-        {
-            page: page,
-            pageSize: 100,
-        }
-    );
-    
-    console.log(`Page ${results.page}/${results.totalPages}: ${results.allRecords.length} records`);
-    
-    for (const record of results.allRecords) {
-        // Process each record
-        console.log(`  - ${record.recordTitle}`);
+import { CatchAllApiClient } from "newscatcher-catchall-sdk";
+
+const client = new CatchAllApiClient({
+    ...
+    headers: {
+        'X-Custom-Header': 'custom value'
     }
-    
-    if (results.page >= results.totalPages) {
-        break;
-    }
-    page++;
-}
+});
 
-console.log(`Processed ${results.validRecords} total records`);
-```
-
-### Access raw response data
-
-Access response headers and raw data:
-
-```typescript
-const { data, rawResponse } = await client.jobs.createJob({
-    query: "Tech company earnings this quarter",
-}).withRawResponse();
-
-console.log(data);
-console.log(rawResponse.headers.get('X-Custom-Header'));
-```
-
-### Additional headers
-
-Send custom headers with your request:
-
-```typescript
-const response = await client.jobs.createJob({
-    query: "Tech company earnings this quarter",
-}, {
+const response = await client.jobs.createJob(..., {
     headers: {
         'X-Custom-Header': 'custom value'
     }
 });
 ```
 
-### Retries
+### Additional Query String Parameters
 
-The SDK retries failed requests automatically with exponential backoff. Configure retry behavior:
+If you would like to send additional query string parameters as part of the request, use the `queryParams` request option.
 
 ```typescript
-const response = await client.jobs.createJob({
-    query: "Tech company earnings this quarter",
-}, {
-    maxRetries: 3, // override maxRetries at the request level (default: 2)
+const response = await client.jobs.createJob(..., {
+    queryParams: {
+        'customQueryParamKey': 'custom query param value'
+    }
 });
 ```
 
-A request is retried when any of these HTTP status codes is returned:
+### Retries
+
+The SDK is instrumented with automatic retries with exponential backoff. A request will be retried as long
+as the request is deemed retryable and the number of retry attempts has not grown larger than the configured
+retry limit (default: 2).
+
+A request is deemed retryable when any of the following HTTP status codes is returned:
 
 - [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
 - [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
 - [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) (Internal Server Errors)
 
-### Timeouts
-
-Set custom timeouts at the request level:
+Use the `maxRetries` request option to configure this behavior.
 
 ```typescript
-const response = await client.jobs.createJob({
-    query: "Tech company earnings this quarter",
-}, {
-    timeoutInSeconds: 30, // override timeout to 30s (default: 60s)
+const response = await client.jobs.createJob(..., {
+    maxRetries: 0 // override maxRetries at the request level
 });
 ```
 
-### Aborting requests
+### Timeouts
 
-Cancel requests using an abort signal:
+The SDK defaults to a 60 second timeout. Use the `timeoutInSeconds` option to configure this behavior.
+
+```typescript
+const response = await client.jobs.createJob(..., {
+    timeoutInSeconds: 30 // override timeout to 30s
+});
+```
+
+### Aborting Requests
+
+The SDK allows users to abort requests at any point by passing in an abort signal.
 
 ```typescript
 const controller = new AbortController();
-const response = await client.jobs.createJob({
-    query: "Tech company earnings this quarter",
-}, {
+const response = await client.jobs.createJob(..., {
     abortSignal: controller.signal
 });
-controller.abort(); // cancels the request
+controller.abort(); // aborts the request
+```
+
+### Access Raw Response Data
+
+The SDK provides access to raw response data, including headers, through the `.withRawResponse()` method.
+The `.withRawResponse()` method returns a promise that results to an object with a `data` and a `rawResponse` property.
+
+```typescript
+const { data, rawResponse } = await client.jobs.createJob(...).withRawResponse();
+
+console.log(data);
+console.log(rawResponse.headers['X-My-Header']);
 ```
 
 ### Logging
 
-Configure logging to debug SDK behavior:
+The SDK supports logging. You can configure the logger by passing in a `logging` object to the client options.
 
 ```typescript
 import { CatchAllApiClient, logging } from "newscatcher-catchall-sdk";
 
 const client = new CatchAllApiClient({
-    apiKey: "YOUR_API_KEY",
+    ...
     logging: {
         level: logging.LogLevel.Debug, // defaults to logging.LogLevel.Info
         logger: new logging.ConsoleLogger(), // defaults to ConsoleLogger
@@ -292,20 +192,24 @@ const client = new CatchAllApiClient({
     }
 });
 ```
+The `logging` object can have the following properties:
+- `level`: The log level to use. Defaults to `logging.LogLevel.Info`.
+- `logger`: The logger to use. Defaults to a `logging.ConsoleLogger`.
+- `silent`: Whether to silence the logger. Defaults to `true`.
 
-Available log levels:
-
+The `level` property can be one of the following values:
 - `logging.LogLevel.Debug`
 - `logging.LogLevel.Info`
 - `logging.LogLevel.Warn`
 - `logging.LogLevel.Error`
 
+To provide a custom logger, you can pass in an object that implements the `logging.ILogger` interface.
+
 <details>
 <summary>Custom logger examples</summary>
 
-Using Winston:
-
-```typescript
+Here's an example using the popular `winston` logging library.
+```ts
 import winston from 'winston';
 
 const winstonLogger = winston.createLogger({...});
@@ -318,26 +222,29 @@ const logger: logging.ILogger = {
 };
 ```
 
-Using Pino:
+Here's an example using the popular `pino` logging library.
 
-```typescript
+```ts
 import pino from 'pino';
 
 const pinoLogger = pino({...});
 
 const logger: logging.ILogger = {
-    debug: (msg, ...args) => pinoLogger.debug(args, msg),
-    info: (msg, ...args) => pinoLogger.info(args, msg),
-    warn: (msg, ...args) => pinoLogger.warn(args, msg),
-    error: (msg, ...args) => pinoLogger.error(args, msg),
+  debug: (msg, ...args) => pinoLogger.debug(args, msg),
+  info: (msg, ...args) => pinoLogger.info(args, msg),
+  warn: (msg, ...args) => pinoLogger.warn(args, msg),
+  error: (msg, ...args) => pinoLogger.error(args, msg),
 };
 ```
-
 </details>
 
-### Runtime compatibility
+
+### Runtime Compatibility
+
 
 The SDK works in the following runtimes:
+
+
 
 - Node.js 18+
 - Vercel
@@ -346,15 +253,16 @@ The SDK works in the following runtimes:
 - Bun 1.0+
 - React Native
 
-### Custom fetch client
+### Customizing Fetch Client
 
-Customize the underlying HTTP client for unsupported environments:
+The SDK provides a way for you to customize the underlying HTTP client / Fetch function. If you're running in an
+unsupported environment, this provides a way for you to break glass and ensure the SDK works.
 
 ```typescript
 import { CatchAllApiClient } from "newscatcher-catchall-sdk";
 
 const client = new CatchAllApiClient({
-    apiKey: "YOUR_API_KEY",
+    ...
     fetcher: // provide your implementation here
 });
 ```
@@ -365,8 +273,13 @@ CatchAll API is in beta. Breaking changes may occur in minor version updates. Se
 
 ## Contributing
 
-This library is generated programmatically from our API specification. Direct contributions to the generated code cannot be merged, but README improvements are welcome. To suggest SDK changes, please [open an issue](https://github.com/Newscatcher/newscatcher-catchall-typescript/issues).
+While we value open-source contributions to this SDK, this library is generated programmatically.
+Additions made directly to this library would have to be moved over to our generation code,
+otherwise they would be overwritten upon the next generated release. Feel free to open a PR as
+a proof of concept, but know that we will not be able to merge it as-is. We suggest opening
+an issue first to discuss with us!
 
+On the other hand, contributions to the README are always very welcome!
 ## Support
 
 - Documentation: [https://www.newscatcherapi.com/docs/v3/catch-all](https://www.newscatcherapi.com/docs/v3/catch-all)
