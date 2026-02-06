@@ -20,14 +20,14 @@ export interface PullJobResponseDto {
     status: string;
     /** Total time taken to process the job. */
     duration?: string;
-    /** Number of candidate records before validation. */
+    /** Number of distinct event clusters identified before validation. */
     candidate_records?: number;
     /** Number of validated records extracted. */
     valid_records?: number;
     /**
-     * Number of candidate records that have been validated during processing.
+     * Number of candidate clusters that have been validated during processing.
      *
-     * The system process records in batches. This field tracks how many candidates have been checked against validation criteria so far.
+     * The system process data in batches. This field tracks how many candidates have been checked against validation criteria so far.
      */
     progress_validated?: number;
     date_range?: PullJobResponseDto.DateRange;
