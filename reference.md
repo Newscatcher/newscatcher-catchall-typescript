@@ -1,5 +1,72 @@
 # Reference
 ## Jobs
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">initialize</a>({ ...params }) -> CatchAllApi.InitializeResponseDto</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get suggested validators, enrichments, and date ranges for a query before submitting a job.
+
+Returns LLM-generated suggestions based on query analysis and validates against plan limits.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.initialize({
+    query: "AI company acquisitions in fintech last week"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.InitializeRequestDto` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">createJob</a>({ ...params }) -> CatchAllApi.SubmitResponseBody</code></summary>
 <dl>
 <dd>
@@ -13,6 +80,9 @@
 <dd>
 
 Submit a natural language query to create a new processing job.
+
+Optionally specify context, date ranges, limit, custom validators, and enrichments. 
+If dates exceed plan limits, returns 400 error.
 </dd>
 </dl>
 </dd>
@@ -29,7 +99,10 @@ Submit a natural language query to create a new processing job.
 ```typescript
 await client.jobs.createJob({
     query: "AI company acquisitions",
-    context: "Focus on deal size and acquiring company details"
+    context: "Focus on deal size and acquiring company details",
+    limit: 10,
+    start_date: "2026-01-30T00:00:00Z",
+    end_date: "2026-02-05T00:00:00Z"
 });
 
 ```
@@ -197,7 +270,7 @@ await client.jobs.getJobStatus({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">getUserJobs</a>() -> CatchAllApi.ListUserJobsResponseDto[]</code></summary>
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">getUserJobs</a>({ ...params }) -> CatchAllApi.ListUserJobsResponseDto[]</code></summary>
 <dl>
 <dd>
 
@@ -236,6 +309,14 @@ await client.jobs.getUserJobs();
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.GetUserJobsRequest` 
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -332,11 +413,15 @@ await client.jobs.getJobResults({
 
 Create a monitor that runs jobs based on a reference job with a specified schedule.
 
+**Reference job requirements:**
+- Job's `end_date` must be within the last 7 days
+
 **Schedule requirements:**
 - Minimum 24-hour interval between executions
 - Natural language format (e.g., "every day at 12 PM UTC", "every 48 hours")
 
 **Validation:**
+- Reference jobs older than 7 days return 400 Bad Request.
 - Schedules below minimum frequency return error with descriptive message.
 - Invalid job IDs return 400 Bad Request.
 - Duplicate monitors (same job already monitored) return error.

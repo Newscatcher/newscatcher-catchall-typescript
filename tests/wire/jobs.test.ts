@@ -5,12 +5,141 @@ import { CatchAllApiClient } from "../../src/Client";
 import { mockServerPool } from "../mock-server/MockServerPool";
 
 describe("JobsClient", () => {
+    test("initialize (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "AI company acquisitions in fintech last week" };
+        const rawResponseBody = {
+            validators: [
+                {
+                    name: "is_acquisition_event",
+                    description: "true if article describes a merger or acquisition event",
+                    type: "boolean",
+                },
+                {
+                    name: "involves_fintech",
+                    description: "true if the companies involved are in the fintech sector",
+                    type: "boolean",
+                },
+            ],
+            enrichments: [
+                { name: "acquiring_company", description: "Extract the acquiring company name", type: "company" },
+                { name: "acquired_company", description: "Extract the acquired company name", type: "text" },
+                { name: "deal_value", description: "Extract the deal value if mentioned", type: "number" },
+                { name: "announcement_date", description: "Extract the announcement date", type: "date" },
+            ],
+            start_date: "2026-01-29T00:00:00Z",
+            end_date: "2026-02-05T00:00:00Z",
+            date_modification_message: [
+                "start_date must be >= 2025-01-23, your plan limited to lookback 365 days; we modified start_date to 2025-01-23.",
+            ],
+        };
+        server
+            .mockEndpoint()
+            .post("/catchAll/initialize")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.initialize({
+            query: "AI company acquisitions in fintech last week",
+        });
+        expect(response).toEqual({
+            validators: [
+                {
+                    name: "is_acquisition_event",
+                    description: "true if article describes a merger or acquisition event",
+                    type: "boolean",
+                },
+                {
+                    name: "involves_fintech",
+                    description: "true if the companies involved are in the fintech sector",
+                    type: "boolean",
+                },
+            ],
+            enrichments: [
+                {
+                    name: "acquiring_company",
+                    description: "Extract the acquiring company name",
+                    type: "company",
+                },
+                {
+                    name: "acquired_company",
+                    description: "Extract the acquired company name",
+                    type: "text",
+                },
+                {
+                    name: "deal_value",
+                    description: "Extract the deal value if mentioned",
+                    type: "number",
+                },
+                {
+                    name: "announcement_date",
+                    description: "Extract the announcement date",
+                    type: "date",
+                },
+            ],
+            start_date: "2026-01-29T00:00:00Z",
+            end_date: "2026-02-05T00:00:00Z",
+            date_modification_message: [
+                "start_date must be >= 2025-01-23, your plan limited to lookback 365 days; we modified start_date to 2025-01-23.",
+            ],
+        });
+    });
+
+    test("initialize (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "query" };
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .post("/catchAll/initialize")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.initialize({
+                query: "query",
+            });
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("initialize (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "query" };
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .post("/catchAll/initialize")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.initialize({
+                query: "query",
+            });
+        }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
+    });
+
     test("createJob (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
             query: "AI company acquisitions",
             context: "Focus on deal size and acquiring company details",
+            limit: 10,
+            start_date: "2026-01-30T00:00:00Z",
+            end_date: "2026-02-05T00:00:00Z",
         };
         const rawResponseBody = { job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3" };
         server
@@ -25,6 +154,9 @@ describe("JobsClient", () => {
         const response = await client.jobs.createJob({
             query: "AI company acquisitions",
             context: "Focus on deal size and acquiring company details",
+            limit: 10,
+            start_date: "2026-01-30T00:00:00Z",
+            end_date: "2026-02-05T00:00:00Z",
         });
         expect(response).toEqual({
             job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
@@ -32,6 +164,27 @@ describe("JobsClient", () => {
     });
 
     test("createJob (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "query" };
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .post("/catchAll/submit")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.createJob({
+                query: "query",
+            });
+        }).rejects.toThrow(CatchAllApi.BadRequestError);
+    });
+
+    test("createJob (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
@@ -52,7 +205,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("createJob (3)", async () => {
+    test("createJob (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
@@ -281,12 +434,25 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("getUserJobs", async () => {
+    test("getUserJobs (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = [
-            { job_id: "job_id", query: "query", created_at: "2025-12-16T11:15:38Z", status: "completed" },
+            {
+                total: 47,
+                page: 1,
+                page_size: 10,
+                total_pages: 5,
+                jobs: [
+                    {
+                        job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+                        query: "AI company acquisitions",
+                        created_at: "2026-02-01T14:30:00Z",
+                        status: "completed",
+                    },
+                ],
+            },
         ];
         server
             .mockEndpoint()
@@ -299,12 +465,38 @@ describe("JobsClient", () => {
         const response = await client.jobs.getUserJobs();
         expect(response).toEqual([
             {
-                job_id: "job_id",
-                query: "query",
-                created_at: "2025-12-16T11:15:38Z",
-                status: "completed",
+                total: 47,
+                page: 1,
+                page_size: 10,
+                total_pages: 5,
+                jobs: [
+                    {
+                        job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+                        query: "AI company acquisitions",
+                        created_at: "2026-02-01T14:30:00Z",
+                        status: "completed",
+                    },
+                ],
             },
         ]);
+    });
+
+    test("getUserJobs (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+        server
+            .mockEndpoint()
+            .get("/catchAll/jobs/user")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getUserJobs();
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
     test("getJobResults (1)", async () => {

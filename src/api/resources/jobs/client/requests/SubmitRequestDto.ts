@@ -6,17 +6,29 @@ import type * as CatchAllApi from "../../../../index.js";
  * @example
  *     {
  *         query: "AI company acquisitions",
- *         context: "Focus on deal size and acquiring company details"
+ *         context: "Focus on deal size and acquiring company details",
+ *         limit: 10,
+ *         start_date: "2026-01-30T00:00:00Z",
+ *         end_date: "2026-02-05T00:00:00Z"
  *     }
  */
 export interface SubmitRequestDto {
     query: CatchAllApi.Query;
     schema?: CatchAllApi.Schema;
     context?: CatchAllApi.Context;
+    limit?: CatchAllApi.Limit;
+    start_date?: CatchAllApi.StartDate;
+    end_date?: CatchAllApi.EndDate;
     /**
-     * Maximum number of records to return. If not specified, defaults to your plan limit.
+     * Custom validators for filtering article clusters.
      *
-     * Use /catchAll/continue to extend the limit after job completion without reprocessing.
+     * If not provided, validators are generated automatically based on the query.
      */
-    limit?: number;
+    validators?: CatchAllApi.ValidatorSchema[];
+    /**
+     * Custom enrichment fields for data extraction.
+     *
+     * If not provided, enrichments are generated automatically based on the query.
+     */
+    enrichments?: CatchAllApi.EnrichmentSchema[];
 }
