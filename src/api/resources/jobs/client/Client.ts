@@ -26,18 +26,105 @@ export class JobsClient {
     }
 
     /**
-     * Submit a natural language query to create a new processing job.
+     * Get suggested validators, enrichments, and date ranges for a query before submitting a job.
      *
-     * @param {CatchAllApi.SubmitRequestDto} request
+     * Returns LLM-generated suggestions based on query analysis and validates against plan limits.
+     *
+     * @param {CatchAllApi.InitializeRequestDto} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      *
      * @example
+     *     await client.jobs.initialize({
+     *         query: "AI company acquisitions in fintech last week"
+     *     })
+     */
+    public initialize(
+        request: CatchAllApi.InitializeRequestDto,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.InitializeResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__initialize(request, requestOptions));
+    }
+
+    private async __initialize(
+        request: CatchAllApi.InitializeRequestDto,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.InitializeResponseDto>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                "catchAll/initialize",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as CatchAllApi.InitializeResponseDto, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 422:
+                    throw new CatchAllApi.UnprocessableEntityError(
+                        _response.error.body as CatchAllApi.ValidationErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/catchAll/initialize");
+    }
+
+    /**
+     * Submit a natural language query to create a new processing job.
+     *
+     * Optionally specify context, date ranges, limit, custom validators, and enrichments.
+     * If dates exceed plan limits, returns 400 error.
+     *
+     * @param {CatchAllApi.SubmitRequestDto} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.UnprocessableEntityError}
+     *
+     * @example
      *     await client.jobs.createJob({
      *         query: "AI company acquisitions",
-     *         context: "Focus on deal size and acquiring company details"
+     *         context: "Focus on deal size and acquiring company details",
+     *         limit: 10,
+     *         start_date: "2026-01-30T00:00:00Z",
+     *         end_date: "2026-02-05T00:00:00Z"
      *     })
      */
     public createJob(
@@ -82,6 +169,11 @@ export class JobsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new CatchAllApi.BadRequestError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -268,20 +360,30 @@ export class JobsClient {
     /**
      * Returns all jobs created by the authenticated user.
      *
+     * @param {CatchAllApi.GetUserJobsRequest} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.ForbiddenError}
      *
      * @example
      *     await client.jobs.getUserJobs()
      */
     public getUserJobs(
+        request: CatchAllApi.GetUserJobsRequest = {},
         requestOptions?: JobsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.ListUserJobsResponseDto[]> {
-        return core.HttpResponsePromise.fromPromise(this.__getUserJobs(requestOptions));
+        return core.HttpResponsePromise.fromPromise(this.__getUserJobs(request, requestOptions));
     }
 
     private async __getUserJobs(
+        request: CatchAllApi.GetUserJobsRequest = {},
         requestOptions?: JobsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListUserJobsResponseDto[]>> {
+        const { page, page_size: pageSize } = request;
+        const _queryParams: Record<string, unknown> = {
+            page,
+            page_size: pageSize,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -297,7 +399,7 @@ export class JobsClient {
             ),
             method: "GET",
             headers: _headers,
-            queryParameters: requestOptions?.queryParams,
+            queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -312,11 +414,19 @@ export class JobsClient {
         }
 
         if (_response.error.reason === "status-code") {
-            throw new errors.CatchAllApiError({
-                statusCode: _response.error.statusCode,
-                body: _response.error.body,
-                rawResponse: _response.rawResponse,
-            });
+            switch (_response.error.statusCode) {
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/catchAll/jobs/user");

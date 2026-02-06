@@ -1,9 +1,9 @@
 {
-    "cliVersion": "3.47.0",
+    "cliVersion": "3.65.0",
     "generatorName": "fernapi/fern-typescript-sdk",
-    "generatorVersion": "3.43.13",
+    "generatorVersion": "3.46.3",
     "generatorConfig": {
         "namespaceExport": "CatchAllApi"
     },
-    "sdkVersion": "0.3.1"
+    "sdkVersion": "1.0.0"
 }
