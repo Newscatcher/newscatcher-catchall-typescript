@@ -7,6 +7,6 @@
  *     }
  */
 export interface GetJobStatusRequest {
-    /** Unique job identifier returned from the `/catchAll/submit` endpoint. */
+    /** Unique job identifier returned from the [`POST /catchAll/submit`](https://www.newscatcherapi.com/docs/v3/catch-all/endpoints/create-job) endpoint. */
     job_id: string;
 }

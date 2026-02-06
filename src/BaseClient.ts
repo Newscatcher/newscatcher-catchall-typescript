@@ -51,8 +51,8 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
         {
             "X-Fern-Language": "JavaScript",
             "X-Fern-SDK-Name": "newscatcher-catchall-sdk",
-            "X-Fern-SDK-Version": "0.3.1",
-            "User-Agent": "newscatcher-catchall-sdk/0.3.1",
+            "X-Fern-SDK-Version": "0.3.2",
+            "User-Agent": "newscatcher-catchall-sdk/0.3.2",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
         },

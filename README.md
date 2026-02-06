@@ -50,7 +50,10 @@ import { CatchAllApiClient } from "newscatcher-catchall-sdk";
 const client = new CatchAllApiClient({ apiKey: "YOUR_API_KEY" });
 await client.jobs.createJob({
     query: "AI company acquisitions",
-    context: "Focus on deal size and acquiring company details"
+    context: "Focus on deal size and acquiring company details",
+    limit: 10,
+    start_date: "2026-01-30T00:00:00Z",
+    end_date: "2026-02-05T00:00:00Z"
 });
 ```
 
@@ -62,7 +65,7 @@ following namespace:
 ```typescript
 import { CatchAllApi } from "newscatcher-catchall-sdk";
 
-const request: CatchAllApi.SubmitRequestDto = {
+const request: CatchAllApi.InitializeRequestDto = {
     ...
 };
 ```

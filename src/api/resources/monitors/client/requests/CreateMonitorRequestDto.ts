@@ -10,7 +10,11 @@ import type * as CatchAllApi from "../../../../index.js";
  *     }
  */
 export interface CreateMonitorRequestDto {
-    /** Job ID to use as template for scheduled runs. */
+    /**
+     * Job ID to use as template for scheduled runs.
+     *
+     * Job's `end_date` must be within the last 7 days.
+     */
     reference_job_id: string;
     /**
      * Natural language schedule (e.g. 'every day at 12 AM EST').
