@@ -19,5 +19,5 @@ export interface InitializeResponseDto {
      *
      * Empty array if no modifications were needed. Contains human-readable messages when requested dates exceed plan's allowed lookback period.
      */
-    date_modification_message?: string[];
+    date_modification_message?: string[] | undefined;
 }

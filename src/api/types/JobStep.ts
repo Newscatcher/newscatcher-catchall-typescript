@@ -7,5 +7,5 @@ export interface JobStep {
     /** Sequential position of this step in the pipeline (1-7). */
     order: number;
     /** Whether this step has finished processing. */
-    completed?: boolean;
+    completed?: boolean | undefined;
 }

@@ -2,5 +2,5 @@
 
 export interface Error_ {
     /** Error message. */
-    detail?: string;
+    detail?: string | undefined;
 }

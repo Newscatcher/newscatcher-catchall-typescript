@@ -9,21 +9,21 @@ export interface PullMonitorResponseDto {
      * Parsed cron expression from the natural language schedule.
      * Standard cron format (minute hour day month day-of-week).
      */
-    cron_expression?: string;
+    cron_expression?: string | undefined;
     /** Timezone used for schedule execution. */
-    timezone?: string;
+    timezone?: string | undefined;
     reference_job: CatchAllApi.ReferenceJob;
     /** Execution time range for this monitor. */
-    run_info?: PullMonitorResponseDto.RunInfo;
+    run_info?: PullMonitorResponseDto.RunInfo | undefined;
     /** Total number of records collected across all monitor jobs. */
-    records?: number;
+    records?: number | undefined;
     /** Current monitor status or error message if monitor creation failed. */
     status: string;
     /**
      * Aggregated records from all jobs executed by this monitor.
      * Each record includes structured data extracted from web sources with citations.
      */
-    all_records?: CatchAllApi.MonitorRecord[];
+    all_records?: CatchAllApi.MonitorRecord[] | undefined;
 }
 
 export namespace PullMonitorResponseDto {
@@ -32,8 +32,8 @@ export namespace PullMonitorResponseDto {
      */
     export interface RunInfo {
         /** Timestamp of the first job execution. */
-        first_run?: string;
+        first_run?: string | undefined;
         /** Timestamp of the most recent job execution. */
-        last_run?: string;
+        last_run?: string | undefined;
     }
 }

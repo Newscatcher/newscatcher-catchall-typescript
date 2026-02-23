@@ -2,11 +2,11 @@
 
 export interface ValidationErrorDetail {
     /** Location of the validation error */
-    loc?: ValidationErrorDetail.Loc.Item[];
+    loc?: ValidationErrorDetail.Loc.Item[] | undefined;
     /** Error message */
-    msg?: string;
+    msg?: string | undefined;
     /** Error type */
-    type?: string;
+    type?: string | undefined;
 }
 
 export namespace ValidationErrorDetail {

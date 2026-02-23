@@ -6,7 +6,7 @@ export interface StatusResponseDto {
     /** Job identifier. */
     job_id: string;
     /** Current job processing status. */
-    status?: CatchAllApi.JobStatus;
+    status?: CatchAllApi.JobStatus | undefined;
     /** Detailed progress tracking for each processing stage. Steps progress sequentially from order 1 (submitted) through 5 (enriching), ending at order 6 (completed) or 7 (failed). */
     steps: CatchAllApi.JobStep[];
 }

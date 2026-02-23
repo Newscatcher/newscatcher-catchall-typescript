@@ -12,13 +12,13 @@ export interface MonitorListItemDto {
     /** Whether the monitor is currently active. */
     enabled: boolean;
     /** Cron expression for monitor schedule. */
-    schedule?: string;
+    schedule?: string | undefined;
     /** Natural language description of the monitor schedule. */
-    schedule_human_readable?: string;
+    schedule_human_readable?: string | undefined;
     /** Timezone for schedule execution. */
-    timezone?: string;
+    timezone?: string | undefined;
     /** The date when the monitor was created. */
-    created_at?: string;
+    created_at?: string | undefined;
     /** Webhook configuration for this monitor (if set). */
-    webhook?: CatchAllApi.WebhookDto;
+    webhook?: CatchAllApi.WebhookDto | undefined;
 }
