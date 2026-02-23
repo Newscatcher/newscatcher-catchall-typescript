@@ -2,7 +2,7 @@
 
 export interface ReferenceJob {
     /** Natural language query from the reference job. */
-    query?: string;
+    query?: string | undefined;
     /** Context provided with the reference job query. */
-    context?: string;
+    context?: string | undefined;
 }

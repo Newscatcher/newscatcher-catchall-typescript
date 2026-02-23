@@ -11,5 +11,5 @@ export interface ValidatorSchema {
     /** What this validator checks for in the article. */
     description: string;
     /** Validator type (currently only boolean supported). */
-    type?: "boolean";
+    type?: "boolean" | undefined;
 }

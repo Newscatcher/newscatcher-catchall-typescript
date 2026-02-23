@@ -20,7 +20,7 @@ export interface MonitorRecord {
     /** Source articles with monitor-specific metadata (job_id, added_on timestamps). */
     citations: CatchAllApi.MonitorCitation[];
     /** The date when this record was first added to monitor results in ISO 8601 format with UTC timezone. */
-    added_on?: string;
+    added_on?: string | undefined;
     /** The date when this record was last updated in monitor results in ISO 8601 format with UTC timezone. */
-    updated_on?: string;
+    updated_on?: string | undefined;
 }
