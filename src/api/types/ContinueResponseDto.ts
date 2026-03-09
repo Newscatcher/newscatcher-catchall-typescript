@@ -4,9 +4,9 @@ export interface ContinueResponseDto {
     /** Job identifier for the continued job. */
     job_id: string;
     /** Previous record limit before continuation. */
-    previous_limit?: number;
+    previous_limit?: number | undefined;
     /** New record limit after continuation. */
     new_limit: number;
     /** Confirmation that the continuation request was accepted. */
-    status?: string;
+    status: string;
 }

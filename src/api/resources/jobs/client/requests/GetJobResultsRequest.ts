@@ -3,11 +3,11 @@
 /**
  * @example
  *     {
- *         job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3"
+ *         job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c"
  *     }
  */
 export interface GetJobResultsRequest {
-    /** Unique job identifier returned from the [`POST /catchAll/submit`](https://www.newscatcherapi.com/docs/v3/catch-all/endpoints/create-job) endpoint. */
+    /** Unique job identifier returned from [`POST /catchAll/submit`](https://www.newscatcherapi.com/docs/web-search-api/api-reference/jobs/create-job). */
     job_id: string;
     /** Page number to retrieve. */
     page?: number;

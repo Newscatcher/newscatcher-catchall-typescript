@@ -8,31 +8,46 @@ describe("JobsClient", () => {
     test("initialize (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { query: "AI company acquisitions in fintech last week" };
+        const rawRequestBody = {
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
+        };
         const rawResponseBody = {
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
             validators: [
                 {
-                    name: "is_acquisition_event",
-                    description: "true if article describes a merger or acquisition event",
+                    name: "is_series_b_funding",
+                    description: "true if the web page describes a Series B funding round",
                     type: "boolean",
                 },
                 {
-                    name: "involves_fintech",
-                    description: "true if the companies involved are in the fintech sector",
+                    name: "is_saas_startup",
+                    description: "true if the company receiving funding is a SaaS startup",
                     type: "boolean",
                 },
             ],
             enrichments: [
-                { name: "acquiring_company", description: "Extract the acquiring company name", type: "company" },
-                { name: "acquired_company", description: "Extract the acquired company name", type: "text" },
-                { name: "deal_value", description: "Extract the deal value if mentioned", type: "number" },
-                { name: "announcement_date", description: "Extract the announcement date", type: "date" },
+                {
+                    name: "funding_amount",
+                    description: "Extract the amount of funding received in the Series B round",
+                    type: "number",
+                },
+                {
+                    name: "investee_company",
+                    description: "Extract the name of the SaaS startup receiving the funding",
+                    type: "company",
+                },
+                { name: "investor_company", description: "Extract the name of the lead investor", type: "company" },
+                {
+                    name: "funding_date",
+                    description: "Extract the date when the funding round was announced",
+                    type: "date",
+                },
             ],
-            start_date: "2026-01-29T00:00:00Z",
-            end_date: "2026-02-05T00:00:00Z",
-            date_modification_message: [
-                "start_date must be >= 2025-01-23, your plan limited to lookback 365 days; we modified start_date to 2025-01-23.",
-            ],
+            start_date: "2026-02-19T00:00:00Z",
+            end_date: "2026-02-24T00:00:00Z",
+            date_modification_message: ["No dates were provided; using a default window of 5 days."],
         };
         server
             .mockEndpoint()
@@ -44,48 +59,49 @@ describe("JobsClient", () => {
             .build();
 
         const response = await client.jobs.initialize({
-            query: "AI company acquisitions in fintech last week",
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
         });
         expect(response).toEqual({
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
             validators: [
                 {
-                    name: "is_acquisition_event",
-                    description: "true if article describes a merger or acquisition event",
+                    name: "is_series_b_funding",
+                    description: "true if the web page describes a Series B funding round",
                     type: "boolean",
                 },
                 {
-                    name: "involves_fintech",
-                    description: "true if the companies involved are in the fintech sector",
+                    name: "is_saas_startup",
+                    description: "true if the company receiving funding is a SaaS startup",
                     type: "boolean",
                 },
             ],
             enrichments: [
                 {
-                    name: "acquiring_company",
-                    description: "Extract the acquiring company name",
-                    type: "company",
-                },
-                {
-                    name: "acquired_company",
-                    description: "Extract the acquired company name",
-                    type: "text",
-                },
-                {
-                    name: "deal_value",
-                    description: "Extract the deal value if mentioned",
+                    name: "funding_amount",
+                    description: "Extract the amount of funding received in the Series B round",
                     type: "number",
                 },
                 {
-                    name: "announcement_date",
-                    description: "Extract the announcement date",
+                    name: "investee_company",
+                    description: "Extract the name of the SaaS startup receiving the funding",
+                    type: "company",
+                },
+                {
+                    name: "investor_company",
+                    description: "Extract the name of the lead investor",
+                    type: "company",
+                },
+                {
+                    name: "funding_date",
+                    description: "Extract the date when the funding round was announced",
                     type: "date",
                 },
             ],
-            start_date: "2026-01-29T00:00:00Z",
-            end_date: "2026-02-05T00:00:00Z",
-            date_modification_message: [
-                "start_date must be >= 2025-01-23, your plan limited to lookback 365 days; we modified start_date to 2025-01-23.",
-            ],
+            start_date: "2026-02-19T00:00:00Z",
+            end_date: "2026-02-24T00:00:00Z",
+            date_modification_message: ["No dates were provided; using a default window of 5 days."],
         });
     });
 
@@ -135,13 +151,13 @@ describe("JobsClient", () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
-            query: "AI company acquisitions",
-            context: "Focus on deal size and acquiring company details",
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
             limit: 10,
-            start_date: "2026-01-30T00:00:00Z",
-            end_date: "2026-02-05T00:00:00Z",
+            start_date: "2026-02-18T00:00:00Z",
+            end_date: "2026-02-23T00:00:00Z",
         };
-        const rawResponseBody = { job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3" };
+        const rawResponseBody = { job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c" };
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -152,14 +168,14 @@ describe("JobsClient", () => {
             .build();
 
         const response = await client.jobs.createJob({
-            query: "AI company acquisitions",
-            context: "Focus on deal size and acquiring company details",
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
             limit: 10,
-            start_date: "2026-01-30T00:00:00Z",
-            end_date: "2026-02-05T00:00:00Z",
+            start_date: "2026-02-18T00:00:00Z",
+            end_date: "2026-02-23T00:00:00Z",
         });
         expect(response).toEqual({
-            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
         });
     });
 
@@ -229,9 +245,9 @@ describe("JobsClient", () => {
     test("continueJob (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3", new_limit: 100 };
+        const rawRequestBody = { job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c", new_limit: 100 };
         const rawResponseBody = {
-            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             previous_limit: 10,
             new_limit: 100,
             status: "accepted",
@@ -246,11 +262,11 @@ describe("JobsClient", () => {
             .build();
 
         const response = await client.jobs.continueJob({
-            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             new_limit: 100,
         });
         expect(response).toEqual({
-            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             previous_limit: 10,
             new_limit: 100,
             status: "accepted",
@@ -260,7 +276,7 @@ describe("JobsClient", () => {
     test("continueJob (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { job_id: "job_id", new_limit: 1 };
+        const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
         server
             .mockEndpoint()
@@ -274,7 +290,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.continueJob({
                 job_id: "job_id",
-                new_limit: 1,
             });
         }).rejects.toThrow(CatchAllApi.BadRequestError);
     });
@@ -282,7 +297,7 @@ describe("JobsClient", () => {
     test("continueJob (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { job_id: "job_id", new_limit: 1 };
+        const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
         server
             .mockEndpoint()
@@ -296,7 +311,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.continueJob({
                 job_id: "job_id",
-                new_limit: 1,
             });
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
@@ -304,7 +318,7 @@ describe("JobsClient", () => {
     test("continueJob (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { job_id: "job_id", new_limit: 1 };
+        const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
         server
             .mockEndpoint()
@@ -318,7 +332,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.continueJob({
                 job_id: "job_id",
-                new_limit: 1,
             });
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
@@ -328,32 +341,32 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
-            status: "analyzing",
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+            status: "completed",
             steps: [
                 { status: "submitted", order: 1, completed: true },
-                { status: "analyzing", order: 2, completed: false },
-                { status: "fetching", order: 3, completed: false },
-                { status: "clustering", order: 4, completed: false },
-                { status: "enriching", order: 5, completed: false },
-                { status: "completed", order: 6, completed: false },
+                { status: "analyzing", order: 2, completed: true },
+                { status: "fetching", order: 3, completed: true },
+                { status: "clustering", order: 4, completed: true },
+                { status: "enriching", order: 5, completed: true },
+                { status: "completed", order: 6, completed: true },
                 { status: "failed", order: 7, completed: false },
             ],
         };
         server
             .mockEndpoint()
-            .get("/catchAll/status/af7a26d6-cf0b-458c-a6ed-4b6318c74da3")
+            .get("/catchAll/status/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
             .respondWith()
             .statusCode(200)
             .jsonBody(rawResponseBody)
             .build();
 
         const response = await client.jobs.getJobStatus({
-            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
         });
         expect(response).toEqual({
-            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
-            status: "analyzing",
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+            status: "completed",
             steps: [
                 {
                     status: "submitted",
@@ -363,27 +376,27 @@ describe("JobsClient", () => {
                 {
                     status: "analyzing",
                     order: 2,
-                    completed: false,
+                    completed: true,
                 },
                 {
                     status: "fetching",
                     order: 3,
-                    completed: false,
+                    completed: true,
                 },
                 {
                     status: "clustering",
                     order: 4,
-                    completed: false,
+                    completed: true,
                 },
                 {
                     status: "enriching",
                     order: 5,
-                    completed: false,
+                    completed: true,
                 },
                 {
                     status: "completed",
                     order: 6,
-                    completed: false,
+                    completed: true,
                 },
                 {
                     status: "failed",
@@ -438,22 +451,26 @@ describe("JobsClient", () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = [
-            {
-                total: 47,
-                page: 1,
-                page_size: 10,
-                total_pages: 5,
-                jobs: [
-                    {
-                        job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
-                        query: "AI company acquisitions",
-                        created_at: "2026-02-01T14:30:00Z",
-                        status: "completed",
-                    },
-                ],
-            },
-        ];
+        const rawResponseBody = {
+            total: 27,
+            page: 1,
+            page_size: 2,
+            total_pages: 14,
+            jobs: [
+                {
+                    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+                    query: "Series B funding rounds for SaaS startups",
+                    created_at: "2026-02-24T13:57:56Z",
+                    status: "completed",
+                },
+                {
+                    job_id: "8d618890-f9f5-4c97-af17-236136a306a7",
+                    query: "Corporate headquarters relocations in the US",
+                    created_at: "2026-02-18T20:25:20Z",
+                    status: "completed",
+                },
+            ],
+        };
         server
             .mockEndpoint()
             .get("/catchAll/jobs/user")
@@ -463,22 +480,26 @@ describe("JobsClient", () => {
             .build();
 
         const response = await client.jobs.getUserJobs();
-        expect(response).toEqual([
-            {
-                total: 47,
-                page: 1,
-                page_size: 10,
-                total_pages: 5,
-                jobs: [
-                    {
-                        job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
-                        query: "AI company acquisitions",
-                        created_at: "2026-02-01T14:30:00Z",
-                        status: "completed",
-                    },
-                ],
-            },
-        ]);
+        expect(response).toEqual({
+            total: 27,
+            page: 1,
+            page_size: 2,
+            total_pages: 14,
+            jobs: [
+                {
+                    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+                    query: "Series B funding rounds for SaaS startups",
+                    created_at: "2026-02-24T13:57:56Z",
+                    status: "completed",
+                },
+                {
+                    job_id: "8d618890-f9f5-4c97-af17-236136a306a7",
+                    query: "Corporate headquarters relocations in the US",
+                    created_at: "2026-02-18T20:25:20Z",
+                    status: "completed",
+                },
+            ],
+        });
     });
 
     test("getUserJobs (2)", async () => {
@@ -504,37 +525,55 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            job_id: "job_id",
-            query: "Tech company earnings this quarter.",
-            context: "Focus on revenue and profit margins.",
-            validators: ["is_current_quarter", "contains_financial_data"],
-            enrichments: ["company_name", "quarter_identifier", "revenue", "revenue_change", "profit_margin"],
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
+            validators: ["is_series_b_funding", "is_saas_startup"],
+            enrichments: [
+                "enrichment_confidence",
+                "funding_amount",
+                "funding_currency",
+                "funding_date",
+                "investee_company",
+                "investor_company",
+                "valuation",
+                "other_investors",
+            ],
             status: "completed",
-            duration: "15m",
-            candidate_records: 3200,
-            valid_records: 156,
-            progress_validated: 50,
-            date_range: { start_date: "2025-09-15T00:00:00Z", end_date: "2025-09-30T23:59:59Z" },
+            limit: 10,
+            duration: "1m",
+            candidate_records: 4,
+            valid_records: 3,
+            progress_validated: 4,
+            date_range: { start_date: "2026-02-18T00:00:00Z", end_date: "2026-02-23T00:00:00Z" },
             page: 1,
-            total_pages: 1,
-            page_size: 1,
+            page_size: 2,
+            total_pages: 2,
             all_records: [
                 {
-                    record_id: "5262823697790152939",
-                    record_title: "Oracle Q1 2026 Earnings Exceed Expectations",
+                    record_id: "6983973854314692457",
+                    record_title: "VulnCheck Raises $25M Series B Funding",
                     enrichment: {
-                        record_title: "Oracle Q1 2026 Earnings Exceed Expectations",
-                        company_name: "Oracle",
-                        quarter_identifier: "Q1 2026",
-                        revenue: "$14.9 billion",
-                        revenue_change: "up 12%",
-                        profit_margin: "42% non-GAAP operating margin",
+                        funding_amount: 25000000,
+                        funding_currency: "USD",
+                        funding_date: "2026-02-17",
+                        investee_company: {
+                            source_text: "VulnCheck",
+                            confidence: 0.99,
+                            metadata: { name: "VulnCheck", domain_url: "vulncheck.com", domain_url_confidence: "high" },
+                        },
+                        investor_company: {
+                            source_text: "Sorenson Capital",
+                            confidence: 0.99,
+                            metadata: { name: "Sorenson Capital" },
+                        },
+                        enrichment_confidence: "high",
                     },
                     citations: [
                         {
-                            title: "Oracle Reports Strong Q1 2026 Results",
-                            link: "https://example.com/article",
-                            published_date: "2025-09-26T08:54:20Z",
+                            title: "VulnCheck raises $25M Series B",
+                            link: "https://www.msn.com/en-us/money/other/exclusive-vulncheck-raises-25m-funding-to-help-companies-patch-software-bugs/ar-AA1WwdjW",
+                            published_date: "2026-02-17T14:01:05Z",
                         },
                     ],
                 },
@@ -542,50 +581,74 @@ describe("JobsClient", () => {
         };
         server
             .mockEndpoint()
-            .get("/catchAll/pull/af7a26d6-cf0b-458c-a6ed-4b6318c74da3")
+            .get("/catchAll/pull/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
             .respondWith()
             .statusCode(200)
             .jsonBody(rawResponseBody)
             .build();
 
         const response = await client.jobs.getJobResults({
-            job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
         });
         expect(response).toEqual({
-            job_id: "job_id",
-            query: "Tech company earnings this quarter.",
-            context: "Focus on revenue and profit margins.",
-            validators: ["is_current_quarter", "contains_financial_data"],
-            enrichments: ["company_name", "quarter_identifier", "revenue", "revenue_change", "profit_margin"],
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
+            validators: ["is_series_b_funding", "is_saas_startup"],
+            enrichments: [
+                "enrichment_confidence",
+                "funding_amount",
+                "funding_currency",
+                "funding_date",
+                "investee_company",
+                "investor_company",
+                "valuation",
+                "other_investors",
+            ],
             status: "completed",
-            duration: "15m",
-            candidate_records: 3200,
-            valid_records: 156,
-            progress_validated: 50,
+            limit: 10,
+            duration: "1m",
+            candidate_records: 4,
+            valid_records: 3,
+            progress_validated: 4,
             date_range: {
-                start_date: "2025-09-15T00:00:00Z",
-                end_date: "2025-09-30T23:59:59Z",
+                start_date: "2026-02-18T00:00:00Z",
+                end_date: "2026-02-23T00:00:00Z",
             },
             page: 1,
-            total_pages: 1,
-            page_size: 1,
+            page_size: 2,
+            total_pages: 2,
             all_records: [
                 {
-                    record_id: "5262823697790152939",
-                    record_title: "Oracle Q1 2026 Earnings Exceed Expectations",
+                    record_id: "6983973854314692457",
+                    record_title: "VulnCheck Raises $25M Series B Funding",
                     enrichment: {
-                        record_title: "Oracle Q1 2026 Earnings Exceed Expectations",
-                        company_name: "Oracle",
-                        quarter_identifier: "Q1 2026",
-                        revenue: "$14.9 billion",
-                        revenue_change: "up 12%",
-                        profit_margin: "42% non-GAAP operating margin",
+                        enrichment_confidence: "high",
+                        funding_amount: 25000000,
+                        funding_currency: "USD",
+                        funding_date: "2026-02-17",
+                        investee_company: {
+                            source_text: "VulnCheck",
+                            confidence: 0.99,
+                            metadata: {
+                                name: "VulnCheck",
+                                domain_url: "vulncheck.com",
+                                domain_url_confidence: "high",
+                            },
+                        },
+                        investor_company: {
+                            source_text: "Sorenson Capital",
+                            confidence: 0.99,
+                            metadata: {
+                                name: "Sorenson Capital",
+                            },
+                        },
                     },
                     citations: [
                         {
-                            title: "Oracle Reports Strong Q1 2026 Results",
-                            link: "https://example.com/article",
-                            published_date: "2025-09-26T08:54:20Z",
+                            title: "VulnCheck raises $25M Series B",
+                            link: "https://www.msn.com/en-us/money/other/exclusive-vulncheck-raises-25m-funding-to-help-companies-patch-software-bugs/ar-AA1WwdjW",
+                            published_date: "2026-02-17T14:01:05Z",
                         },
                     ],
                 },

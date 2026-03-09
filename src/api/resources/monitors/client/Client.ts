@@ -26,20 +26,7 @@ export class MonitorsClient {
     }
 
     /**
-     * Create a monitor that runs jobs based on a reference job with a specified schedule.
-     *
-     * **Reference job requirements:**
-     * - Job's `end_date` must be within the last 7 days
-     *
-     * **Schedule requirements:**
-     * - Minimum 24-hour interval between executions
-     * - Natural language format (e.g., "every day at 12 PM UTC", "every 48 hours")
-     *
-     * **Validation:**
-     * - Reference jobs older than 7 days return 400 Bad Request.
-     * - Schedules below minimum frequency return error with descriptive message.
-     * - Invalid job IDs return 400 Bad Request.
-     * - Duplicate monitors (same job already monitored) return error.
+     * Create a scheduled monitor based on a reference job.
      *
      * @param {CatchAllApi.CreateMonitorRequestDto} request
      * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -48,8 +35,17 @@ export class MonitorsClient {
      *
      * @example
      *     await client.monitors.createMonitor({
-     *         reference_job_id: "reference_job_id",
-     *         schedule: "every day at 12 PM UTC"
+     *         reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+     *         schedule: "every day at 12 PM UTC",
+     *         webhook: {
+     *             url: "https://your-endpoint.com/webhook",
+     *             method: "POST",
+     *             headers: {
+     *                 "Authorization": "Bearer your_token_here"
+     *             }
+     *         },
+     *         limit: 10,
+     *         backfill: true
      *     })
      */
     public createMonitor(
@@ -112,15 +108,7 @@ export class MonitorsClient {
     }
 
     /**
-     * Update webhook configuration for an existing monitor without recreating it.
-     *
-     * **Supported updates:**
-     * - Webhook URL
-     * - HTTP method (POST/PUT)
-     * - Headers and authentication
-     * - Query parameters
-     *
-     * **Note:** Schedule and reference job cannot be modified. To change these, create a new monitor.
+     * Update the webhook configuration for an existing monitor.
      *
      * @param {CatchAllApi.UpdateMonitorRequestDto} request
      * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -217,8 +205,7 @@ export class MonitorsClient {
     }
 
     /**
-     * Returns all jobs associated with a monitor, sorted by start_date.
-     * Each job includes job_id, start_date, and end_date.
+     * Return all jobs executed by a monitor.
      *
      * @param {CatchAllApi.ListMonitorJobsRequest} request
      * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -302,8 +289,7 @@ export class MonitorsClient {
     }
 
     /**
-     * Retrieve aggregated results from all jobs executed by this monitor.
-     * Includes monitor configuration, execution history, and all records collected.
+     * Retrieve aggregated results from all jobs executed by a monitor.
      *
      * @param {CatchAllApi.PullMonitorResultsRequest} request
      * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -384,8 +370,7 @@ export class MonitorsClient {
     }
 
     /**
-     * Disables a monitor to stop executing scheduled jobs.
-     * Validates that the provided API key is associated with the monitor.
+     * Stop scheduled job execution for a monitor.
      *
      * @param {CatchAllApi.DisableMonitorRequest} request
      * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -472,10 +457,9 @@ export class MonitorsClient {
     }
 
     /**
-     * Enables a monitor to resume executing scheduled jobs.
-     * Validates that the provided API key is associated with the monitor.
+     * Resume scheduled job execution for a monitor.
      *
-     * @param {CatchAllApi.EnableMonitorRequest} request
+     * @param {CatchAllApi.EnableMonitorRequestDto} request
      * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
@@ -484,21 +468,22 @@ export class MonitorsClient {
      *
      * @example
      *     await client.monitors.enableMonitor({
-     *         monitor_id: "monitor_id"
+     *         monitor_id: "monitor_id",
+     *         backfill: true
      *     })
      */
     public enableMonitor(
-        request: CatchAllApi.EnableMonitorRequest,
+        request: CatchAllApi.EnableMonitorRequestDto,
         requestOptions?: MonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.EnableMonitorResponse> {
         return core.HttpResponsePromise.fromPromise(this.__enableMonitor(request, requestOptions));
     }
 
     private async __enableMonitor(
-        request: CatchAllApi.EnableMonitorRequest,
+        request: CatchAllApi.EnableMonitorRequestDto,
         requestOptions?: MonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.EnableMonitorResponse>> {
-        const { monitor_id: monitorId } = request;
+        const { monitor_id: monitorId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -514,7 +499,10 @@ export class MonitorsClient {
             ),
             method: "POST",
             headers: _headers,
+            contentType: "application/json",
             queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: _body,
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -562,6 +550,7 @@ export class MonitorsClient {
     /**
      * Returns all monitors created by the authenticated user.
      *
+     * @param {CatchAllApi.ListMonitorsRequest} request
      * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
@@ -571,14 +560,21 @@ export class MonitorsClient {
      *     await client.monitors.listMonitors()
      */
     public listMonitors(
+        request: CatchAllApi.ListMonitorsRequest = {},
         requestOptions?: MonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.ListMonitorsResponseDto> {
-        return core.HttpResponsePromise.fromPromise(this.__listMonitors(requestOptions));
+        return core.HttpResponsePromise.fromPromise(this.__listMonitors(request, requestOptions));
     }
 
     private async __listMonitors(
+        request: CatchAllApi.ListMonitorsRequest = {},
         requestOptions?: MonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListMonitorsResponseDto>> {
+        const { page, page_size: pageSize } = request;
+        const _queryParams: Record<string, unknown> = {
+            page,
+            page_size: pageSize,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -594,7 +590,7 @@ export class MonitorsClient {
             ),
             method: "GET",
             headers: _headers,
-            queryParameters: requestOptions?.queryParams,
+            queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,

@@ -3,7 +3,7 @@
 export interface UserJob {
     /** Job identifier. */
     job_id: string;
-    /** Natural language query for this job. */
+    /** Plain text query for this job. */
     query: string;
     /** Job creation timestamp in ISO 8601 format. */
     created_at: string;

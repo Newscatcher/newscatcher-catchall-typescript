@@ -12,9 +12,7 @@
 <dl>
 <dd>
 
-Get suggested validators, enrichments, and date ranges for a query before submitting a job.
-
-Returns LLM-generated suggestions based on query analysis and validates against plan limits.
+Get suggested validators, enrichments, and date ranges for a query.
 </dd>
 </dl>
 </dd>
@@ -30,7 +28,8 @@ Returns LLM-generated suggestions based on query analysis and validates against 
 
 ```typescript
 await client.jobs.initialize({
-    query: "AI company acquisitions in fintech last week"
+    query: "Series B funding rounds for SaaS startups",
+    context: "Focus on funding amount and company name"
 });
 
 ```
@@ -67,7 +66,7 @@ await client.jobs.initialize({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">createJob</a>({ ...params }) -> CatchAllApi.SubmitResponseBody</code></summary>
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">createJob</a>({ ...params }) -> CatchAllApi.SubmitResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -79,10 +78,7 @@ await client.jobs.initialize({
 <dl>
 <dd>
 
-Submit a natural language query to create a new processing job.
-
-Optionally specify context, date ranges, limit, custom validators, and enrichments. 
-If dates exceed plan limits, returns 400 error.
+Submit a query to create a new processing job.
 </dd>
 </dl>
 </dd>
@@ -98,11 +94,11 @@ If dates exceed plan limits, returns 400 error.
 
 ```typescript
 await client.jobs.createJob({
-    query: "AI company acquisitions",
-    context: "Focus on deal size and acquiring company details",
+    query: "Series B funding rounds for SaaS startups",
+    context: "Focus on funding amount and company name",
     limit: 10,
-    start_date: "2026-01-30T00:00:00Z",
-    end_date: "2026-02-05T00:00:00Z"
+    start_date: "2026-02-18T00:00:00Z",
+    end_date: "2026-02-23T00:00:00Z"
 });
 
 ```
@@ -167,7 +163,7 @@ Continue an existing job to process more records beyond the initial limit.
 
 ```typescript
 await client.jobs.continueJob({
-    job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
     new_limit: 100
 });
 
@@ -233,7 +229,7 @@ Retrieve the current processing status of a job.
 
 ```typescript
 await client.jobs.getJobStatus({
-    job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3"
+    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c"
 });
 
 ```
@@ -270,7 +266,7 @@ await client.jobs.getJobStatus({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">getUserJobs</a>({ ...params }) -> CatchAllApi.ListUserJobsResponseDto[]</code></summary>
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">getUserJobs</a>({ ...params }) -> CatchAllApi.ListUserJobsResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -361,7 +357,7 @@ Retrieve the final results for a completed job.
 
 ```typescript
 await client.jobs.getJobResults({
-    job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3"
+    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c"
 });
 
 ```
@@ -411,20 +407,7 @@ await client.jobs.getJobResults({
 <dl>
 <dd>
 
-Create a monitor that runs jobs based on a reference job with a specified schedule.
-
-**Reference job requirements:**
-- Job's `end_date` must be within the last 7 days
-
-**Schedule requirements:**
-- Minimum 24-hour interval between executions
-- Natural language format (e.g., "every day at 12 PM UTC", "every 48 hours")
-
-**Validation:**
-- Reference jobs older than 7 days return 400 Bad Request.
-- Schedules below minimum frequency return error with descriptive message.
-- Invalid job IDs return 400 Bad Request.
-- Duplicate monitors (same job already monitored) return error.
+Create a scheduled monitor based on a reference job.
 </dd>
 </dl>
 </dd>
@@ -440,8 +423,17 @@ Create a monitor that runs jobs based on a reference job with a specified schedu
 
 ```typescript
 await client.monitors.createMonitor({
-    reference_job_id: "reference_job_id",
-    schedule: "every day at 12 PM UTC"
+    reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+    schedule: "every day at 12 PM UTC",
+    webhook: {
+        url: "https://your-endpoint.com/webhook",
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer your_token_here"
+        }
+    },
+    limit: 10,
+    backfill: true
 });
 
 ```
@@ -490,15 +482,7 @@ await client.monitors.createMonitor({
 <dl>
 <dd>
 
-Update webhook configuration for an existing monitor without recreating it.
-
-**Supported updates:**
-- Webhook URL
-- HTTP method (POST/PUT)
-- Headers and authentication
-- Query parameters
-
-**Note:** Schedule and reference job cannot be modified. To change these, create a new monitor.
+Update the webhook configuration for an existing monitor.
 </dd>
 </dl>
 </dd>
@@ -570,8 +554,7 @@ await client.monitors.updateMonitor({
 <dl>
 <dd>
 
-Returns all jobs associated with a monitor, sorted by start_date.
-Each job includes job_id, start_date, and end_date.
+Return all jobs executed by a monitor.
 </dd>
 </dl>
 </dd>
@@ -636,8 +619,7 @@ await client.monitors.listMonitorJobs({
 <dl>
 <dd>
 
-Retrieve aggregated results from all jobs executed by this monitor.
-Includes monitor configuration, execution history, and all records collected.
+Retrieve aggregated results from all jobs executed by a monitor.
 </dd>
 </dl>
 </dd>
@@ -702,8 +684,7 @@ await client.monitors.pullMonitorResults({
 <dl>
 <dd>
 
-Disables a monitor to stop executing scheduled jobs.
-Validates that the provided API key is associated with the monitor.
+Stop scheduled job execution for a monitor.
 </dd>
 </dl>
 </dd>
@@ -768,8 +749,7 @@ await client.monitors.disableMonitor({
 <dl>
 <dd>
 
-Enables a monitor to resume executing scheduled jobs.
-Validates that the provided API key is associated with the monitor.
+Resume scheduled job execution for a monitor.
 </dd>
 </dl>
 </dd>
@@ -785,7 +765,8 @@ Validates that the provided API key is associated with the monitor.
 
 ```typescript
 await client.monitors.enableMonitor({
-    monitor_id: "monitor_id"
+    monitor_id: "monitor_id",
+    backfill: true
 });
 
 ```
@@ -802,7 +783,7 @@ await client.monitors.enableMonitor({
 <dl>
 <dd>
 
-**request:** `CatchAllApi.EnableMonitorRequest` 
+**request:** `CatchAllApi.EnableMonitorRequestDto` 
     
 </dd>
 </dl>
@@ -822,7 +803,7 @@ await client.monitors.enableMonitor({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">listMonitors</a>() -> CatchAllApi.ListMonitorsResponseDto</code></summary>
+<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">listMonitors</a>({ ...params }) -> CatchAllApi.ListMonitorsResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -861,6 +842,14 @@ await client.monitors.listMonitors();
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.ListMonitorsRequest` 
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -987,3 +976,4 @@ await client.meta.getVersion();
 </dd>
 </dl>
 </details>
+

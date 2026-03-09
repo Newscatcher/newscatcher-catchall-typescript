@@ -2,22 +2,21 @@
 
 import type * as CatchAllApi from "../index.js";
 
-/**
- * Suggestions for validators, enrichments, and date ranges based on query analysis.
- *
- * Date ranges are validated against plan limits and adjusted if necessary.
- */
 export interface InitializeResponseDto {
-    /** Suggested validators for filtering relevant articles. */
+    /** Echo of the query from the request. */
+    query: string;
+    /** Echo of the context from the request. Null if not provided. */
+    context?: (string | null) | undefined;
+    /** Suggested validators for filtering relevant web pages. */
     validators: CatchAllApi.ValidatorSchema[];
     /** Suggested enrichment fields for data extraction. */
     enrichments: CatchAllApi.EnrichmentSchema[];
-    start_date: CatchAllApi.StartDate;
-    end_date: CatchAllApi.EndDate;
+    start_date?: CatchAllApi.StartDate | undefined;
+    end_date?: CatchAllApi.EndDate | undefined;
     /**
      * Messages explaining date adjustments due to plan limits.
      *
      * Empty array if no modifications were needed. Contains human-readable messages when requested dates exceed plan's allowed lookback period.
      */
-    date_modification_message?: string[];
+    date_modification_message?: string[] | undefined;
 }
