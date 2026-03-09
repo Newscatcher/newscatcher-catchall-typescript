@@ -8,8 +8,7 @@
  * - `date`: ISO format dates (YYYY-MM-DD)
  * - `option`: Enum-like fixed values (status, category)
  * - `url`: Web URLs
- * - `dict`: Complex structured objects
- * - `company`: Structured company data (name, alternative_names, website_candidates, people, address)
+ * - `company`: Structured company data. Returns `source_text`, `confidence`, and `metadata`. See [Company enrichment](https://www.newscatcherapi.com/docs/web-search-api/api-reference/jobs/company-enrichment-dto) data model.
  */
 export const EnrichmentType = {
     Text: "text",
@@ -17,7 +16,6 @@ export const EnrichmentType = {
     Date: "date",
     Option: "option",
     Url: "url",
-    Dict: "dict",
     Company: "company",
 } as const;
 export type EnrichmentType = (typeof EnrichmentType)[keyof typeof EnrichmentType];

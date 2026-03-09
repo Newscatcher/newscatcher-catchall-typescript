@@ -2,17 +2,7 @@
 
 import type * as CatchAllApi from "../index.js";
 
-export interface Record_ {
-    /** Unique identifier for the record. */
-    record_id: string;
-    /** Short title summarizing the record. */
-    record_title: string;
-    /**
-     * Structured data extracted from articles. Schema is dynamically generated per job. Field names are chosen semantically to match the content.
-     *
-     * See [Understanding dynamic schemas](https://www.newscatcherapi.com/docs/v3/catch-all/overview/dynamic-schemas) for integration guidance.
-     */
-    enrichment: Record<string, unknown>;
-    /** Source articles that were used to extract this record. */
+export interface Record_ extends CatchAllApi.BaseRecord {
+    /** Source documents that were used to extract this record. */
     citations: CatchAllApi.Citation[];
 }
