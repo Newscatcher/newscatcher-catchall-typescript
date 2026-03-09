@@ -5,23 +5,40 @@ import type * as CatchAllApi from "../../../../index.js";
 /**
  * @example
  *     {
- *         reference_job_id: "reference_job_id",
- *         schedule: "every day at 12 PM UTC"
+ *         reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+ *         schedule: "every day at 12 PM UTC",
+ *         webhook: {
+ *             url: "https://your-endpoint.com/webhook",
+ *             method: "POST",
+ *             headers: {
+ *                 "Authorization": "Bearer your_token_here"
+ *             }
+ *         },
+ *         limit: 10,
+ *         backfill: true
  *     }
  */
 export interface CreateMonitorRequestDto {
     /**
-     * Job ID to use as template for scheduled runs.
+     * Job ID to use as template for scheduled runs. Defines the query, validators, and enrichments used for each scheduled run.
      *
-     * Job's `end_date` must be within the last 7 days.
+     * If [`backfill`](https://www.newscatcherapi.com/docs/web-search-api/api-reference/monitors/create-monitor#body-backfill) is true, the job's `end_date` must be within the last 7 days.
      */
     reference_job_id: string;
     /**
-     * Natural language schedule (e.g. 'every day at 12 AM EST').
+     * Monitor schedule in plain text format (e.g. 'every day at 12 PM UTC', 'every 48 hours').
      *
-     * **Minimum frequency:** Monitors must be scheduled at least 24 hours apart.
+     * Minimum frequency depends on your plan.
      */
     schedule: string;
     /** Optional webhook to receive notifications when jobs complete. */
     webhook?: CatchAllApi.WebhookDto;
+    /** Maximum number of records per monitor run. If not provided, defaults to the plan limit. */
+    limit?: number;
+    /**
+     * If true, fills the data gap between the reference job's `end_date` and the first scheduled run. The reference job's `end_date` must be within the last 7 days.
+     *
+     * If false, no gap filling occurs and the first run uses the current cron window only — the reference job's age does not matter.
+     */
+    backfill?: boolean;
 }

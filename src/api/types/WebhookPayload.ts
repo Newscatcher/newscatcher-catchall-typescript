@@ -9,21 +9,21 @@ import type * as CatchAllApi from "../index.js";
  */
 export interface WebhookPayload {
     /** Monitor identifier. */
-    monitor_id?: string;
+    monitor_id?: string | undefined;
     /** Reference job used as template for this monitor. */
-    reference_job_id?: string;
+    reference_job_id?: string | undefined;
     /** Job ID of the most recent execution. */
-    latest_job_id?: string;
+    latest_job_id?: string | undefined;
     /** Number of new records from latest job (after deduplication). */
-    records_count?: number;
+    records_count?: number | undefined;
     /** Total number of jobs executed by this monitor. */
-    jobs_processed?: number;
+    jobs_processed?: number | undefined;
     /** The date when the webhook was triggered in ISO 8601 format with UTC timezone. */
-    updated_at?: string;
+    updated_at?: string | undefined;
     /** Cron expression defining the monitor schedule. */
-    cron_expression?: string;
+    cron_expression?: string | undefined;
     /** Timezone for schedule execution. */
-    timezone?: string;
+    timezone?: string | undefined;
     /** Array of new records from the latest job execution (includes monitor-specific fields like added_on, updated_on). */
-    records?: CatchAllApi.MonitorRecord[];
+    records?: CatchAllApi.MonitorRecord[] | undefined;
 }

@@ -5,22 +5,21 @@ import type * as CatchAllApi from "../../../../index.js";
 /**
  * @example
  *     {
- *         query: "AI company acquisitions",
- *         context: "Focus on deal size and acquiring company details",
+ *         query: "Series B funding rounds for SaaS startups",
+ *         context: "Focus on funding amount and company name",
  *         limit: 10,
- *         start_date: "2026-01-30T00:00:00Z",
- *         end_date: "2026-02-05T00:00:00Z"
+ *         start_date: "2026-02-18T00:00:00Z",
+ *         end_date: "2026-02-23T00:00:00Z"
  *     }
  */
 export interface SubmitRequestDto {
     query: CatchAllApi.Query;
-    schema?: CatchAllApi.Schema;
     context?: CatchAllApi.Context;
     limit?: CatchAllApi.Limit;
     start_date?: CatchAllApi.StartDate;
     end_date?: CatchAllApi.EndDate;
     /**
-     * Custom validators for filtering article clusters.
+     * Custom validators for filtering web page clusters.
      *
      * If not provided, validators are generated automatically based on the query.
      */

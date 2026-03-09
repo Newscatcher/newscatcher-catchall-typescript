@@ -20,4 +20,6 @@ export interface UpdateMonitorRequestDto {
     monitor_id: string;
     /** Updated webhook configuration. */
     webhook?: CatchAllApi.WebhookDto;
+    /** Updated maximum number of records per monitor run. */
+    limit?: number;
 }

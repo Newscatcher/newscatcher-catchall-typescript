@@ -5,7 +5,8 @@ import type * as CatchAllApi from "../../../../index.js";
 /**
  * @example
  *     {
- *         query: "AI company acquisitions in fintech last week"
+ *         query: "Series B funding rounds for SaaS startups",
+ *         context: "Focus on funding amount and company name"
  *     }
  */
 export interface InitializeRequestDto {

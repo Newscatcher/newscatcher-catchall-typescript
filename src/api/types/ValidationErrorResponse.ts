@@ -3,5 +3,5 @@
 import type * as CatchAllApi from "../index.js";
 
 export interface ValidationErrorResponse {
-    detail?: CatchAllApi.ValidationErrorDetail[];
+    detail?: CatchAllApi.ValidationErrorDetail[] | undefined;
 }

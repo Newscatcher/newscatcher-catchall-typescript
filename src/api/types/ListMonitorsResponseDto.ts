@@ -4,7 +4,13 @@ import type * as CatchAllApi from "../index.js";
 
 export interface ListMonitorsResponseDto {
     /** Total number of monitors for this user. */
-    total_monitors: number;
+    total: number;
+    /** Current page number. */
+    page: number;
+    /** Number of monitors per page. */
+    page_size: number;
+    /** Total number of pages available. */
+    total_pages: number;
     /** Array of monitor summaries. */
     monitors: CatchAllApi.MonitorListItemDto[];
 }

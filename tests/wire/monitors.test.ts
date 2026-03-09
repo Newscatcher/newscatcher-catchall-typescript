@@ -8,8 +8,21 @@ describe("MonitorsClient", () => {
     test("createMonitor (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { reference_job_id: "reference_job_id", schedule: "every day at 12 PM UTC" };
-        const rawResponseBody = { monitor_id: "monitor_id", status: "Monitor Created Successfully" };
+        const rawRequestBody = {
+            reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+            schedule: "every day at 12 PM UTC",
+            webhook: {
+                url: "https://your-endpoint.com/webhook",
+                method: "POST",
+                headers: { Authorization: "Bearer your_token_here" },
+            },
+            limit: 10,
+            backfill: true,
+        };
+        const rawResponseBody = {
+            monitor_id: "7f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d",
+            status: "Monitor Created Successfully",
+        };
         server
             .mockEndpoint()
             .post("/catchAll/monitors/create")
@@ -20,11 +33,20 @@ describe("MonitorsClient", () => {
             .build();
 
         const response = await client.monitors.createMonitor({
-            reference_job_id: "reference_job_id",
+            reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             schedule: "every day at 12 PM UTC",
+            webhook: {
+                url: "https://your-endpoint.com/webhook",
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer your_token_here",
+                },
+            },
+            limit: 10,
+            backfill: true,
         });
         expect(response).toEqual({
-            monitor_id: "monitor_id",
+            monitor_id: "7f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d",
             status: "Monitor Created Successfully",
         });
     });
@@ -237,30 +259,40 @@ describe("MonitorsClient", () => {
             cron_expression: "0 12 * * *",
             timezone: "UTC",
             reference_job: {
-                query: "AI company acquisitions",
-                context: "Focus on deal size and acquiring company details",
+                query: "Series B funding rounds for SaaS startups",
+                context: "Focus on funding amount and company name",
             },
             run_info: { first_run: "2025-10-23T12:00:00Z", last_run: "2025-11-07T12:00:00Z" },
             records: 487,
             status: "Done",
             all_records: [
                 {
-                    record_id: "5262823697790152939",
-                    record_title: "Oracle Q1 2026 Earnings Exceed Expectations",
+                    record_id: "6983973854314692457",
+                    record_title: "VulnCheck Raises $25M Series B Funding",
                     enrichment: {
-                        record_title: "Oracle Q1 2026 Earnings Exceed Expectations",
-                        company_name: "Oracle",
-                        quarter_identifier: "Q1 2026",
-                        revenue: "$14.9 billion",
-                        revenue_change: "up 12%",
-                        profit_margin: "42% non-GAAP operating margin",
+                        funding_amount: 25000000,
+                        funding_currency: "USD",
+                        funding_date: "2026-02-17",
+                        investee_company: {
+                            source_text: "VulnCheck",
+                            confidence: 0.99,
+                            metadata: { name: "VulnCheck", domain_url: "vulncheck.com", domain_url_confidence: "high" },
+                        },
+                        investor_company: {
+                            source_text: "Sorenson Capital",
+                            confidence: 0.99,
+                            metadata: { name: "Sorenson Capital" },
+                        },
+                        valuation: 25000000,
+                        other_investors: "National Grid Partners, Ten Eleven Ventures, In-Q-Tel",
+                        enrichment_confidence: "high",
                     },
                     citations: [
                         {
+                            title: "Exclusive: VulnCheck raises $25M funding to help companies patch software bugs",
+                            link: "https://www.msn.com/en-us/money/other/exclusive-vulncheck-raises-25m-funding-to-help-companies-patch-software-bugs/ar-AA1WwdjW",
+                            published_date: "2026-02-17T14:01:05Z",
                             id: "8760624448e9815f9fb4abd114c75e76",
-                            title: "Oracle Reports Strong Q1 2026 Results",
-                            link: "https://example.com/article",
-                            published_date: "2025-09-26T08:54:20Z",
                             job_id: "6269aa54-c332-4fff-8a65-0d4e82a365e8",
                             added_on: "2025-11-14T21:00:00Z",
                         },
@@ -269,6 +301,7 @@ describe("MonitorsClient", () => {
                     updated_on: "2025-11-14T21:00:00Z",
                 },
             ],
+            limit: 100,
         };
         server
             .mockEndpoint()
@@ -286,8 +319,8 @@ describe("MonitorsClient", () => {
             cron_expression: "0 12 * * *",
             timezone: "UTC",
             reference_job: {
-                query: "AI company acquisitions",
-                context: "Focus on deal size and acquiring company details",
+                query: "Series B funding rounds for SaaS startups",
+                context: "Focus on funding amount and company name",
             },
             run_info: {
                 first_run: "2025-10-23T12:00:00Z",
@@ -297,22 +330,38 @@ describe("MonitorsClient", () => {
             status: "Done",
             all_records: [
                 {
-                    record_id: "5262823697790152939",
-                    record_title: "Oracle Q1 2026 Earnings Exceed Expectations",
+                    record_id: "6983973854314692457",
+                    record_title: "VulnCheck Raises $25M Series B Funding",
                     enrichment: {
-                        record_title: "Oracle Q1 2026 Earnings Exceed Expectations",
-                        company_name: "Oracle",
-                        quarter_identifier: "Q1 2026",
-                        revenue: "$14.9 billion",
-                        revenue_change: "up 12%",
-                        profit_margin: "42% non-GAAP operating margin",
+                        enrichment_confidence: "high",
+                        funding_amount: 25000000,
+                        funding_currency: "USD",
+                        funding_date: "2026-02-17",
+                        investee_company: {
+                            source_text: "VulnCheck",
+                            confidence: 0.99,
+                            metadata: {
+                                name: "VulnCheck",
+                                domain_url: "vulncheck.com",
+                                domain_url_confidence: "high",
+                            },
+                        },
+                        investor_company: {
+                            source_text: "Sorenson Capital",
+                            confidence: 0.99,
+                            metadata: {
+                                name: "Sorenson Capital",
+                            },
+                        },
+                        valuation: 25000000,
+                        other_investors: "National Grid Partners, Ten Eleven Ventures, In-Q-Tel",
                     },
                     citations: [
                         {
+                            title: "Exclusive: VulnCheck raises $25M funding to help companies patch software bugs",
+                            link: "https://www.msn.com/en-us/money/other/exclusive-vulncheck-raises-25m-funding-to-help-companies-patch-software-bugs/ar-AA1WwdjW",
+                            published_date: "2026-02-17T14:01:05Z",
                             id: "8760624448e9815f9fb4abd114c75e76",
-                            title: "Oracle Reports Strong Q1 2026 Results",
-                            link: "https://example.com/article",
-                            published_date: "2025-09-26T08:54:20Z",
                             job_id: "6269aa54-c332-4fff-8a65-0d4e82a365e8",
                             added_on: "2025-11-14T21:00:00Z",
                         },
@@ -321,6 +370,7 @@ describe("MonitorsClient", () => {
                     updated_on: "2025-11-14T21:00:00Z",
                 },
             ],
+            limit: 100,
         });
     });
 
@@ -450,11 +500,12 @@ describe("MonitorsClient", () => {
     test("enableMonitor (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
+        const rawRequestBody = { backfill: true };
         const rawResponseBody = { success: true, message: "Monitor enabled successfully.", monitor_id: "monitor_id" };
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/enable")
+            .jsonBody(rawRequestBody)
             .respondWith()
             .statusCode(200)
             .jsonBody(rawResponseBody)
@@ -462,6 +513,7 @@ describe("MonitorsClient", () => {
 
         const response = await client.monitors.enableMonitor({
             monitor_id: "monitor_id",
+            backfill: true,
         });
         expect(response).toEqual({
             success: true,
@@ -473,11 +525,12 @@ describe("MonitorsClient", () => {
     test("enableMonitor (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
+        const rawRequestBody = {};
         const rawResponseBody = {};
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/enable")
+            .jsonBody(rawRequestBody)
             .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
@@ -493,11 +546,12 @@ describe("MonitorsClient", () => {
     test("enableMonitor (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
+        const rawRequestBody = {};
         const rawResponseBody = {};
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/enable")
+            .jsonBody(rawRequestBody)
             .respondWith()
             .statusCode(404)
             .jsonBody(rawResponseBody)
@@ -513,11 +567,12 @@ describe("MonitorsClient", () => {
     test("enableMonitor (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
+        const rawRequestBody = {};
         const rawResponseBody = {};
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/enable")
+            .jsonBody(rawRequestBody)
             .respondWith()
             .statusCode(422)
             .jsonBody(rawResponseBody)
@@ -535,17 +590,20 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            total_monitors: 3,
+            total: 3,
+            page: 1,
+            page_size: 100,
+            total_pages: 1,
             monitors: [
                 {
                     monitor_id: "7f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d",
-                    reference_job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
-                    reference_job_query: "AI company acquisitions",
+                    reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+                    reference_job_query: "Series B funding rounds for SaaS startups",
                     enabled: true,
                     schedule: "0 12 * * *",
-                    schedule_human_readable: "Every 24 hours",
+                    schedule_human_readable: "Every day at 12 PM",
                     timezone: "UTC",
-                    created_at: "2025-10-23T14:30:00Z",
+                    created_at: "2026-02-24T14:00:00Z",
                     webhook: { url: "url" },
                 },
             ],
@@ -554,17 +612,20 @@ describe("MonitorsClient", () => {
 
         const response = await client.monitors.listMonitors();
         expect(response).toEqual({
-            total_monitors: 3,
+            total: 3,
+            page: 1,
+            page_size: 100,
+            total_pages: 1,
             monitors: [
                 {
                     monitor_id: "7f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d",
-                    reference_job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
-                    reference_job_query: "AI company acquisitions",
+                    reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+                    reference_job_query: "Series B funding rounds for SaaS startups",
                     enabled: true,
                     schedule: "0 12 * * *",
-                    schedule_human_readable: "Every 24 hours",
+                    schedule_human_readable: "Every day at 12 PM",
                     timezone: "UTC",
-                    created_at: "2025-10-23T14:30:00Z",
+                    created_at: "2026-02-24T14:00:00Z",
                     webhook: {
                         url: "url",
                     },

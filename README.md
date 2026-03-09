@@ -1,9 +1,9 @@
-# Newscatcher TypeScript Library
+# Newscatcher CatchAll TypeScript Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2FNewscatcher%2Fnewscatcher-catchall-typescript)
 [![npm shield](https://img.shields.io/npm/v/newscatcher-catchall-sdk)](https://www.npmjs.com/package/newscatcher-catchall-sdk)
 
-The Newscatcher TypeScript library provides convenient access to the Newscatcher APIs from TypeScript.
+The Newscatcher CatchAll TypeScript library provides convenient access to the Web Search APIs from TypeScript.
 
 ## Table of Contents
 
@@ -22,13 +22,12 @@ The Newscatcher TypeScript library provides convenient access to the Newscatcher
   - [Access Raw Response Data](#access-raw-response-data)
   - [Logging](#logging)
   - [Runtime Compatibility](#runtime-compatibility)
-- [Beta Status](#beta-status)
 - [Contributing](#contributing)
 - [Support](#support)
 
 ## Documentation
 
-API reference documentation is available [here](https://www.newscatcherapi.com/docs/v3/catch-all/endpoints/create-job).
+API reference documentation is available [here](https://www.newscatcherapi.com/docs/web-search-api/api-reference/jobs/initialize-job).
 
 ## Installation
 
@@ -270,10 +269,6 @@ const client = new CatchAllApiClient({
 });
 ```
 
-## Beta status
-
-CatchAll API is in beta. Breaking changes may occur in minor version updates. See the [Changelog](https://www.newscatcherapi.com/docs/v3/catch-all/overview/changelog) for updates.
-
 ## Contributing
 
 While we value open-source contributions to this SDK, this library is generated programmatically.
@@ -285,5 +280,5 @@ an issue first to discuss with us!
 On the other hand, contributions to the README are always very welcome!
 ## Support
 
-- Documentation: [https://www.newscatcherapi.com/docs/v3/catch-all](https://www.newscatcherapi.com/docs/v3/catch-all)
+- Documentation: [www.newscatcherapi.com/docs/web-search-api](https://www.newscatcherapi.com/docs/web-search-api/get-started/introduction)
 - Support: <support@newscatcherapi.com>
