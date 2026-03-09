@@ -3,6 +3,6 @@
 /**
  * Maximum number of records to return. If not specified, defaults to your plan limit.
  *
- * Use [`POST /catchAll/continue`](https://www.newscatcherapi.com/docs/v3/catch-all/endpoints/continue-job) to extend the limit after job completion without reprocessing.
+ * Use [`POST /catchAll/continue`](https://www.newscatcherapi.com/docs/web-search-api/api-reference/jobs/continue-job) to extend the limit after job completion without reprocessing.
  */
 export type Limit = number;

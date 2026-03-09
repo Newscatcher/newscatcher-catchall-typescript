@@ -4,13 +4,13 @@ export interface WebhookDto {
     /** Webhook endpoint URL. */
     url: string;
     /** HTTP method to use. */
-    method?: WebhookDto.Method;
+    method?: WebhookDto.Method | undefined;
     /** HTTP headers to include in request. */
-    headers?: Record<string, string>;
+    headers?: Record<string, string> | undefined;
     /** Query string parameters. */
-    params?: Record<string, unknown>;
+    params?: Record<string, unknown> | undefined;
     /** Basic auth credentials [username, password]. */
-    auth?: string[];
+    auth?: string[] | undefined;
 }
 
 export namespace WebhookDto {

@@ -2,7 +2,7 @@
 
 export interface CreateMonitorResponseDto {
     /** Monitor ID if successful, null if error. */
-    monitor_id?: string;
+    monitor_id?: (string | null) | undefined;
     /** Creation status or error message */
     status: string;
 }

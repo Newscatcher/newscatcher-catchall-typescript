@@ -5,15 +5,15 @@
  *
  * - `submitted`: Job queued, waiting to start processing.
  * - `analyzing`: Extracting keywords, generating search queries, and creating validators/extractors.
- * - `fetching`: Retrieving articles from web sources.
- * - `clustering`: Grouping similar articles into distinct events.
+ * - `fetching`: Retrieving web pages.
+ * - `clustering`: Grouping similar web pages into clusters.
  * - `enriching`: Validating clusters and extracting structured data.
  * - `completed`: Job finished successfully, results ready.
  * - `failed`: Job processing failed.
  *
  * Poll `/catchAll/status/{job_id}` every 30-60 seconds until status is `completed` (typically 10-15 minutes).
  */
-export const JobStatus = {
+export const PublicJobStatus = {
     Submitted: "submitted",
     Analyzing: "analyzing",
     Fetching: "fetching",
@@ -22,4 +22,4 @@ export const JobStatus = {
     Completed: "completed",
     Failed: "failed",
 } as const;
-export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
+export type PublicJobStatus = (typeof PublicJobStatus)[keyof typeof PublicJobStatus];

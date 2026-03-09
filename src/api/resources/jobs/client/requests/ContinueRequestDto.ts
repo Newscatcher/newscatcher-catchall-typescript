@@ -3,13 +3,13 @@
 /**
  * @example
  *     {
- *         job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+ *         job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
  *         new_limit: 100
  *     }
  */
 export interface ContinueRequestDto {
     /** Job identifier of the completed job to continue. */
     job_id: string;
-    /** New record limit for continued processing. Must be greater than the previous limit. */
-    new_limit: number;
+    /** New record limit for continued processing. Must be greater than the previous limit. If not provided, defaults to the plan maximum. */
+    new_limit?: number;
 }

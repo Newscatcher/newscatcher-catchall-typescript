@@ -26,9 +26,7 @@ export class JobsClient {
     }
 
     /**
-     * Get suggested validators, enrichments, and date ranges for a query before submitting a job.
-     *
-     * Returns LLM-generated suggestions based on query analysis and validates against plan limits.
+     * Get suggested validators, enrichments, and date ranges for a query.
      *
      * @param {CatchAllApi.InitializeRequestDto} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -38,7 +36,8 @@ export class JobsClient {
      *
      * @example
      *     await client.jobs.initialize({
-     *         query: "AI company acquisitions in fintech last week"
+     *         query: "Series B funding rounds for SaaS startups",
+     *         context: "Focus on funding amount and company name"
      *     })
      */
     public initialize(
@@ -106,10 +105,7 @@ export class JobsClient {
     }
 
     /**
-     * Submit a natural language query to create a new processing job.
-     *
-     * Optionally specify context, date ranges, limit, custom validators, and enrichments.
-     * If dates exceed plan limits, returns 400 error.
+     * Submit a query to create a new processing job.
      *
      * @param {CatchAllApi.SubmitRequestDto} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -120,24 +116,24 @@ export class JobsClient {
      *
      * @example
      *     await client.jobs.createJob({
-     *         query: "AI company acquisitions",
-     *         context: "Focus on deal size and acquiring company details",
+     *         query: "Series B funding rounds for SaaS startups",
+     *         context: "Focus on funding amount and company name",
      *         limit: 10,
-     *         start_date: "2026-01-30T00:00:00Z",
-     *         end_date: "2026-02-05T00:00:00Z"
+     *         start_date: "2026-02-18T00:00:00Z",
+     *         end_date: "2026-02-23T00:00:00Z"
      *     })
      */
     public createJob(
         request: CatchAllApi.SubmitRequestDto,
         requestOptions?: JobsClient.RequestOptions,
-    ): core.HttpResponsePromise<CatchAllApi.SubmitResponseBody> {
+    ): core.HttpResponsePromise<CatchAllApi.SubmitResponseDto> {
         return core.HttpResponsePromise.fromPromise(this.__createJob(request, requestOptions));
     }
 
     private async __createJob(
         request: CatchAllApi.SubmitRequestDto,
         requestOptions?: JobsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<CatchAllApi.SubmitResponseBody>> {
+    ): Promise<core.WithRawResponse<CatchAllApi.SubmitResponseDto>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -164,7 +160,7 @@ export class JobsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as CatchAllApi.SubmitResponseBody, rawResponse: _response.rawResponse };
+            return { data: _response.body as CatchAllApi.SubmitResponseDto, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -208,7 +204,7 @@ export class JobsClient {
      *
      * @example
      *     await client.jobs.continueJob({
-     *         job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3",
+     *         job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
      *         new_limit: 100
      *     })
      */
@@ -292,7 +288,7 @@ export class JobsClient {
      *
      * @example
      *     await client.jobs.getJobStatus({
-     *         job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3"
+     *         job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c"
      *     })
      */
     public getJobStatus(
@@ -371,14 +367,14 @@ export class JobsClient {
     public getUserJobs(
         request: CatchAllApi.GetUserJobsRequest = {},
         requestOptions?: JobsClient.RequestOptions,
-    ): core.HttpResponsePromise<CatchAllApi.ListUserJobsResponseDto[]> {
+    ): core.HttpResponsePromise<CatchAllApi.ListUserJobsResponseDto> {
         return core.HttpResponsePromise.fromPromise(this.__getUserJobs(request, requestOptions));
     }
 
     private async __getUserJobs(
         request: CatchAllApi.GetUserJobsRequest = {},
         requestOptions?: JobsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<CatchAllApi.ListUserJobsResponseDto[]>> {
+    ): Promise<core.WithRawResponse<CatchAllApi.ListUserJobsResponseDto>> {
         const { page, page_size: pageSize } = request;
         const _queryParams: Record<string, unknown> = {
             page,
@@ -407,10 +403,7 @@ export class JobsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as CatchAllApi.ListUserJobsResponseDto[],
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as CatchAllApi.ListUserJobsResponseDto, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -443,7 +436,7 @@ export class JobsClient {
      *
      * @example
      *     await client.jobs.getJobResults({
-     *         job_id: "af7a26d6-cf0b-458c-a6ed-4b6318c74da3"
+     *         job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c"
      *     })
      */
     public getJobResults(
