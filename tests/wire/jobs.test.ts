@@ -49,6 +49,7 @@ describe("JobsClient", () => {
             end_date: "2026-02-24T00:00:00Z",
             date_modification_message: ["No dates were provided; using a default window of 5 days."],
         };
+
         server
             .mockEndpoint()
             .post("/catchAll/initialize")
@@ -110,6 +111,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/initialize")
@@ -131,6 +133,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/initialize")
@@ -158,6 +161,7 @@ describe("JobsClient", () => {
             end_date: "2026-02-23T00:00:00Z",
         };
         const rawResponseBody = { job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c" };
+
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -184,6 +188,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -205,6 +210,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -226,6 +232,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -252,6 +259,7 @@ describe("JobsClient", () => {
             new_limit: 100,
             status: "accepted",
         };
+
         server
             .mockEndpoint()
             .post("/catchAll/continue")
@@ -278,6 +286,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/continue")
@@ -299,6 +308,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/continue")
@@ -320,6 +330,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/continue")
@@ -353,6 +364,7 @@ describe("JobsClient", () => {
                 { status: "failed", order: 7, completed: false },
             ],
         };
+
         server
             .mockEndpoint()
             .get("/catchAll/status/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
@@ -412,6 +424,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/status/job_id")
@@ -432,6 +445,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/status/job_id")
@@ -471,6 +485,7 @@ describe("JobsClient", () => {
                 },
             ],
         };
+
         server
             .mockEndpoint()
             .get("/catchAll/jobs/user")
@@ -507,6 +522,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/jobs/user")
@@ -579,6 +595,7 @@ describe("JobsClient", () => {
                 },
             ],
         };
+
         server
             .mockEndpoint()
             .get("/catchAll/pull/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
@@ -661,6 +678,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/pull/job_id")
@@ -681,6 +699,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/pull/job_id")
