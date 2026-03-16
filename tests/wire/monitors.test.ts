@@ -23,6 +23,7 @@ describe("MonitorsClient", () => {
             monitor_id: "7f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d",
             status: "Monitor Created Successfully",
         };
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/create")
@@ -56,6 +57,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { reference_job_id: "reference_job_id", schedule: "schedule" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/create")
@@ -87,6 +89,7 @@ describe("MonitorsClient", () => {
             monitor_id: "3fec5b07-8786-46d7-9486-d43ff67eccd4",
             status: "Monitor updated Successfully",
         };
+
         server
             .mockEndpoint()
             .patch("/catchAll/monitors/monitor_id")
@@ -117,6 +120,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .patch("/catchAll/monitors/monitor_id")
@@ -138,6 +142,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .patch("/catchAll/monitors/monitor_id")
@@ -159,6 +164,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .patch("/catchAll/monitors/monitor_id")
@@ -185,6 +191,7 @@ describe("MonitorsClient", () => {
             total_jobs: 1,
             jobs: [{ job_id: "job_id", start_date: "2025-11-14T21:00:00Z", end_date: "2025-11-15T00:00:00Z" }],
         };
+
         server
             .mockEndpoint()
             .get("/catchAll/monitors/monitor_id/jobs")
@@ -215,6 +222,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/monitors/monitor_id/jobs")
@@ -235,6 +243,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/monitors/monitor_id/jobs")
@@ -303,6 +312,7 @@ describe("MonitorsClient", () => {
             ],
             limit: 100,
         };
+
         server
             .mockEndpoint()
             .get("/catchAll/monitors/pull/monitor_id")
@@ -379,6 +389,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/monitors/pull/monitor_id")
@@ -399,6 +410,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/monitors/pull/monitor_id")
@@ -419,6 +431,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = { success: true, message: "Monitor disabled successfully.", monitor_id: "monitor_id" };
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/disable")
@@ -442,6 +455,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/disable")
@@ -462,6 +476,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/disable")
@@ -482,6 +497,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/disable")
@@ -502,6 +518,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { backfill: true };
         const rawResponseBody = { success: true, message: "Monitor enabled successfully.", monitor_id: "monitor_id" };
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/enable")
@@ -527,6 +544,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/enable")
@@ -548,6 +566,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/enable")
@@ -569,6 +588,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/monitors/monitor_id/enable")
@@ -608,6 +628,7 @@ describe("MonitorsClient", () => {
                 },
             ],
         };
+
         server.mockEndpoint().get("/catchAll/monitors").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
         const response = await client.monitors.listMonitors();
@@ -639,6 +660,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server.mockEndpoint().get("/catchAll/monitors").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -651,6 +673,7 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server.mockEndpoint().get("/catchAll/monitors").respondWith().statusCode(422).jsonBody(rawResponseBody).build();
 
         await expect(async () => {

@@ -9,6 +9,7 @@ describe("MetaClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = { healthy: true };
+
         server.mockEndpoint().get("/health").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
         const response = await client.meta.healthCheck();
@@ -22,6 +23,7 @@ describe("MetaClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = { version: "1.1.2" };
+
         server.mockEndpoint().get("/version").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
         const response = await client.meta.getVersion();
