@@ -1,9 +1,9 @@
-# Newscatcher CatchAll TypeScript Library
+# Newscatcher TypeScript Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2FNewscatcher%2Fnewscatcher-catchall-typescript)
 [![npm shield](https://img.shields.io/npm/v/newscatcher-catchall-sdk)](https://www.npmjs.com/package/newscatcher-catchall-sdk)
 
-The Newscatcher CatchAll TypeScript library provides convenient access to the Web Search APIs from TypeScript.
+The Newscatcher TypeScript library provides convenient access to the Newscatcher APIs from TypeScript.
 
 ## Table of Contents
 
@@ -14,6 +14,7 @@ The Newscatcher CatchAll TypeScript library provides convenient access to the We
 - [Request and Response Types](#request-and-response-types)
 - [Exception Handling](#exception-handling)
 - [Advanced](#advanced)
+  - [Subpackage Exports](#subpackage-exports)
   - [Additional Headers](#additional-headers)
   - [Additional Query String Parameters](#additional-query-string-parameters)
   - [Retries](#retries)
@@ -21,6 +22,7 @@ The Newscatcher CatchAll TypeScript library provides convenient access to the We
   - [Aborting Requests](#aborting-requests)
   - [Access Raw Response Data](#access-raw-response-data)
   - [Logging](#logging)
+  - [Custom Fetch](#custom-fetch)
   - [Runtime Compatibility](#runtime-compatibility)
 - [Contributing](#contributing)
 - [Support](#support)
@@ -48,11 +50,12 @@ import { CatchAllApiClient } from "newscatcher-catchall-sdk";
 
 const client = new CatchAllApiClient({ apiKey: "YOUR_API_KEY" });
 await client.jobs.createJob({
-    query: "AI company acquisitions",
-    context: "Focus on deal size and acquiring company details",
+    query: "Series B funding rounds for SaaS startups",
+    context: "Focus on funding amount and company name",
     limit: 10,
-    start_date: "2026-01-30T00:00:00Z",
-    end_date: "2026-02-05T00:00:00Z"
+    start_date: "2026-02-18T00:00:00Z",
+    end_date: "2026-02-23T00:00:00Z",
+    mode: "base"
 });
 ```
 
@@ -90,6 +93,16 @@ try {
 ```
 
 ## Advanced
+
+### Subpackage Exports
+
+This SDK supports direct imports of subpackage clients, which allows JavaScript bundlers to tree-shake and include only the imported subpackage code. This results in much smaller bundle sizes.
+
+```typescript
+import { JobsClient } from 'newscatcher-catchall-sdk/jobs';
+
+const client = new JobsClient({...});
+```
 
 ### Additional Headers
 
@@ -241,6 +254,26 @@ const logger: logging.ILogger = {
 </details>
 
 
+### Custom Fetch
+
+The SDK provides a low-level `fetch` method for making custom HTTP requests while still
+benefiting from SDK-level configuration like authentication, retries, timeouts, and logging.
+This is useful for calling API endpoints not yet supported in the SDK.
+
+```typescript
+const response = await client.fetch("/v1/custom/endpoint", {
+    method: "GET",
+}, {
+    timeoutInSeconds: 30,
+    maxRetries: 3,
+    headers: {
+        "X-Custom-Header": "custom-value",
+    },
+});
+
+const data = await response.json();
+```
+
 ### Runtime Compatibility
 
 
@@ -255,19 +288,6 @@ The SDK works in the following runtimes:
 - Bun 1.0+
 - React Native
 
-### Customizing Fetch Client
-
-The SDK provides a way for you to customize the underlying HTTP client / Fetch function. If you're running in an
-unsupported environment, this provides a way for you to break glass and ensure the SDK works.
-
-```typescript
-import { CatchAllApiClient } from "newscatcher-catchall-sdk";
-
-const client = new CatchAllApiClient({
-    ...
-    fetcher: // provide your implementation here
-});
-```
 
 ## Contributing
 
@@ -282,3 +302,4 @@ On the other hand, contributions to the README are always very welcome!
 
 - Documentation: [www.newscatcherapi.com/docs/web-search-api](https://www.newscatcherapi.com/docs/web-search-api/get-started/introduction)
 - Support: <support@newscatcherapi.com>
+

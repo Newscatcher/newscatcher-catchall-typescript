@@ -9,4 +9,17 @@ export interface UserJob {
     created_at: string;
     /** Current processing status of the job. */
     status: string;
+    /** Processing mode used for this job. */
+    mode?: UserJob.Mode | undefined;
+    /** Masked API key that created this job. */
+    user_key?: string | undefined;
+}
+
+export namespace UserJob {
+    /** Processing mode used for this job. */
+    export const Mode = {
+        Lite: "lite",
+        Base: "base",
+    } as const;
+    export type Mode = (typeof Mode)[keyof typeof Mode];
 }
