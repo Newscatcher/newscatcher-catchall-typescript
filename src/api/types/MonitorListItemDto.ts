@@ -19,6 +19,8 @@ export interface MonitorListItemDto {
     timezone?: string | undefined;
     /** The date when the monitor was created. */
     created_at?: string | undefined;
-    /** Webhook configuration for this monitor (if set). */
-    webhook?: CatchAllApi.WebhookDto | undefined;
+    /** Webhook configuration for this monitor, or null if not set. */
+    webhook?: (CatchAllApi.WebhookDto | null) | undefined;
+    /** Masked API key associated with this monitor. */
+    user_key?: string | undefined;
 }

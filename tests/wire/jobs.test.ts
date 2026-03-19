@@ -49,6 +49,7 @@ describe("JobsClient", () => {
             end_date: "2026-02-24T00:00:00Z",
             date_modification_message: ["No dates were provided; using a default window of 5 days."],
         };
+
         server
             .mockEndpoint()
             .post("/catchAll/initialize")
@@ -110,6 +111,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/initialize")
@@ -131,6 +133,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/initialize")
@@ -156,8 +159,10 @@ describe("JobsClient", () => {
             limit: 10,
             start_date: "2026-02-18T00:00:00Z",
             end_date: "2026-02-23T00:00:00Z",
+            mode: "base",
         };
         const rawResponseBody = { job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c" };
+
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -173,6 +178,7 @@ describe("JobsClient", () => {
             limit: 10,
             start_date: "2026-02-18T00:00:00Z",
             end_date: "2026-02-23T00:00:00Z",
+            mode: "base",
         });
         expect(response).toEqual({
             job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
@@ -184,6 +190,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -205,6 +212,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -226,6 +234,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/submit")
@@ -252,6 +261,7 @@ describe("JobsClient", () => {
             new_limit: 100,
             status: "accepted",
         };
+
         server
             .mockEndpoint()
             .post("/catchAll/continue")
@@ -278,6 +288,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/continue")
@@ -299,6 +310,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/continue")
@@ -320,6 +332,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { job_id: "job_id" };
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .post("/catchAll/continue")
@@ -353,6 +366,7 @@ describe("JobsClient", () => {
                 { status: "failed", order: 7, completed: false },
             ],
         };
+
         server
             .mockEndpoint()
             .get("/catchAll/status/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
@@ -412,6 +426,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/status/job_id")
@@ -432,6 +447,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/status/job_id")
@@ -462,15 +478,20 @@ describe("JobsClient", () => {
                     query: "Series B funding rounds for SaaS startups",
                     created_at: "2026-02-24T13:57:56Z",
                     status: "completed",
+                    mode: "base",
+                    user_key: "***...a1b2",
                 },
                 {
                     job_id: "8d618890-f9f5-4c97-af17-236136a306a7",
                     query: "Corporate headquarters relocations in the US",
                     created_at: "2026-02-18T20:25:20Z",
                     status: "completed",
+                    mode: "base",
+                    user_key: "***...a1b2",
                 },
             ],
         };
+
         server
             .mockEndpoint()
             .get("/catchAll/jobs/user")
@@ -491,12 +512,16 @@ describe("JobsClient", () => {
                     query: "Series B funding rounds for SaaS startups",
                     created_at: "2026-02-24T13:57:56Z",
                     status: "completed",
+                    mode: "base",
+                    user_key: "***...a1b2",
                 },
                 {
                     job_id: "8d618890-f9f5-4c97-af17-236136a306a7",
                     query: "Corporate headquarters relocations in the US",
                     created_at: "2026-02-18T20:25:20Z",
                     status: "completed",
+                    mode: "base",
+                    user_key: "***...a1b2",
                 },
             ],
         });
@@ -507,6 +532,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/jobs/user")
@@ -528,17 +554,8 @@ describe("JobsClient", () => {
             job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             query: "Series B funding rounds for SaaS startups",
             context: "Focus on funding amount and company name",
-            validators: ["is_series_b_funding", "is_saas_startup"],
-            enrichments: [
-                "enrichment_confidence",
-                "funding_amount",
-                "funding_currency",
-                "funding_date",
-                "investee_company",
-                "investor_company",
-                "valuation",
-                "other_investors",
-            ],
+            validators: [{ key: "value" }],
+            enrichments: [{ key: "value" }],
             status: "completed",
             limit: 10,
             duration: "1m",
@@ -549,6 +566,7 @@ describe("JobsClient", () => {
             page: 1,
             page_size: 2,
             total_pages: 2,
+            mode: "base",
             all_records: [
                 {
                     record_id: "6983973854314692457",
@@ -579,6 +597,7 @@ describe("JobsClient", () => {
                 },
             ],
         };
+
         server
             .mockEndpoint()
             .get("/catchAll/pull/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
@@ -594,16 +613,15 @@ describe("JobsClient", () => {
             job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             query: "Series B funding rounds for SaaS startups",
             context: "Focus on funding amount and company name",
-            validators: ["is_series_b_funding", "is_saas_startup"],
+            validators: [
+                {
+                    key: "value",
+                },
+            ],
             enrichments: [
-                "enrichment_confidence",
-                "funding_amount",
-                "funding_currency",
-                "funding_date",
-                "investee_company",
-                "investor_company",
-                "valuation",
-                "other_investors",
+                {
+                    key: "value",
+                },
             ],
             status: "completed",
             limit: 10,
@@ -618,6 +636,7 @@ describe("JobsClient", () => {
             page: 1,
             page_size: 2,
             total_pages: 2,
+            mode: "base",
             all_records: [
                 {
                     record_id: "6983973854314692457",
@@ -661,6 +680,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/pull/job_id")
@@ -681,6 +701,7 @@ describe("JobsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {};
+
         server
             .mockEndpoint()
             .get("/catchAll/pull/job_id")

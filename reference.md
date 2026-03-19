@@ -98,7 +98,8 @@ await client.jobs.createJob({
     context: "Focus on funding amount and company name",
     limit: 10,
     start_date: "2026-02-18T00:00:00Z",
-    end_date: "2026-02-23T00:00:00Z"
+    end_date: "2026-02-23T00:00:00Z",
+    mode: "base"
 });
 
 ```
@@ -950,6 +951,61 @@ Returns current API version.
 
 ```typescript
 await client.meta.getVersion();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `MetaClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.meta.<a href="/src/api/resources/meta/client/Client.ts">getPlanLimits</a>() -> CatchAllApi.GetPlanLimitsResponseDto</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns plan features and current usage for the authenticated organization.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.meta.getPlanLimits();
 
 ```
 </dd>

@@ -9,7 +9,8 @@ import type * as CatchAllApi from "../../../../index.js";
  *         context: "Focus on funding amount and company name",
  *         limit: 10,
  *         start_date: "2026-02-18T00:00:00Z",
- *         end_date: "2026-02-23T00:00:00Z"
+ *         end_date: "2026-02-23T00:00:00Z",
+ *         mode: "base"
  *     }
  */
 export interface SubmitRequestDto {
@@ -30,4 +31,25 @@ export interface SubmitRequestDto {
      * If not provided, enrichments are generated automatically based on the query.
      */
     enrichments?: CatchAllApi.EnrichmentSchema[];
+    /**
+     * Job processing mode.
+     *
+     * - `base`: Full pipeline with validation and enrichment.
+     * - `lite`: Lightweight extraction with faster processing. Returns titles and citations only.
+     */
+    mode?: SubmitRequestDto.Mode;
+}
+
+export namespace SubmitRequestDto {
+    /**
+     * Job processing mode.
+     *
+     * - `base`: Full pipeline with validation and enrichment.
+     * - `lite`: Lightweight extraction with faster processing. Returns titles and citations only.
+     */
+    export const Mode = {
+        Lite: "lite",
+        Base: "base",
+    } as const;
+    export type Mode = (typeof Mode)[keyof typeof Mode];
 }
