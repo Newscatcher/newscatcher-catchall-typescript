@@ -120,7 +120,8 @@ export class JobsClient {
      *         context: "Focus on funding amount and company name",
      *         limit: 10,
      *         start_date: "2026-02-18T00:00:00Z",
-     *         end_date: "2026-02-23T00:00:00Z"
+     *         end_date: "2026-02-23T00:00:00Z",
+     *         mode: "base"
      *     })
      */
     public createJob(
