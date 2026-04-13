@@ -2,10 +2,9 @@
 
 import type * as core from "../../core/index.js";
 import * as errors from "../../errors/index.js";
-import type * as CatchAllApi from "../index.js";
 
 export class BadRequestError extends errors.CatchAllApiError {
-    constructor(body: CatchAllApi.Error_, rawResponse?: core.RawResponse) {
+    constructor(body?: unknown, rawResponse?: core.RawResponse) {
         super({
             message: "BadRequestError",
             statusCode: 400,
