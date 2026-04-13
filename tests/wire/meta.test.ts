@@ -14,9 +14,7 @@ describe("MetaClient", () => {
         server.mockEndpoint().get("/health").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
         const response = await client.meta.healthCheck();
-        expect(response).toEqual({
-            healthy: true,
-        });
+        expect(response).toEqual(rawResponseBody);
     });
 
     test("getVersion", async () => {
@@ -28,9 +26,7 @@ describe("MetaClient", () => {
         server.mockEndpoint().get("/version").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
         const response = await client.meta.getVersion();
-        expect(response).toEqual({
-            version: "1.3.1",
-        });
+        expect(response).toEqual(rawResponseBody);
     });
 
     test("getPlanLimits (1)", async () => {
@@ -72,31 +68,7 @@ describe("MetaClient", () => {
             .build();
 
         const response = await client.meta.getPlanLimits();
-        expect(response).toEqual({
-            features: [
-                {
-                    name: "Jobs Concurrency",
-                    code: "Jobs_Concurrency",
-                    value_type: "integer",
-                    value: 20,
-                    current_usage: 1,
-                },
-                {
-                    name: "Max Results",
-                    code: "Job_Max_Results",
-                    value_type: "integer",
-                    value: 100000,
-                    current_usage: 0,
-                },
-                {
-                    name: "Monthly Granted Credits",
-                    code: "monthly_free_credits",
-                    value_type: "integer",
-                    value: 200000,
-                    current_usage: 0,
-                },
-            ],
-        });
+        expect(response).toEqual(rawResponseBody);
     });
 
     test("getPlanLimits (2)", async () => {
