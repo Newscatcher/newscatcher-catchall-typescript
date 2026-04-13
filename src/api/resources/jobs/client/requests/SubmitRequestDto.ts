@@ -38,6 +38,12 @@ export interface SubmitRequestDto {
      * - `lite`: Lightweight extraction with faster processing. Returns titles and citations only.
      */
     mode?: SubmitRequestDto.Mode;
+    /**
+     * Dataset IDs to connect to this job. When provided, activates Company Search mode — the job returns only events relevant to companies in the connected datasets with each record including a `connected_entities` array scored per company.
+     *
+     * The dataset must have `latest_status: ready` before the job is submitted. Submitting with a non-existent or inaccessible dataset ID returns `400`.
+     */
+    connected_dataset_ids?: string[];
 }
 
 export namespace SubmitRequestDto {
