@@ -5,4 +5,9 @@ import type * as CatchAllApi from "../index.js";
 export interface Record_ extends CatchAllApi.BaseRecord {
     /** Source documents that were used to extract this record. */
     citations: CatchAllApi.Citation[];
+    /**
+     * Entities from the connected dataset that are relevant to this record.
+     * Only present when the job was submitted with `connected_dataset_ids`.
+     */
+    connected_entities?: CatchAllApi.ConnectedEntity[] | undefined;
 }

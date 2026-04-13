@@ -26,6 +26,78 @@ export class JobsClient {
     }
 
     /**
+     * Returns all jobs created by the authenticated user.
+     *
+     * @param {CatchAllApi.GetUserJobsRequest} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.ForbiddenError}
+     *
+     * @example
+     *     await client.jobs.getUserJobs()
+     */
+    public getUserJobs(
+        request: CatchAllApi.GetUserJobsRequest = {},
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.ListUserJobsResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__getUserJobs(request, requestOptions));
+    }
+
+    private async __getUserJobs(
+        request: CatchAllApi.GetUserJobsRequest = {},
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.ListUserJobsResponseDto>> {
+        const { page, page_size: pageSize } = request;
+        const _queryParams: Record<string, unknown> = {
+            page,
+            page_size: pageSize,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                "catchAll/jobs/user",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as CatchAllApi.ListUserJobsResponseDto, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/catchAll/jobs/user");
+    }
+
+    /**
      * Get suggested validators, enrichments, and date ranges for a query.
      *
      * @param {CatchAllApi.InitializeRequestDto} request
@@ -167,10 +239,7 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new CatchAllApi.BadRequestError(
-                        _response.error.body as CatchAllApi.Error_,
-                        _response.rawResponse,
-                    );
+                    throw new CatchAllApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -191,91 +260,6 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/catchAll/submit");
-    }
-
-    /**
-     * Continue an existing job to process more records beyond the initial limit.
-     *
-     * @param {CatchAllApi.ContinueRequestDto} request
-     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link CatchAllApi.BadRequestError}
-     * @throws {@link CatchAllApi.ForbiddenError}
-     * @throws {@link CatchAllApi.UnprocessableEntityError}
-     *
-     * @example
-     *     await client.jobs.continueJob({
-     *         job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-     *         new_limit: 100
-     *     })
-     */
-    public continueJob(
-        request: CatchAllApi.ContinueRequestDto,
-        requestOptions?: JobsClient.RequestOptions,
-    ): core.HttpResponsePromise<CatchAllApi.ContinueResponseDto> {
-        return core.HttpResponsePromise.fromPromise(this.__continueJob(request, requestOptions));
-    }
-
-    private async __continueJob(
-        request: CatchAllApi.ContinueRequestDto,
-        requestOptions?: JobsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<CatchAllApi.ContinueResponseDto>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.CatchAllApiEnvironment.Default,
-                "catchAll/continue",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryParameters: requestOptions?.queryParams,
-            requestType: "json",
-            body: request,
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as CatchAllApi.ContinueResponseDto, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new CatchAllApi.BadRequestError(
-                        _response.error.body as CatchAllApi.Error_,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new CatchAllApi.ForbiddenError(
-                        _response.error.body as CatchAllApi.Error_,
-                        _response.rawResponse,
-                    );
-                case 422:
-                    throw new CatchAllApi.UnprocessableEntityError(
-                        _response.error.body as CatchAllApi.ValidationErrorResponse,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.CatchAllApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/catchAll/continue");
     }
 
     /**
@@ -352,78 +336,6 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/catchAll/status/{job_id}");
-    }
-
-    /**
-     * Returns all jobs created by the authenticated user.
-     *
-     * @param {CatchAllApi.GetUserJobsRequest} request
-     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link CatchAllApi.ForbiddenError}
-     *
-     * @example
-     *     await client.jobs.getUserJobs()
-     */
-    public getUserJobs(
-        request: CatchAllApi.GetUserJobsRequest = {},
-        requestOptions?: JobsClient.RequestOptions,
-    ): core.HttpResponsePromise<CatchAllApi.ListUserJobsResponseDto> {
-        return core.HttpResponsePromise.fromPromise(this.__getUserJobs(request, requestOptions));
-    }
-
-    private async __getUserJobs(
-        request: CatchAllApi.GetUserJobsRequest = {},
-        requestOptions?: JobsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<CatchAllApi.ListUserJobsResponseDto>> {
-        const { page, page_size: pageSize } = request;
-        const _queryParams: Record<string, unknown> = {
-            page,
-            page_size: pageSize,
-        };
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.CatchAllApiEnvironment.Default,
-                "catchAll/jobs/user",
-            ),
-            method: "GET",
-            headers: _headers,
-            queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as CatchAllApi.ListUserJobsResponseDto, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 403:
-                    throw new CatchAllApi.ForbiddenError(
-                        _response.error.body as CatchAllApi.Error_,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.CatchAllApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/catchAll/jobs/user");
     }
 
     /**
@@ -504,5 +416,87 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/catchAll/pull/{job_id}");
+    }
+
+    /**
+     * Continue an existing job to process more records beyond the initial limit.
+     *
+     * @param {CatchAllApi.ContinueRequestDto} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.jobs.continueJob({
+     *         job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+     *         new_limit: 100
+     *     })
+     */
+    public continueJob(
+        request: CatchAllApi.ContinueRequestDto,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.ContinueResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__continueJob(request, requestOptions));
+    }
+
+    private async __continueJob(
+        request: CatchAllApi.ContinueRequestDto,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.ContinueResponseDto>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                "catchAll/continue",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as CatchAllApi.ContinueResponseDto, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new CatchAllApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 422:
+                    throw new CatchAllApi.UnprocessableEntityError(
+                        _response.error.body as CatchAllApi.ValidationErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/catchAll/continue");
     }
 }

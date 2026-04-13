@@ -11,8 +11,10 @@ The Newscatcher TypeScript library provides convenient access to the Newscatcher
 - [Installation](#installation)
 - [Reference](#reference)
 - [Usage](#usage)
+- [Environments](#environments)
 - [Request and Response Types](#request-and-response-types)
 - [Exception Handling](#exception-handling)
+- [File Uploads](#file-uploads)
 - [Advanced](#advanced)
   - [Subpackage Exports](#subpackage-exports)
   - [Additional Headers](#additional-headers)
@@ -59,6 +61,18 @@ await client.jobs.createJob({
 });
 ```
 
+## Environments
+
+This SDK allows you to configure different environments for API requests.
+
+```typescript
+import { CatchAllApiClient, CatchAllApiEnvironment } from "newscatcher-catchall-sdk";
+
+const client = new CatchAllApiClient({
+    environment: CatchAllApiEnvironment.Default,
+});
+```
+
 ## Request and Response Types
 
 The SDK exports all request and response types as TypeScript interfaces. Simply import them with the
@@ -67,7 +81,7 @@ following namespace:
 ```typescript
 import { CatchAllApi } from "newscatcher-catchall-sdk";
 
-const request: CatchAllApi.InitializeRequestDto = {
+const request: CatchAllApi.GetUserJobsRequest = {
     ...
 };
 ```
@@ -91,6 +105,51 @@ try {
     }
 }
 ```
+
+## File Uploads
+
+You can upload files using the client:
+
+```typescript
+import { createReadStream } from "fs";
+import * as fs from "fs";
+import { CatchAllApiClient } from "newscatcher-catchall-sdk";
+
+const client = new CatchAllApiClient({ apiKey: "YOUR_API_KEY" });
+await client.datasets.createDatasetFromCsv({
+    file: fs.createReadStream("/path/to/your/file"),
+    name: "name"
+});
+```
+The client accepts a variety of types for file upload parameters:
+* Stream types: `fs.ReadStream`, `stream.Readable`, and `ReadableStream`
+* Buffered types: `Buffer`, `Blob`, `File`, `ArrayBuffer`, `ArrayBufferView`, and `Uint8Array`
+
+### Metadata
+
+You can configure metadata when uploading a file:
+```typescript
+const file: Uploadable.WithMetadata = {
+    data: createReadStream("path/to/file"),
+    filename: "my-file",       // optional
+    contentType: "audio/mpeg", // optional
+    contentLength: 1949,       // optional
+};
+```
+
+Alternatively, you can upload a file directly from a file path:
+```typescript
+const file : Uploadable.FromPath = {
+    path: "path/to/file",
+    filename: "my-file",        // optional
+    contentType: "audio/mpeg",  // optional
+    contentLength: 1949,        // optional
+};
+```
+
+The metadata is used to set the `Content-Length`, `Content-Type`, and `Content-Disposition` headers. If not provided, the client will attempt to determine them automatically.
+For example, `fs.ReadStream` has a `path` property which the SDK uses to retrieve the file size from the filesystem without loading it into memory.
+
 
 ## Advanced
 
@@ -302,4 +361,5 @@ On the other hand, contributions to the README are always very welcome!
 
 - Documentation: [www.newscatcherapi.com/docs/web-search-api](https://www.newscatcherapi.com/docs/web-search-api/get-started/introduction)
 - Support: <support@newscatcherapi.com>
+
 

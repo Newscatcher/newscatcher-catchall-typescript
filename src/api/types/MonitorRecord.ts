@@ -4,6 +4,7 @@ import type * as CatchAllApi from "../index.js";
 
 /**
  * Record with monitor-specific metadata. Used in monitor results and webhook payloads.
+ *
  * Includes timestamps tracking when records were added and updated, and citations include job tracking.
  */
 export interface MonitorRecord extends CatchAllApi.BaseRecord {

@@ -5,6 +5,66 @@ import { CatchAllApiClient } from "../../src/Client";
 import { mockServerPool } from "../mock-server/MockServerPool";
 
 describe("JobsClient", () => {
+    test("getUserJobs (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            total: 27,
+            page: 1,
+            page_size: 2,
+            total_pages: 14,
+            jobs: [
+                {
+                    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+                    query: "Series B funding rounds for SaaS startups",
+                    created_at: "2026-02-24T13:57:56Z",
+                    status: "completed",
+                    mode: "base",
+                    user_key: "***...a1b2",
+                },
+                {
+                    job_id: "8d618890-f9f5-4c97-af17-236136a306a7",
+                    query: "Corporate headquarters relocations in the US",
+                    created_at: "2026-02-18T20:25:20Z",
+                    status: "completed",
+                    mode: "base",
+                    user_key: "***...a1b2",
+                },
+            ],
+        };
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/jobs/user")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.getUserJobs();
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("getUserJobs (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/jobs/user")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getUserJobs();
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
     test("initialize (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
@@ -63,47 +123,7 @@ describe("JobsClient", () => {
             query: "Series B funding rounds for SaaS startups",
             context: "Focus on funding amount and company name",
         });
-        expect(response).toEqual({
-            query: "Series B funding rounds for SaaS startups",
-            context: "Focus on funding amount and company name",
-            validators: [
-                {
-                    name: "is_series_b_funding",
-                    description: "true if the web page describes a Series B funding round",
-                    type: "boolean",
-                },
-                {
-                    name: "is_saas_startup",
-                    description: "true if the company receiving funding is a SaaS startup",
-                    type: "boolean",
-                },
-            ],
-            enrichments: [
-                {
-                    name: "funding_amount",
-                    description: "Extract the amount of funding received in the Series B round",
-                    type: "number",
-                },
-                {
-                    name: "investee_company",
-                    description: "Extract the name of the SaaS startup receiving the funding",
-                    type: "company",
-                },
-                {
-                    name: "investor_company",
-                    description: "Extract the name of the lead investor",
-                    type: "company",
-                },
-                {
-                    name: "funding_date",
-                    description: "Extract the date when the funding round was announced",
-                    type: "date",
-                },
-            ],
-            start_date: "2026-02-19T00:00:00Z",
-            end_date: "2026-02-24T00:00:00Z",
-            date_modification_message: ["No dates were provided; using a default window of 5 days."],
-        });
+        expect(response).toEqual(rawResponseBody);
     });
 
     test("initialize (2)", async () => {
@@ -180,16 +200,14 @@ describe("JobsClient", () => {
             end_date: "2026-02-23T00:00:00Z",
             mode: "base",
         });
-        expect(response).toEqual({
-            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-        });
+        expect(response).toEqual(rawResponseBody);
     });
 
     test("createJob (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
-        const rawResponseBody = {};
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -251,6 +269,196 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
 
+    test("getJobStatus (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+            status: "completed",
+            steps: [
+                { status: "submitted", order: 1, completed: true },
+                { status: "analyzing", order: 2, completed: true },
+                { status: "fetching", order: 3, completed: true },
+                { status: "clustering", order: 4, completed: true },
+                { status: "enriching", order: 5, completed: true },
+                { status: "completed", order: 6, completed: true },
+                { status: "failed", order: 7, completed: false },
+            ],
+        };
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/status/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.getJobStatus({
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("getJobStatus (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/status/job_id")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getJobStatus({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("getJobStatus (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/status/job_id")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getJobStatus({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
+    test("getJobResults (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+            query: "Series B funding rounds for SaaS startups",
+            context: "Focus on funding amount and company name",
+            validators: [{ key: "value" }],
+            enrichments: [{ key: "value" }],
+            status: "completed",
+            limit: 10,
+            duration: "1m",
+            candidate_records: 4,
+            valid_records: 3,
+            progress_validated: 4,
+            date_range: { start_date: "2026-02-18T00:00:00Z", end_date: "2026-02-23T00:00:00Z" },
+            page: 1,
+            page_size: 2,
+            total_pages: 2,
+            mode: "base",
+            all_records: [
+                {
+                    record_id: "6983973854314692457",
+                    record_title: "VulnCheck Raises $25M Series B Funding",
+                    enrichment: {
+                        funding_amount: 25000000,
+                        funding_currency: "USD",
+                        funding_date: "2026-02-17",
+                        investee_company: {
+                            source_text: "VulnCheck",
+                            confidence: 0.99,
+                            metadata: { name: "VulnCheck", domain_url: "vulncheck.com", domain_url_confidence: "high" },
+                        },
+                        investor_company: {
+                            source_text: "Sorenson Capital",
+                            confidence: 0.99,
+                            metadata: { name: "Sorenson Capital" },
+                        },
+                        enrichment_confidence: "high",
+                    },
+                    citations: [
+                        {
+                            title: "VulnCheck raises $25M Series B",
+                            link: "https://www.msn.com/en-us/money/other/exclusive-vulncheck-raises-25m-funding-to-help-companies-patch-software-bugs/ar-AA1WwdjW",
+                            published_date: "2026-02-17T14:01:05Z",
+                        },
+                    ],
+                    connected_entities: [
+                        {
+                            entity_id: "e1f2a3b4-c5d6-7890-abcd-ef1234567890",
+                            name: "Tesla",
+                            ed_score: 8,
+                            relation: "Lucid Gravity is positioned as a direct competitor to the Tesla Model X.",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/pull/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.getJobResults({
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("getJobResults (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/pull/job_id")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getJobResults({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("getJobResults (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/pull/job_id")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getJobResults({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
     test("continueJob (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
@@ -275,19 +483,14 @@ describe("JobsClient", () => {
             job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             new_limit: 100,
         });
-        expect(response).toEqual({
-            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-            previous_limit: 10,
-            new_limit: 100,
-            status: "accepted",
-        });
+        expect(response).toEqual(rawResponseBody);
     });
 
     test("continueJob (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { job_id: "job_id" };
-        const rawResponseBody = {};
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -347,373 +550,5 @@ describe("JobsClient", () => {
                 job_id: "job_id",
             });
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
-    });
-
-    test("getJobStatus (1)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-            status: "completed",
-            steps: [
-                { status: "submitted", order: 1, completed: true },
-                { status: "analyzing", order: 2, completed: true },
-                { status: "fetching", order: 3, completed: true },
-                { status: "clustering", order: 4, completed: true },
-                { status: "enriching", order: 5, completed: true },
-                { status: "completed", order: 6, completed: true },
-                { status: "failed", order: 7, completed: false },
-            ],
-        };
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/status/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        const response = await client.jobs.getJobStatus({
-            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-        });
-        expect(response).toEqual({
-            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-            status: "completed",
-            steps: [
-                {
-                    status: "submitted",
-                    order: 1,
-                    completed: true,
-                },
-                {
-                    status: "analyzing",
-                    order: 2,
-                    completed: true,
-                },
-                {
-                    status: "fetching",
-                    order: 3,
-                    completed: true,
-                },
-                {
-                    status: "clustering",
-                    order: 4,
-                    completed: true,
-                },
-                {
-                    status: "enriching",
-                    order: 5,
-                    completed: true,
-                },
-                {
-                    status: "completed",
-                    order: 6,
-                    completed: true,
-                },
-                {
-                    status: "failed",
-                    order: 7,
-                    completed: false,
-                },
-            ],
-        });
-    });
-
-    test("getJobStatus (2)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {};
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/status/job_id")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.jobs.getJobStatus({
-                job_id: "job_id",
-            });
-        }).rejects.toThrow(CatchAllApi.ForbiddenError);
-    });
-
-    test("getJobStatus (3)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {};
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/status/job_id")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.jobs.getJobStatus({
-                job_id: "job_id",
-            });
-        }).rejects.toThrow(CatchAllApi.NotFoundError);
-    });
-
-    test("getUserJobs (1)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            total: 27,
-            page: 1,
-            page_size: 2,
-            total_pages: 14,
-            jobs: [
-                {
-                    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-                    query: "Series B funding rounds for SaaS startups",
-                    created_at: "2026-02-24T13:57:56Z",
-                    status: "completed",
-                    mode: "base",
-                    user_key: "***...a1b2",
-                },
-                {
-                    job_id: "8d618890-f9f5-4c97-af17-236136a306a7",
-                    query: "Corporate headquarters relocations in the US",
-                    created_at: "2026-02-18T20:25:20Z",
-                    status: "completed",
-                    mode: "base",
-                    user_key: "***...a1b2",
-                },
-            ],
-        };
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/jobs/user")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        const response = await client.jobs.getUserJobs();
-        expect(response).toEqual({
-            total: 27,
-            page: 1,
-            page_size: 2,
-            total_pages: 14,
-            jobs: [
-                {
-                    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-                    query: "Series B funding rounds for SaaS startups",
-                    created_at: "2026-02-24T13:57:56Z",
-                    status: "completed",
-                    mode: "base",
-                    user_key: "***...a1b2",
-                },
-                {
-                    job_id: "8d618890-f9f5-4c97-af17-236136a306a7",
-                    query: "Corporate headquarters relocations in the US",
-                    created_at: "2026-02-18T20:25:20Z",
-                    status: "completed",
-                    mode: "base",
-                    user_key: "***...a1b2",
-                },
-            ],
-        });
-    });
-
-    test("getUserJobs (2)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {};
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/jobs/user")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.jobs.getUserJobs();
-        }).rejects.toThrow(CatchAllApi.ForbiddenError);
-    });
-
-    test("getJobResults (1)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-            query: "Series B funding rounds for SaaS startups",
-            context: "Focus on funding amount and company name",
-            validators: [{ key: "value" }],
-            enrichments: [{ key: "value" }],
-            status: "completed",
-            limit: 10,
-            duration: "1m",
-            candidate_records: 4,
-            valid_records: 3,
-            progress_validated: 4,
-            date_range: { start_date: "2026-02-18T00:00:00Z", end_date: "2026-02-23T00:00:00Z" },
-            page: 1,
-            page_size: 2,
-            total_pages: 2,
-            mode: "base",
-            all_records: [
-                {
-                    record_id: "6983973854314692457",
-                    record_title: "VulnCheck Raises $25M Series B Funding",
-                    enrichment: {
-                        funding_amount: 25000000,
-                        funding_currency: "USD",
-                        funding_date: "2026-02-17",
-                        investee_company: {
-                            source_text: "VulnCheck",
-                            confidence: 0.99,
-                            metadata: { name: "VulnCheck", domain_url: "vulncheck.com", domain_url_confidence: "high" },
-                        },
-                        investor_company: {
-                            source_text: "Sorenson Capital",
-                            confidence: 0.99,
-                            metadata: { name: "Sorenson Capital" },
-                        },
-                        enrichment_confidence: "high",
-                    },
-                    citations: [
-                        {
-                            title: "VulnCheck raises $25M Series B",
-                            link: "https://www.msn.com/en-us/money/other/exclusive-vulncheck-raises-25m-funding-to-help-companies-patch-software-bugs/ar-AA1WwdjW",
-                            published_date: "2026-02-17T14:01:05Z",
-                        },
-                    ],
-                },
-            ],
-        };
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/pull/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        const response = await client.jobs.getJobResults({
-            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-        });
-        expect(response).toEqual({
-            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-            query: "Series B funding rounds for SaaS startups",
-            context: "Focus on funding amount and company name",
-            validators: [
-                {
-                    key: "value",
-                },
-            ],
-            enrichments: [
-                {
-                    key: "value",
-                },
-            ],
-            status: "completed",
-            limit: 10,
-            duration: "1m",
-            candidate_records: 4,
-            valid_records: 3,
-            progress_validated: 4,
-            date_range: {
-                start_date: "2026-02-18T00:00:00Z",
-                end_date: "2026-02-23T00:00:00Z",
-            },
-            page: 1,
-            page_size: 2,
-            total_pages: 2,
-            mode: "base",
-            all_records: [
-                {
-                    record_id: "6983973854314692457",
-                    record_title: "VulnCheck Raises $25M Series B Funding",
-                    enrichment: {
-                        enrichment_confidence: "high",
-                        funding_amount: 25000000,
-                        funding_currency: "USD",
-                        funding_date: "2026-02-17",
-                        investee_company: {
-                            source_text: "VulnCheck",
-                            confidence: 0.99,
-                            metadata: {
-                                name: "VulnCheck",
-                                domain_url: "vulncheck.com",
-                                domain_url_confidence: "high",
-                            },
-                        },
-                        investor_company: {
-                            source_text: "Sorenson Capital",
-                            confidence: 0.99,
-                            metadata: {
-                                name: "Sorenson Capital",
-                            },
-                        },
-                    },
-                    citations: [
-                        {
-                            title: "VulnCheck raises $25M Series B",
-                            link: "https://www.msn.com/en-us/money/other/exclusive-vulncheck-raises-25m-funding-to-help-companies-patch-software-bugs/ar-AA1WwdjW",
-                            published_date: "2026-02-17T14:01:05Z",
-                        },
-                    ],
-                },
-            ],
-        });
-    });
-
-    test("getJobResults (2)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {};
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/pull/job_id")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.jobs.getJobResults({
-                job_id: "job_id",
-            });
-        }).rejects.toThrow(CatchAllApi.ForbiddenError);
-    });
-
-    test("getJobResults (3)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {};
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/pull/job_id")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.jobs.getJobResults({
-                job_id: "job_id",
-            });
-        }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 });
