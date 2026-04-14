@@ -1,3 +1,7 @@
+export * from "./datasets/client/requests/index.js";
+export * as datasets from "./datasets/index.js";
+export * from "./entities/client/requests/index.js";
+export * as entities from "./entities/index.js";
 export * from "./jobs/client/requests/index.js";
 export * as jobs from "./jobs/index.js";
 export * as meta from "./meta/index.js";
