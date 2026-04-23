@@ -1,4 +1,5 @@
 export type { ContinueRequestDto } from "./ContinueRequestDto.js";
+export type { DeleteJobRequest } from "./DeleteJobRequest.js";
 export type { GetJobResultsRequest } from "./GetJobResultsRequest.js";
 export type { GetJobStatusRequest } from "./GetJobStatusRequest.js";
 export type { GetUserJobsRequest } from "./GetUserJobsRequest.js";

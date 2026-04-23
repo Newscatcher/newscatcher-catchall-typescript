@@ -395,6 +395,77 @@ await client.jobs.continueJob({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">deleteJob</a>({ ...params }) -> CatchAllApi.DeleteJobResponseDto</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Soft-deletes a job. The job is flagged as deleted and no longer
+appears in list results. The underlying data is retained.
+
+Only the job owner can delete a job. Returns `404` if the job is not
+found or does not belong to the authenticated user.
+
+Deleting an already-deleted job returns `200`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.deleteJob({
+    job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.DeleteJobRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Monitors
 <details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">listMonitors</a>({ ...params }) -> CatchAllApi.ListMonitorsResponseDto</code></summary>
 <dl>
@@ -664,6 +735,71 @@ await client.monitors.listMonitorJobs({
 </dl>
 </details>
 
+<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">getMonitorStatusHistory</a>({ ...params }) -> CatchAllApi.MonitorStatusHistoryResponseDto</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns the full execution history of a monitor as a list of status entries, ordered from newest to oldest.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.monitors.getMonitorStatusHistory({
+    monitor_id: "monitor_id"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.GetMonitorStatusHistoryRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `MonitorsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">enableMonitor</a>({ ...params }) -> CatchAllApi.EnableMonitorResponse</code></summary>
 <dl>
 <dd>
@@ -776,6 +912,78 @@ await client.monitors.disableMonitor({
 <dd>
 
 **request:** `CatchAllApi.DisableMonitorRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `MonitorsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">deleteMonitor</a>({ ...params }) -> CatchAllApi.DeleteMonitorResponseDto</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Soft-deletes a monitor. The monitor is flagged as deleted, stops
+executing scheduled jobs immediately, and no longer appears in list
+results.
+
+Only the monitor owner can delete a monitor. Returns `404` if the
+monitor is not found or does not belong to the authenticated user.
+
+Deleting an already-deleted monitor returns `200`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.monitors.deleteMonitor({
+    monitor_id: "monitor_id"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.DeleteMonitorRequest` 
     
 </dd>
 </dl>

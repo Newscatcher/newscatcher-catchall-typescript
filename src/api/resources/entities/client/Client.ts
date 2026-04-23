@@ -18,7 +18,7 @@ export declare namespace EntitiesClient {
 /**
  * Operations to create, update, and delete company entities.
  *
- * Entities are the building blocks of Company Search. Each entity represents
+ * Entities are the building blocks of Company Watchlist. Each entity represents
  * a company (or person) you want to track. Add identifying information such as
  * domain, alternative names, and key persons to improve matching quality.
  */
@@ -89,6 +89,11 @@ export class EntitiesClient {
             method: "GET",
             headers: _headers,
             queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,

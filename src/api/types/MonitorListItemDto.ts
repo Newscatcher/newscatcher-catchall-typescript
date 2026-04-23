@@ -23,4 +23,6 @@ export interface MonitorListItemDto {
     webhook?: (CatchAllApi.WebhookDto | null) | undefined;
     /** Masked API key associated with this monitor. */
     user_key?: string | undefined;
+    /** Present when this monitor was shared with the authenticated user. Omitted when the user owns the monitor. */
+    sharing_info?: CatchAllApi.SharingInfo | undefined;
 }
