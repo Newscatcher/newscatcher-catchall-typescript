@@ -20,7 +20,7 @@ export declare namespace DatasetsClient {
  *
  * A dataset is a named collection of entities — think of it as a watchlist or
  * portfolio. Connect a dataset to a job via `connected_dataset_ids` to activate
- * Company Search mode. Datasets can be reused across multiple jobs and monitors.
+ * Company Watchlist. Datasets can be reused across multiple jobs and monitors.
  */
 export class DatasetsClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<DatasetsClient.Options>;
@@ -62,6 +62,7 @@ export class DatasetsClient {
             latest_status: latestStatus,
             sort_by: sortBy,
             sort_order: sortOrder,
+            ownership,
         } = request;
         const _queryParams: Record<string, unknown> = {
             page,
@@ -70,6 +71,7 @@ export class DatasetsClient {
             latest_status: latestStatus != null ? latestStatus : undefined,
             sort_by: sortBy != null ? sortBy : undefined,
             sort_order: sortOrder != null ? sortOrder : undefined,
+            ownership: ownership != null ? ownership : undefined,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -87,6 +89,11 @@ export class DatasetsClient {
             method: "GET",
             headers: _headers,
             queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -624,6 +631,11 @@ export class DatasetsClient {
             method: "GET",
             headers: _headers,
             queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,

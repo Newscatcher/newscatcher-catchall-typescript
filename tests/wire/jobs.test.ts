@@ -21,6 +21,7 @@ describe("JobsClient", () => {
                     created_at: "2026-02-24T13:57:56Z",
                     status: "completed",
                     mode: "base",
+                    sharing_info: { shared_at: "2026-04-15T12:00:00Z", permission: "view", shared_by: "John Doe" },
                     user_key: "***...a1b2",
                 },
                 {
@@ -29,6 +30,7 @@ describe("JobsClient", () => {
                     created_at: "2026-02-18T20:25:20Z",
                     status: "completed",
                     mode: "base",
+                    sharing_info: { shared_at: "2026-04-15T12:00:00Z", permission: "view", shared_by: "John Doe" },
                     user_key: "***...a1b2",
                 },
             ],
@@ -364,6 +366,7 @@ describe("JobsClient", () => {
             page_size: 2,
             total_pages: 2,
             mode: "base",
+            sharing_info: { shared_at: "2026-04-15T12:00:00Z", permission: "view", shared_by: "John Doe" },
             all_records: [
                 {
                     record_id: "6983973854314692457",
@@ -550,5 +553,71 @@ describe("JobsClient", () => {
                 job_id: "job_id",
             });
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
+    });
+
+    test("deleteJob (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            success: true,
+            message: "Job deleted successfully.",
+            job_id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        };
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/jobs/5f0c9087-85cb-4917-b3c7-e5a5eff73a0c")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.deleteJob({
+            job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("deleteJob (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/jobs/job_id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.deleteJob({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("deleteJob (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/jobs/job_id")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.deleteJob({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 });

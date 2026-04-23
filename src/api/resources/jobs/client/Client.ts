@@ -47,10 +47,12 @@ export class JobsClient {
         request: CatchAllApi.GetUserJobsRequest = {},
         requestOptions?: JobsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListUserJobsResponseDto>> {
-        const { page, page_size: pageSize } = request;
+        const { page, page_size: pageSize, search, ownership } = request;
         const _queryParams: Record<string, unknown> = {
             page,
             page_size: pageSize,
+            search,
+            ownership: ownership != null ? ownership : undefined,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -68,6 +70,11 @@ export class JobsClient {
             method: "GET",
             headers: _headers,
             queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -384,6 +391,11 @@ export class JobsClient {
             method: "GET",
             headers: _headers,
             queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -498,5 +510,87 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/catchAll/continue");
+    }
+
+    /**
+     * Soft-deletes a job. The job is flagged as deleted and no longer
+     * appears in list results. The underlying data is retained.
+     *
+     * Only the job owner can delete a job. Returns `404` if the job is not
+     * found or does not belong to the authenticated user.
+     *
+     * Deleting an already-deleted job returns `200`.
+     *
+     * @param {CatchAllApi.DeleteJobRequest} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.UnauthorizedError}
+     * @throws {@link CatchAllApi.NotFoundError}
+     *
+     * @example
+     *     await client.jobs.deleteJob({
+     *         job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c"
+     *     })
+     */
+    public deleteJob(
+        request: CatchAllApi.DeleteJobRequest,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.DeleteJobResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteJob(request, requestOptions));
+    }
+
+    private async __deleteJob(
+        request: CatchAllApi.DeleteJobRequest,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.DeleteJobResponseDto>> {
+        const { job_id: jobId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                `catchAll/jobs/${core.url.encodePathParam(jobId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as CatchAllApi.DeleteJobResponseDto, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "DELETE", "/catchAll/jobs/{job_id}");
     }
 }

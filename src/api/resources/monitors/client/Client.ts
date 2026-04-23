@@ -48,10 +48,12 @@ export class MonitorsClient {
         request: CatchAllApi.ListMonitorsRequest = {},
         requestOptions?: MonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListMonitorsResponseDto>> {
-        const { page, page_size: pageSize } = request;
+        const { page, page_size: pageSize, search, ownership } = request;
         const _queryParams: Record<string, unknown> = {
             page,
             page_size: pageSize,
+            search,
+            ownership: ownership != null ? ownership : undefined,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -69,6 +71,11 @@ export class MonitorsClient {
             method: "GET",
             headers: _headers,
             queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -293,7 +300,7 @@ export class MonitorsClient {
     ): Promise<core.WithRawResponse<CatchAllApi.ListMonitorJobsResponse>> {
         const { monitor_id: monitorId, sort } = request;
         const _queryParams: Record<string, unknown> = {
-            sort: sort != null ? sort : undefined,
+            sort: (sort != null ? sort : undefined) ?? "asc",
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -311,6 +318,11 @@ export class MonitorsClient {
             method: "GET",
             headers: _headers,
             queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -347,6 +359,90 @@ export class MonitorsClient {
             _response.rawResponse,
             "GET",
             "/catchAll/monitors/{monitor_id}/jobs",
+        );
+    }
+
+    /**
+     * Returns the full execution history of a monitor as a list of status entries, ordered from newest to oldest.
+     *
+     * @param {CatchAllApi.GetMonitorStatusHistoryRequest} request
+     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.UnauthorizedError}
+     * @throws {@link CatchAllApi.NotFoundError}
+     *
+     * @example
+     *     await client.monitors.getMonitorStatusHistory({
+     *         monitor_id: "monitor_id"
+     *     })
+     */
+    public getMonitorStatusHistory(
+        request: CatchAllApi.GetMonitorStatusHistoryRequest,
+        requestOptions?: MonitorsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.MonitorStatusHistoryResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__getMonitorStatusHistory(request, requestOptions));
+    }
+
+    private async __getMonitorStatusHistory(
+        request: CatchAllApi.GetMonitorStatusHistoryRequest,
+        requestOptions?: MonitorsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.MonitorStatusHistoryResponseDto>> {
+        const { monitor_id: monitorId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId)}/status`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as CatchAllApi.MonitorStatusHistoryResponseDto,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/catchAll/monitors/{monitor_id}/status",
         );
     }
 
@@ -525,6 +621,94 @@ export class MonitorsClient {
             _response.rawResponse,
             "POST",
             "/catchAll/monitors/{monitor_id}/disable",
+        );
+    }
+
+    /**
+     * Soft-deletes a monitor. The monitor is flagged as deleted, stops
+     * executing scheduled jobs immediately, and no longer appears in list
+     * results.
+     *
+     * Only the monitor owner can delete a monitor. Returns `404` if the
+     * monitor is not found or does not belong to the authenticated user.
+     *
+     * Deleting an already-deleted monitor returns `200`.
+     *
+     * @param {CatchAllApi.DeleteMonitorRequest} request
+     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.UnauthorizedError}
+     * @throws {@link CatchAllApi.NotFoundError}
+     *
+     * @example
+     *     await client.monitors.deleteMonitor({
+     *         monitor_id: "monitor_id"
+     *     })
+     */
+    public deleteMonitor(
+        request: CatchAllApi.DeleteMonitorRequest,
+        requestOptions?: MonitorsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.DeleteMonitorResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__deleteMonitor(request, requestOptions));
+    }
+
+    private async __deleteMonitor(
+        request: CatchAllApi.DeleteMonitorRequest,
+        requestOptions?: MonitorsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.DeleteMonitorResponseDto>> {
+        const { monitor_id: monitorId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as CatchAllApi.DeleteMonitorResponseDto, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "DELETE",
+            "/catchAll/monitors/{monitor_id}",
         );
     }
 
