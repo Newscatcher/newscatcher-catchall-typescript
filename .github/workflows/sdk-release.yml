@@ -93,6 +93,8 @@ jobs:
       - name: Set up node
         if: steps.check.outputs.bumped == 'true'
         uses: actions/setup-node@v6
+        with:
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install pnpm
         if: steps.check.outputs.bumped == 'true'
