@@ -1,0 +1,147 @@
+name: SDK Release
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  compile:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Set up node
+        uses: actions/setup-node@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Compile
+        run: pnpm build
+
+  test:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Set up node
+        uses: actions/setup-node@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test
+        run: pnpm test
+
+  release:
+    needs: [compile, test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Read version from package.json
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ -z "$VERSION" ]; then
+            echo "ERROR: Could not read version from package.json"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "TAG=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get latest git tag
+        id: latest_tag
+        run: |
+          LATEST=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
+          echo "LATEST_TAG=$LATEST" >> $GITHUB_OUTPUT
+
+      - name: Check if version was bumped
+        id: check
+        run: |
+          TAG="${{ steps.version.outputs.TAG }}"
+          LATEST="${{ steps.latest_tag.outputs.LATEST_TAG }}"
+          if [ "$TAG" = "$LATEST" ]; then
+            echo "bumped=false" >> $GITHUB_OUTPUT
+            echo "Version $TAG already tagged — skipping release."
+          else
+            echo "bumped=true" >> $GITHUB_OUTPUT
+            echo "New version detected: $TAG (previous: $LATEST)"
+          fi
+
+      - name: Set up node
+        if: steps.check.outputs.bumped == 'true'
+        uses: actions/setup-node@v6
+
+      - name: Install pnpm
+        if: steps.check.outputs.bumped == 'true'
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        if: steps.check.outputs.bumped == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        if: steps.check.outputs.bumped == 'true'
+        run: pnpm build
+
+      - name: Create and push tag
+        if: steps.check.outputs.bumped == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "${{ steps.version.outputs.TAG }}"
+          git push origin "${{ steps.version.outputs.TAG }}"
+
+      - name: Publish to npm
+        if: steps.check.outputs.bumped == 'true'
+        run: |
+          publish() {
+            npx -y npm@latest publish "$@"
+          }
+          if [[ ${GITHUB_REF} == *alpha* ]]; then
+            publish --access public --tag alpha
+          elif [[ ${GITHUB_REF} == *beta* ]]; then
+            publish --access public --tag beta
+          else
+            PKG_NAME=$(node -p "require('./package.json').name")
+            PKG_VERSION=$(node -p "require('./package.json').version")
+            CURRENT_LATEST=$(npm view "${PKG_NAME}" dist-tags.latest 2>/dev/null || echo "0.0.0")
+            if npx -y semver "${PKG_VERSION}" -r "<${CURRENT_LATEST}" > /dev/null 2>&1; then
+              echo "Publishing ${PKG_VERSION} with --tag backport (current latest is ${CURRENT_LATEST})"
+              publish --access public --tag backport
+            else
+              publish --access public
+            fi
+          fi
+
+      - name: Create GitHub release with generated notes
+        if: steps.check.outputs.bumped == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.version.outputs.TAG }}" \
+            --title "${{ steps.version.outputs.TAG }}" \
+            --generate-notes \
+            --latest

@@ -4,3 +4,6 @@
 # Protect licensing
 LICENSE
 changelog.md
+
+# CI
+.github/workflows/sdk-release.yml
