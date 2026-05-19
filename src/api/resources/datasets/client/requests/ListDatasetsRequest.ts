@@ -19,6 +19,5 @@ export interface ListDatasetsRequest {
     latest_status?: CatchAllApi.DatasetStatus;
     sort_by?: CatchAllApi.DatasetSortBy;
     sort_order?: CatchAllApi.SortOrder;
-    /** Filter results by ownership. Defaults to `all`. */
     ownership?: CatchAllApi.OwnershipFilter;
 }

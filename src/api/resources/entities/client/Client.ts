@@ -30,9 +30,7 @@ export class EntitiesClient {
     }
 
     /**
-     * Returns a paginated list of entities belonging to the authenticated
-     * organization. Supports filtering by status and entity type, and
-     * sorting by name, status, or creation date.
+     * Returns a paginated list of entities belonging to the authenticated organization. Supports filtering by status and entity type, and sorting by name, status, or creation date.
      *
      * @param {CatchAllApi.ListEntitiesRequest} request
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -212,11 +210,9 @@ export class EntitiesClient {
     }
 
     /**
-     * Creates multiple entities in a single request. Each entity is
-     * processed independently — a failure in one does not affect others.
+     * Creates multiple entities in a single request. Each entity is processed independently — a failure in one does not affect others.
      *
-     * Returns an array of `{id, status}` objects in the same order as
-     * the input array.
+     * Returns an array of `{id, status}` objects in the same order as the input array.
      *
      * @param {CatchAllApi.CreateEntitiesBatchRequest} request
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.

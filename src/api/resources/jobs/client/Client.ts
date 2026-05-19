@@ -511,11 +511,9 @@ export class JobsClient {
     }
 
     /**
-     * Soft-deletes a job. The job is flagged as deleted and no longer
-     * appears in list results. The underlying data is retained.
+     * Soft-deletes a job. The job is flagged as deleted and no longer appears in list results. The underlying data is retained.
      *
-     * Only the job owner can delete a job. Returns `404` if the job is not
-     * found or does not belong to the authenticated user.
+     * Only the job owner can delete a job. Returns `404` if the job is not found or does not belong to the authenticated user.
      *
      * Deleting an already-deleted job returns `200`.
      *

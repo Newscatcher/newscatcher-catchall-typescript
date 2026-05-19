@@ -30,9 +30,7 @@ export class DatasetsClient {
     }
 
     /**
-     * Returns a paginated list of datasets belonging to the authenticated
-     * organization. Supports filtering by status and sorting by name,
-     * status, or creation date.
+     * Returns a paginated list of datasets belonging to the authenticated organization. Supports filtering by status and sorting by name, status, or creation date.
      *
      * @param {CatchAllApi.ListDatasetsRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -213,9 +211,7 @@ export class DatasetsClient {
     }
 
     /**
-     * Creates a new dataset by uploading a CSV file. Each row in the CSV
-     * becomes an entity. The `name` column is required; all other columns
-     * are optional.
+     * Creates a new dataset by uploading a CSV file. Each row in the CSV becomes an entity. The `name` and `domain`columns are required; all other columns are optional.
      *
      * **CSV format:**
      * ```csv
@@ -571,112 +567,6 @@ export class DatasetsClient {
     }
 
     /**
-     * Returns a paginated list of entities in a dataset. Supports filtering by status and entity type.
-     *
-     * @param {CatchAllApi.ListEntitiesInDatasetRequest} request
-     * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link CatchAllApi.ForbiddenError}
-     * @throws {@link CatchAllApi.NotFoundError}
-     *
-     * @example
-     *     await client.datasets.listEntitiesInDataset({
-     *         dataset_id: "ccabb755-afc2-4047-b84c-78d1f23d49b2"
-     *     })
-     */
-    public listEntitiesInDataset(
-        request: CatchAllApi.ListEntitiesInDatasetRequest,
-        requestOptions?: DatasetsClient.RequestOptions,
-    ): core.HttpResponsePromise<CatchAllApi.DatasetEntityListResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__listEntitiesInDataset(request, requestOptions));
-    }
-
-    private async __listEntitiesInDataset(
-        request: CatchAllApi.ListEntitiesInDatasetRequest,
-        requestOptions?: DatasetsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<CatchAllApi.DatasetEntityListResponse>> {
-        const {
-            dataset_id: datasetId,
-            page,
-            page_size: pageSize,
-            search,
-            status,
-            entity_type: entityType,
-            sort_by: sortBy,
-            sort_order: sortOrder,
-        } = request;
-        const _queryParams: Record<string, unknown> = {
-            page,
-            page_size: pageSize,
-            search,
-            status: status != null ? status : undefined,
-            entity_type: entityType != null ? entityType : undefined,
-            sort_by: sortBy != null ? sortBy : undefined,
-            sort_order: sortOrder != null ? sortOrder : undefined,
-        };
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(datasetId)}/entities`,
-            ),
-            method: "GET",
-            headers: _headers,
-            queryString: core.url
-                .queryBuilder()
-                .addMany(_queryParams)
-                .mergeAdditional(requestOptions?.queryParams)
-                .build(),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: _response.body as CatchAllApi.DatasetEntityListResponse,
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 403:
-                    throw new CatchAllApi.ForbiddenError(
-                        _response.error.body as CatchAllApi.Error_,
-                        _response.rawResponse,
-                    );
-                case 404:
-                    throw new CatchAllApi.NotFoundError(
-                        _response.error.body as CatchAllApi.Error_,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.CatchAllApiError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/catchAll/datasets/{dataset_id}/entities",
-        );
-    }
-
-    /**
      * Adds one or more existing entities to a dataset. Returns the number of entities added.
      *
      * @param {CatchAllApi.AddEntitiesToDatasetRequest} request
@@ -770,9 +660,7 @@ export class DatasetsClient {
     }
 
     /**
-     * Removes one or more entities from a dataset. The entities themselves
-     * are not deleted — they are only removed from this dataset. Returns
-     * the number of entities removed.
+     * Removes one or more entities from a dataset. The entities themselves are not deleted — they are only removed from this dataset. Returns the number of entities removed.
      *
      * @param {CatchAllApi.RemoveEntitiesFromDatasetRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -865,8 +753,107 @@ export class DatasetsClient {
     }
 
     /**
-     * Returns the full status change history for a dataset, ordered
-     * chronologically from oldest to newest.
+     * Returns a paginated list of entities in a dataset. Supports filtering by status, entity type, and name search.
+     *
+     * @param {CatchAllApi.ListDatasetEntitiesRequest} request
+     * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link CatchAllApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.datasets.listEntitiesInDataset({
+     *         dataset_id: "ccabb755-afc2-4047-b84c-78d1f23d49b2",
+     *         page: 1,
+     *         page_size: 100,
+     *         search: "OpenAI",
+     *         status: "ready",
+     *         entity_type: "company",
+     *         sort_by: "created_at",
+     *         sort_order: "desc"
+     *     })
+     */
+    public listEntitiesInDataset(
+        request: CatchAllApi.ListDatasetEntitiesRequest,
+        requestOptions?: DatasetsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.DatasetEntityListResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__listEntitiesInDataset(request, requestOptions));
+    }
+
+    private async __listEntitiesInDataset(
+        request: CatchAllApi.ListDatasetEntitiesRequest,
+        requestOptions?: DatasetsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.DatasetEntityListResponse>> {
+        const { dataset_id: datasetId, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                `catchAll/datasets/${core.url.encodePathParam(datasetId)}/entities/list`,
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as CatchAllApi.DatasetEntityListResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 422:
+                    throw new CatchAllApi.UnprocessableEntityError(
+                        _response.error.body as CatchAllApi.ValidationErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/catchAll/datasets/{dataset_id}/entities/list",
+        );
+    }
+
+    /**
+     * Returns the full status change history for a dataset, ordered chronologically from oldest to newest.
      *
      * @param {CatchAllApi.GetDatasetStatusHistoryRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -950,11 +937,9 @@ export class DatasetsClient {
     }
 
     /**
-     * Appends new companies to an existing dataset by uploading a CSV file.
-     * Uses the same CSV format as the dataset creation endpoint.
+     * Appends new companies to an existing dataset by uploading a CSV file. Uses the same CSV format as the dataset creation endpoint.
      *
-     * The response omits `dataset_name` compared to the create-from-CSV
-     * endpoint since the dataset already exists.
+     * The response omits `dataset_name` compared to the create-from-CSV endpoint since the dataset already exists.
      *
      * @param {CatchAllApi.UploadCsvToDatasetRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.

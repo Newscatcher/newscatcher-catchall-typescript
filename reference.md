@@ -407,11 +407,9 @@ await client.jobs.continueJob({
 <dl>
 <dd>
 
-Soft-deletes a job. The job is flagged as deleted and no longer
-appears in list results. The underlying data is retained.
+Soft-deletes a job. The job is flagged as deleted and no longer appears in list results. The underlying data is retained.
 
-Only the job owner can delete a job. Returns `404` if the job is not
-found or does not belong to the authenticated user.
+Only the job owner can delete a job. Returns `404` if the job is not found or does not belong to the authenticated user.
 
 Deleting an already-deleted job returns `200`.
 </dd>
@@ -559,7 +557,8 @@ Create a scheduled monitor based on a reference job.
 ```typescript
 await client.monitors.createMonitor({
     reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-    schedule: "every day at 12 PM UTC",
+    schedule: "every day at 12 PM",
+    timezone: "UTC",
     webhook: {
         url: "https://your-endpoint.com/webhook",
         method: "POST",
@@ -1088,9 +1087,7 @@ await client.monitors.updateMonitor({
 <dl>
 <dd>
 
-Returns a paginated list of entities belonging to the authenticated
-organization. Supports filtering by status and entity type, and
-sorting by name, status, or creation date.
+Returns a paginated list of entities belonging to the authenticated organization. Supports filtering by status and entity type, and sorting by name, status, or creation date.
 </dd>
 </dl>
 </dd>
@@ -1234,11 +1231,9 @@ await client.entities.createEntity({
 <dl>
 <dd>
 
-Creates multiple entities in a single request. Each entity is
-processed independently — a failure in one does not affect others.
+Creates multiple entities in a single request. Each entity is processed independently — a failure in one does not affect others.
 
-Returns an array of `{id, status}` objects in the same order as
-the input array.
+Returns an array of `{id, status}` objects in the same order as the input array.
 </dd>
 </dl>
 </dd>
@@ -1527,9 +1522,7 @@ await client.entities.updateEntity({
 <dl>
 <dd>
 
-Returns a paginated list of datasets belonging to the authenticated
-organization. Supports filtering by status and sorting by name,
-status, or creation date.
+Returns a paginated list of datasets belonging to the authenticated organization. Supports filtering by status and sorting by name, status, or creation date.
 </dd>
 </dl>
 </dd>
@@ -1668,9 +1661,7 @@ await client.datasets.createDataset({
 <dl>
 <dd>
 
-Creates a new dataset by uploading a CSV file. Each row in the CSV
-becomes an entity. The `name` column is required; all other columns
-are optional.
+Creates a new dataset by uploading a CSV file. Each row in the CSV becomes an entity. The `name` and `domain`columns are required; all other columns are optional.
 
 **CSV format:**
 ```csv
@@ -1934,71 +1925,6 @@ await client.datasets.updateDataset({
 </dl>
 </details>
 
-<details><summary><code>client.datasets.<a href="/src/api/resources/datasets/client/Client.ts">listEntitiesInDataset</a>({ ...params }) -> CatchAllApi.DatasetEntityListResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Returns a paginated list of entities in a dataset. Supports filtering by status and entity type.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.datasets.listEntitiesInDataset({
-    dataset_id: "ccabb755-afc2-4047-b84c-78d1f23d49b2"
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `CatchAllApi.ListEntitiesInDatasetRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `DatasetsClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.datasets.<a href="/src/api/resources/datasets/client/Client.ts">addEntitiesToDataset</a>({ ...params }) -> CatchAllApi.ManageEntitiesResponse</code></summary>
 <dl>
 <dd>
@@ -2079,9 +2005,7 @@ await client.datasets.addEntitiesToDataset({
 <dl>
 <dd>
 
-Removes one or more entities from a dataset. The entities themselves
-are not deleted — they are only removed from this dataset. Returns
-the number of entities removed.
+Removes one or more entities from a dataset. The entities themselves are not deleted — they are only removed from this dataset. Returns the number of entities removed.
 </dd>
 </dl>
 </dd>
@@ -2137,6 +2061,78 @@ await client.datasets.removeEntitiesFromDataset({
 </dl>
 </details>
 
+<details><summary><code>client.datasets.<a href="/src/api/resources/datasets/client/Client.ts">listEntitiesInDataset</a>({ ...params }) -> CatchAllApi.DatasetEntityListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns a paginated list of entities in a dataset. Supports filtering by status, entity type, and name search.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.datasets.listEntitiesInDataset({
+    dataset_id: "ccabb755-afc2-4047-b84c-78d1f23d49b2",
+    page: 1,
+    page_size: 100,
+    search: "OpenAI",
+    status: "ready",
+    entity_type: "company",
+    sort_by: "created_at",
+    sort_order: "desc"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.ListDatasetEntitiesRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `DatasetsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.datasets.<a href="/src/api/resources/datasets/client/Client.ts">getDatasetStatusHistory</a>({ ...params }) -> CatchAllApi.DatasetStatusHistoryResponse</code></summary>
 <dl>
 <dd>
@@ -2149,8 +2145,7 @@ await client.datasets.removeEntitiesFromDataset({
 <dl>
 <dd>
 
-Returns the full status change history for a dataset, ordered
-chronologically from oldest to newest.
+Returns the full status change history for a dataset, ordered chronologically from oldest to newest.
 </dd>
 </dl>
 </dd>
@@ -2215,11 +2210,9 @@ await client.datasets.getDatasetStatusHistory({
 <dl>
 <dd>
 
-Appends new companies to an existing dataset by uploading a CSV file.
-Uses the same CSV format as the dataset creation endpoint.
+Appends new companies to an existing dataset by uploading a CSV file. Uses the same CSV format as the dataset creation endpoint.
 
-The response omits `dataset_name` compared to the create-from-CSV
-endpoint since the dataset already exists.
+The response omits `dataset_name` compared to the create-from-CSV endpoint since the dataset already exists.
 </dd>
 </dl>
 </dd>

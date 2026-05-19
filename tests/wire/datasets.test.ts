@@ -382,87 +382,6 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
 
-    test("listEntitiesInDataset (1)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            entities: [
-                {
-                    id: "854198fa-f702-49db-a381-0427fa87f173",
-                    name: "NewsCatcher",
-                    entity_type: "company",
-                    status: "pending",
-                    description: "AI-powered news data provider",
-                    attributes: {
-                        domain: "newscatcherapi.com",
-                        description: "Provider of news and web search APIs for developers",
-                        key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-                        alternative_names: ["NC", "NewsCatcher API"],
-                    },
-                },
-            ],
-            total: 4,
-            page: 1,
-            page_size: 100,
-        };
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/datasets/ccabb755-afc2-4047-b84c-78d1f23d49b2/entities")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        const response = await client.datasets.listEntitiesInDataset({
-            dataset_id: "ccabb755-afc2-4047-b84c-78d1f23d49b2",
-        });
-        expect(response).toEqual(rawResponseBody);
-    });
-
-    test("listEntitiesInDataset (2)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {};
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/datasets/dataset_id/entities")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.datasets.listEntitiesInDataset({
-                dataset_id: "dataset_id",
-            });
-        }).rejects.toThrow(CatchAllApi.ForbiddenError);
-    });
-
-    test("listEntitiesInDataset (3)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {};
-
-        server
-            .mockEndpoint()
-            .get("/catchAll/datasets/dataset_id/entities")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.datasets.listEntitiesInDataset({
-                dataset_id: "dataset_id",
-            });
-        }).rejects.toThrow(CatchAllApi.NotFoundError);
-    });
-
     test("addEntitiesToDataset (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
@@ -657,6 +576,127 @@ describe("DatasetsClient", () => {
                 body: {
                     entity_ids: ["entity_ids", "entity_ids"],
                 },
+            });
+        }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
+    });
+
+    test("listEntitiesInDataset (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            page: 1,
+            page_size: 100,
+            search: "OpenAI",
+            status: "ready",
+            entity_type: "company",
+            sort_by: "created_at",
+            sort_order: "desc",
+        };
+        const rawResponseBody = {
+            entities: [
+                {
+                    id: "854198fa-f702-49db-a381-0427fa87f173",
+                    name: "NewsCatcher",
+                    entity_type: "company",
+                    status: "pending",
+                    description: "AI-powered news data provider",
+                    attributes: {
+                        domain: "newscatcherapi.com",
+                        description: "Provider of news and web search APIs for developers",
+                        key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
+                        alternative_names: ["NC", "NewsCatcher API"],
+                    },
+                },
+            ],
+            total: 4,
+            page: 1,
+            page_size: 100,
+        };
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/datasets/ccabb755-afc2-4047-b84c-78d1f23d49b2/entities/list")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.datasets.listEntitiesInDataset({
+            dataset_id: "ccabb755-afc2-4047-b84c-78d1f23d49b2",
+            page: 1,
+            page_size: 100,
+            search: "OpenAI",
+            status: "ready",
+            entity_type: "company",
+            sort_by: "created_at",
+            sort_order: "desc",
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("listEntitiesInDataset (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/datasets/dataset_id/entities/list")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.listEntitiesInDataset({
+                dataset_id: "dataset_id",
+            });
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("listEntitiesInDataset (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/datasets/dataset_id/entities/list")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.listEntitiesInDataset({
+                dataset_id: "dataset_id",
+            });
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
+    test("listEntitiesInDataset (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/datasets/dataset_id/entities/list")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.listEntitiesInDataset({
+                dataset_id: "dataset_id",
             });
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });

@@ -6,7 +6,8 @@ import type * as CatchAllApi from "../../../../index.js";
  * @example
  *     {
  *         reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
- *         schedule: "every day at 12 PM UTC",
+ *         schedule: "every day at 12 PM",
+ *         timezone: "UTC",
  *         webhook: {
  *             url: "https://your-endpoint.com/webhook",
  *             method: "POST",
@@ -25,12 +26,14 @@ export interface CreateMonitorRequestDto {
      * If [`backfill`](https://www.newscatcherapi.com/docs/web-search-api/api-reference/monitors/create-monitor#body-backfill) is true, the job's `end_date` must be within the last 7 days.
      */
     reference_job_id: string;
-    /**
-     * Monitor schedule in plain text format (e.g. 'every day at 12 PM UTC', 'every 48 hours').
-     *
-     * Minimum frequency depends on your plan.
-     */
+    /** Monitor schedule in plain text format. Minimum frequency depends on your plan. */
     schedule: string;
+    /**
+     * The IANA timezone identifier used as the fallback when the `schedule` string does not include an explicit timezone.
+     *
+     * If the schedule includes a timezone abbreviation (for example, `"every day at 9am EST"`), the parsed timezone takes priority and this value is ignored.
+     */
+    timezone?: string;
     /** Optional webhook to receive notifications when jobs complete. */
     webhook?: CatchAllApi.WebhookDto;
     /** Maximum number of records per monitor run. If not provided, defaults to the plan limit. */
