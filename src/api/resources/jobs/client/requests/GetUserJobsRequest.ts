@@ -13,6 +13,5 @@ export interface GetUserJobsRequest {
     page_size?: number;
     /** Filter results by text (case-insensitive substring match). */
     search?: string;
-    /** Filter results by ownership. Defaults to `all`. */
     ownership?: CatchAllApi.OwnershipFilter;
 }

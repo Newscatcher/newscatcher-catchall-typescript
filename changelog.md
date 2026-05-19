@@ -1,3 +1,14 @@
+## 2.0.0 - 2026-05-19
+### Breaking Changes
+* **`ListEntitiesInDatasetRequest`** has been renamed to `ListDatasetEntitiesRequest`; update all type references and imports to use the new name.
+* **`listEntitiesInDataset`** now sends a `POST` request to `/catchAll/datasets/{id}/entities/list` instead of a `GET` to `/catchAll/datasets/{id}/entities`; any custom request interceptors or mocks targeting the old method and path must be updated.
+### Added
+* **`ListDatasetEntitiesRequest`** — new request type replacing `ListEntitiesInDatasetRequest`, with an additional `search` field description clarifying case-insensitive substring matching.
+* **`SubmitRequestDto.ed_score_min`** — new optional field to set a minimum relevance score threshold for connected entities in Company Watchlist jobs.
+* **`CreateMonitorRequestDto.timezone`** — new optional IANA timezone identifier field; the `schedule` string no longer needs to embed a timezone abbreviation.
+* **`ConnectedEntity`** — gains new required `relation` and `type` fields, plus an optional `company` field (`CompanyAttributes`) for entity attribute data.
+* **`AuthOption`** type and `auth` option on `BaseClientOptions` — allows overriding authentication per-client instance by passing `false`, a function, an `AuthProvider`, or auth options.
+
 ## 1.5.1 - 2026-04-30
 * chore: migrate query parameter handling to queryBuilder() across all clients
 * Replace the legacy `queryParameters` object spread pattern with the

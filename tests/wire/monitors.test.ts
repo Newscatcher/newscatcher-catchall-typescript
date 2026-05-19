@@ -68,7 +68,8 @@ describe("MonitorsClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
             reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-            schedule: "every day at 12 PM UTC",
+            schedule: "every day at 12 PM",
+            timezone: "UTC",
             webhook: {
                 url: "https://your-endpoint.com/webhook",
                 method: "POST",
@@ -93,7 +94,8 @@ describe("MonitorsClient", () => {
 
         const response = await client.monitors.createMonitor({
             reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
-            schedule: "every day at 12 PM UTC",
+            schedule: "every day at 12 PM",
+            timezone: "UTC",
             webhook: {
                 url: "https://your-endpoint.com/webhook",
                 method: "POST",

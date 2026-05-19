@@ -39,11 +39,17 @@ export interface SubmitRequestDto {
      */
     mode?: SubmitRequestDto.Mode;
     /**
-     * Dataset IDs to connect to this job. When provided, activates Company Watchlist mode — the job returns only events relevant to companies in the connected datasets with each record including a `connected_entities` array scored per company.
+     * Dataset IDs to connect to the job. When provided, this enables Company Watchlist mode — the job returns only events relevant to companies in the connected datasets. To set the minimum relevance threshold, use `ed_score_min`.
      *
      * The dataset must have `latest_status: ready` before the job is submitted. Submitting with a non-existent or inaccessible dataset ID returns `400`.
      */
     connected_dataset_ids?: string[];
+    /**
+     * The minimum relevance score a connected entity must reach for its record to be included in results.
+     *
+     * Only valid when `connected_dataset_ids` is set; otherwise ignored. Records where no connected entity meets the threshold are excluded entirely.
+     */
+    ed_score_min?: number;
 }
 
 export namespace SubmitRequestDto {

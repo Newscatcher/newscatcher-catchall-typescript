@@ -400,6 +400,13 @@ describe("JobsClient", () => {
                             name: "Tesla",
                             ed_score: 8,
                             relation: "Lucid Gravity is positioned as a direct competitor to the Tesla Model X.",
+                            type: "company",
+                            company: {
+                                domain: "newscatcherapi.com",
+                                description: "Provider of news and web search APIs for developers",
+                                key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
+                                alternative_names: ["NC", "NewsCatcher API"],
+                            },
                         },
                     ],
                 },
