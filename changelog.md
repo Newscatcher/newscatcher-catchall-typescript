@@ -1,3 +1,9 @@
+## 1.6.0 - 2026-05-19
+### Added
+* **`AuthOption`** — new exported type union (`false | getAuthRequest function | AuthProvider | HeaderAuthProvider.AuthOptions`) for flexible auth configuration.
+* **`BaseClientOptions.auth`** — new optional `auth` field that lets callers override authentication at client construction time; pass `false` to disable auth, a function, an `AuthProvider` instance, or raw auth options.
+* **`isAuthProvider()`** — new exported type-guard helper in `core/auth` for checking whether a value implements the `AuthProvider` interface.
+
 ## 1.5.1 - 2026-04-30
 * chore: migrate query parameter handling to queryBuilder() across all clients
 * Replace the legacy `queryParameters` object spread pattern with the
