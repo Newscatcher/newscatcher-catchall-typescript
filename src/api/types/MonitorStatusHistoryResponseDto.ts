@@ -3,7 +3,7 @@
 import type * as CatchAllApi from "../index.js";
 
 export interface MonitorStatusHistoryResponseDto {
-    /** Whether the request succeeded. */
+    /** True if the request succeeded; false otherwise. */
     success: boolean;
     /** Optional message. `null` on success. */
     message?: (string | null) | undefined;

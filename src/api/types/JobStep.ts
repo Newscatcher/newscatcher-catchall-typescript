@@ -6,6 +6,6 @@ export interface JobStep {
     status: CatchAllApi.PublicJobStatus;
     /** Sequential position of this step in the pipeline (1-7). */
     order: number;
-    /** Whether this step has finished processing. */
+    /** True if this step has finished processing; false otherwise. */
     completed: boolean;
 }

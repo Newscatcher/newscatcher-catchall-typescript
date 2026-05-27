@@ -9,3 +9,8 @@ export * from "./meta/types/index.js";
 export * from "./monitors/client/requests/index.js";
 export * as monitors from "./monitors/index.js";
 export * from "./monitors/types/index.js";
+export * from "./projects/client/requests/index.js";
+export * as projects from "./projects/index.js";
+export * from "./webhooks/client/requests/index.js";
+export * as webhooks from "./webhooks/index.js";
+export * from "./webhooks/types/index.js";

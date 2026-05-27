@@ -1,3 +1,11 @@
+## 2.1.0 - 2026-05-27
+### Added
+* **`WebhooksClient`** — new top-level client (`client.webhooks`) for managing reusable organization-level webhook endpoints, with full CRUD, test, resource assignment, and delivery history operations.
+* **`ProjectsClient`** — new top-level client (`client.projects`) for creating, retrieving, updating, deleting, and managing resource associations for projects.
+* **`JobsClient.validateQuery()`** — validates a plain-text query before job submission, returning a quality assessment with status, issues, and suggestions.
+* **`project_id`** and **`webhook_ids`** optional fields — added to `SubmitRequestDto`, `CreateMonitorRequestDto`, `GetUserJobsRequest`, `ListMonitorsRequest`, and `ListDatasetsRequest` to scope and associate resources with projects and webhooks.
+* **New request, response, and supporting types** — webhook types (`WebhookResponseDto`, `DeliveryMode`, `DeliveryStatus`, `HttpMethod`, auth DTOs, and more), project types (`ProjectResponseDto`, `ProjectSummaryDto`, `ProjectOverviewResponseDto`, and more), and query validation types (`ValidateQueryResponseDto`, `QueryStatus`, `IssueType`, `Suggestion`) are now exported from the types index.
+
 ## 2.0.0 - 2026-05-19
 ### Breaking Changes
 * **`ListEntitiesInDatasetRequest`** has been renamed to `ListDatasetEntitiesRequest`; update all type references and imports to use the new name.

@@ -4,7 +4,9 @@ import type * as CatchAllApi from "../../../../index.js";
 
 /**
  * @example
- *     {}
+ *     {
+ *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
+ *     }
  */
 export interface GetUserJobsRequest {
     /** Page number to retrieve. */
@@ -14,4 +16,6 @@ export interface GetUserJobsRequest {
     /** Filter results by text (case-insensitive substring match). */
     search?: string;
     ownership?: CatchAllApi.OwnershipFilter;
+    /** Filter results to resources belonging to this project. */
+    project_id?: string;
 }

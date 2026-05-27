@@ -5,7 +5,8 @@ import type * as CatchAllApi from "../../../../index.js";
 /**
  * @example
  *     {
- *         search: "Portfolio"
+ *         search: "Portfolio",
+ *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
  *     }
  */
 export interface ListDatasetsRequest {
@@ -20,4 +21,6 @@ export interface ListDatasetsRequest {
     sort_by?: CatchAllApi.DatasetSortBy;
     sort_order?: CatchAllApi.SortOrder;
     ownership?: CatchAllApi.OwnershipFilter;
+    /** Filter results to resources belonging to this project. */
+    project_id?: string;
 }
