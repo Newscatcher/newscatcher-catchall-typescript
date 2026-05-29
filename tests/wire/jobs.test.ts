@@ -44,7 +44,9 @@ describe("JobsClient", () => {
             .jsonBody(rawResponseBody)
             .build();
 
-        const response = await client.jobs.getUserJobs();
+        const response = await client.jobs.getUserJobs({
+            project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04",
+        });
         expect(response).toEqual(rawResponseBody);
     });
 
@@ -65,6 +67,84 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.getUserJobs();
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("validateQuery (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "Series B funding rounds for SaaS startups" };
+        const rawResponseBody = {
+            status: "good",
+            title: "Specific event type clear",
+            description: "Clear event type and focus; no timeframe needed for a default recent search.",
+            issues: ["missing_event_type"],
+            suggestions: [
+                {
+                    issue: "missing_event_type",
+                    message: "Add a target sector or geography to narrow the results.",
+                    example: "Series A fundraising for AI startups in healthcare",
+                },
+            ],
+            confidence: 0.98,
+        };
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/validate")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.validateQuery({
+            query: "Series B funding rounds for SaaS startups",
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("validateQuery (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "query" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/validate")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.validateQuery({
+                query: "query",
+            });
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("validateQuery (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "query" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/validate")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.validateQuery({
+                query: "query",
+            });
+        }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
 
     test("initialize (1)", async () => {

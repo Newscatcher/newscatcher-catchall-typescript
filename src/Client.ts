@@ -5,6 +5,8 @@ import { EntitiesClient } from "./api/resources/entities/client/Client.js";
 import { JobsClient } from "./api/resources/jobs/client/Client.js";
 import { MetaClient } from "./api/resources/meta/client/Client.js";
 import { MonitorsClient } from "./api/resources/monitors/client/Client.js";
+import { ProjectsClient } from "./api/resources/projects/client/Client.js";
+import { WebhooksClient } from "./api/resources/webhooks/client/Client.js";
 import type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "./BaseClient.js";
 import * as core from "./core/index.js";
@@ -19,8 +21,10 @@ export class CatchAllApiClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<CatchAllApiClient.Options>;
     protected _jobs: JobsClient | undefined;
     protected _monitors: MonitorsClient | undefined;
+    protected _webhooks: WebhooksClient | undefined;
     protected _entities: EntitiesClient | undefined;
     protected _datasets: DatasetsClient | undefined;
+    protected _projects: ProjectsClient | undefined;
     protected _meta: MetaClient | undefined;
 
     constructor(options: CatchAllApiClient.Options = {}) {
@@ -35,12 +39,20 @@ export class CatchAllApiClient {
         return (this._monitors ??= new MonitorsClient(this._options));
     }
 
+    public get webhooks(): WebhooksClient {
+        return (this._webhooks ??= new WebhooksClient(this._options));
+    }
+
     public get entities(): EntitiesClient {
         return (this._entities ??= new EntitiesClient(this._options));
     }
 
     public get datasets(): DatasetsClient {
         return (this._datasets ??= new DatasetsClient(this._options));
+    }
+
+    public get projects(): ProjectsClient {
+        return (this._projects ??= new ProjectsClient(this._options));
     }
 
     public get meta(): MetaClient {

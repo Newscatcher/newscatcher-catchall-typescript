@@ -9,7 +9,7 @@ export interface MonitorListItemDto {
     reference_job_id: string;
     /** Plain text query from the reference job. */
     reference_job_query: string;
-    /** Whether the monitor is currently active. */
+    /** True if the monitor is currently active; false otherwise. */
     enabled: boolean;
     /** Cron expression for monitor schedule. */
     schedule?: string | undefined;
