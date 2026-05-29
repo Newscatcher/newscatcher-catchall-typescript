@@ -35,7 +35,9 @@ export class MonitorsClient {
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      *
      * @example
-     *     await client.monitors.listMonitors()
+     *     await client.monitors.listMonitors({
+     *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
+     *     })
      */
     public listMonitors(
         request: CatchAllApi.ListMonitorsRequest = {},
@@ -48,12 +50,13 @@ export class MonitorsClient {
         request: CatchAllApi.ListMonitorsRequest = {},
         requestOptions?: MonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListMonitorsResponseDto>> {
-        const { page, page_size: pageSize, search, ownership } = request;
+        const { page, page_size: pageSize, search, ownership, project_id: projectId } = request;
         const _queryParams: Record<string, unknown> = {
             page,
             page_size: pageSize,
             search,
             ownership: ownership != null ? ownership : undefined,
+            project_id: projectId,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -122,13 +125,7 @@ export class MonitorsClient {
      *         reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
      *         schedule: "every day at 12 PM",
      *         timezone: "UTC",
-     *         webhook: {
-     *             url: "https://your-endpoint.com/webhook",
-     *             method: "POST",
-     *             headers: {
-     *                 "Authorization": "Bearer your_token_here"
-     *             }
-     *         },
+     *         webhook_ids: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"],
      *         limit: 10,
      *         backfill: true
      *     })
@@ -724,13 +721,7 @@ export class MonitorsClient {
      * @example
      *     await client.monitors.updateMonitor({
      *         monitor_id: "monitor_id",
-     *         webhook: {
-     *             url: "https://new-endpoint.com/webhook",
-     *             method: "POST",
-     *             headers: {
-     *                 "Authorization": "Bearer new_token_xyz"
-     *             }
-     *         }
+     *         webhook_ids: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"]
      *     })
      */
     public updateMonitor(

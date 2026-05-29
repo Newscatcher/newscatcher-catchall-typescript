@@ -34,7 +34,9 @@ export class JobsClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      *
      * @example
-     *     await client.jobs.getUserJobs()
+     *     await client.jobs.getUserJobs({
+     *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
+     *     })
      */
     public getUserJobs(
         request: CatchAllApi.GetUserJobsRequest = {},
@@ -47,12 +49,13 @@ export class JobsClient {
         request: CatchAllApi.GetUserJobsRequest = {},
         requestOptions?: JobsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListUserJobsResponseDto>> {
-        const { page, page_size: pageSize, search, ownership } = request;
+        const { page, page_size: pageSize, search, ownership, project_id: projectId } = request;
         const _queryParams: Record<string, unknown> = {
             page,
             page_size: pageSize,
             search,
             ownership: ownership != null ? ownership : undefined,
+            project_id: projectId,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -101,6 +104,86 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/catchAll/jobs/user");
+    }
+
+    /**
+     * Checks whether a query is well-formed and likely to produce good results before submitting a job.
+     *
+     * Returns a quality assessment with a status level, identified issues, and actionable suggestions.
+     *
+     * @param {CatchAllApi.ValidateQueryRequestDto} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.UnprocessableEntityError}
+     *
+     * @example
+     *     await client.jobs.validateQuery({
+     *         query: "Series B funding rounds for SaaS startups"
+     *     })
+     */
+    public validateQuery(
+        request: CatchAllApi.ValidateQueryRequestDto,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<CatchAllApi.ValidateQueryResponseDto> {
+        return core.HttpResponsePromise.fromPromise(this.__validateQuery(request, requestOptions));
+    }
+
+    private async __validateQuery(
+        request: CatchAllApi.ValidateQueryRequestDto,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<CatchAllApi.ValidateQueryResponseDto>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                "catchAll/validate",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as CatchAllApi.ValidateQueryResponseDto, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 422:
+                    throw new CatchAllApi.UnprocessableEntityError(
+                        _response.error.body as CatchAllApi.ValidationErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/catchAll/validate");
     }
 
     /**

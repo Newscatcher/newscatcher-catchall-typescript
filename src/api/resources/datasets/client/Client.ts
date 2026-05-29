@@ -39,7 +39,8 @@ export class DatasetsClient {
      *
      * @example
      *     await client.datasets.listDatasets({
-     *         search: "Portfolio"
+     *         search: "Portfolio",
+     *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
      *     })
      */
     public listDatasets(
@@ -61,6 +62,7 @@ export class DatasetsClient {
             sort_by: sortBy,
             sort_order: sortOrder,
             ownership,
+            project_id: projectId,
         } = request;
         const _queryParams: Record<string, unknown> = {
             page,
@@ -70,6 +72,7 @@ export class DatasetsClient {
             sort_by: sortBy != null ? sortBy : undefined,
             sort_order: sortOrder != null ? sortOrder : undefined,
             ownership: ownership != null ? ownership : undefined,
+            project_id: projectId,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(

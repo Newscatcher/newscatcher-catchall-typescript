@@ -33,7 +33,9 @@ describe("MonitorsClient", () => {
 
         server.mockEndpoint().get("/catchAll/monitors").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
-        const response = await client.monitors.listMonitors();
+        const response = await client.monitors.listMonitors({
+            project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04",
+        });
         expect(response).toEqual(rawResponseBody);
     });
 
@@ -70,11 +72,7 @@ describe("MonitorsClient", () => {
             reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             schedule: "every day at 12 PM",
             timezone: "UTC",
-            webhook: {
-                url: "https://your-endpoint.com/webhook",
-                method: "POST",
-                headers: { Authorization: "Bearer your_token_here" },
-            },
+            webhook_ids: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"],
             limit: 10,
             backfill: true,
         };
@@ -96,13 +94,7 @@ describe("MonitorsClient", () => {
             reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
             schedule: "every day at 12 PM",
             timezone: "UTC",
-            webhook: {
-                url: "https://your-endpoint.com/webhook",
-                method: "POST",
-                headers: {
-                    Authorization: "Bearer your_token_here",
-                },
-            },
+            webhook_ids: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"],
             limit: 10,
             backfill: true,
         });
@@ -633,13 +625,7 @@ describe("MonitorsClient", () => {
     test("updateMonitor (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            webhook: {
-                url: "https://new-endpoint.com/webhook",
-                method: "POST",
-                headers: { Authorization: "Bearer new_token_xyz" },
-            },
-        };
+        const rawRequestBody = { webhook_ids: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"] };
         const rawResponseBody = {
             monitor_id: "3fec5b07-8786-46d7-9486-d43ff67eccd4",
             status: "Monitor updated Successfully",
@@ -656,13 +642,7 @@ describe("MonitorsClient", () => {
 
         const response = await client.monitors.updateMonitor({
             monitor_id: "monitor_id",
-            webhook: {
-                url: "https://new-endpoint.com/webhook",
-                method: "POST",
-                headers: {
-                    Authorization: "Bearer new_token_xyz",
-                },
-            },
+            webhook_ids: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"],
         });
         expect(response).toEqual(rawResponseBody);
     });

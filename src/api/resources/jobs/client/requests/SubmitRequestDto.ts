@@ -50,6 +50,10 @@ export interface SubmitRequestDto {
      * Only valid when `connected_dataset_ids` is set; otherwise ignored. Records where no connected entity meets the threshold are excluded entirely.
      */
     ed_score_min?: number;
+    /** Project to assign this job to. The job appears in the project's resource list immediately after submission. */
+    project_id?: string;
+    /** IDs of webhooks to notify when the job completes. Maximum 5 per job. */
+    webhook_ids?: string[];
 }
 
 export namespace SubmitRequestDto {

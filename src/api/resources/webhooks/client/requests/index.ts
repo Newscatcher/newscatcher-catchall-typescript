@@ -1,0 +1,11 @@
+export type { AssignWebhookResourceRequestDto } from "./AssignWebhookResourceRequestDto.js";
+export type { CreateWebhookRequestDto } from "./CreateWebhookRequestDto.js";
+export type { DeleteWebhookRequest } from "./DeleteWebhookRequest.js";
+export type { GetWebhookDeliveryHistoryRequest } from "./GetWebhookDeliveryHistoryRequest.js";
+export type { GetWebhookRequest } from "./GetWebhookRequest.js";
+export type { ListWebhookResourcesRequest } from "./ListWebhookResourcesRequest.js";
+export type { ListWebhooksForResourceRequest } from "./ListWebhooksForResourceRequest.js";
+export type { ListWebhooksRequest } from "./ListWebhooksRequest.js";
+export type { RemoveWebhookResourceRequest } from "./RemoveWebhookResourceRequest.js";
+export type { TestWebhookRequestDto } from "./TestWebhookRequestDto.js";
+export type { UpdateWebhookRequestDto } from "./UpdateWebhookRequestDto.js";

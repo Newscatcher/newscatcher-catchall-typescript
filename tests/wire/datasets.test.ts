@@ -32,6 +32,7 @@ describe("DatasetsClient", () => {
 
         const response = await client.datasets.listDatasets({
             search: "Portfolio",
+            project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04",
         });
         expect(response).toEqual(rawResponseBody);
     });
