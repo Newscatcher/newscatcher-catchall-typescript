@@ -25,6 +25,8 @@ export interface ConnectedEntity {
     ed_score: number;
     /** Short explanation (up to 100 characters) of why this entity is associated with the event. */
     relation: string;
+    /** How the entity relates to the event: `event_associated` if the entity is a direct actor, `mention` if merely referenced. */
+    association_type?: string | undefined;
     /** The entity type. */
     type: string;
     /**

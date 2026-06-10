@@ -12,4 +12,11 @@ import type * as CatchAllApi from "../../../../index.js";
 export interface InitializeRequestDto {
     query: CatchAllApi.Query;
     context?: CatchAllApi.Context;
+    /** Optional list of watchlist dataset IDs connected to this job. */
+    connected_dataset_ids?: string[];
+    /**
+     * When true, returns generic news validators and enrichments suitable for
+     * watchlist-based article collection instead of query-specific fields.
+     */
+    fetch_all_watchlist_news?: boolean;
 }
