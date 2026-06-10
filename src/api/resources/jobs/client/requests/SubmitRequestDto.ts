@@ -54,6 +54,18 @@ export interface SubmitRequestDto {
     project_id?: string;
     /** IDs of webhooks to notify when the job completes. Maximum 5 per job. */
     webhook_ids?: string[];
+    /**
+     * When true, retrieves all news for connected Company Watchlist entities
+     * without topic filtering. Requires connected_dataset_ids to be set.
+     */
+    fetch_all_watchlist_news?: boolean;
+    /**
+     * Filter events by entity association type. `event_associated` keeps only
+     * events where the entity is a direct actor. `mention` keeps only events
+     * where the entity is merely referenced. Only relevant when
+     * connected_dataset_ids is set.
+     */
+    ed_association_type?: CatchAllApi.EntityAssociationType;
 }
 
 export namespace SubmitRequestDto {

@@ -480,6 +480,7 @@ describe("JobsClient", () => {
                             name: "Tesla",
                             ed_score: 8,
                             relation: "Lucid Gravity is positioned as a direct competitor to the Tesla Model X.",
+                            association_type: "event_associated",
                             type: "company",
                             company: {
                                 domain: "newscatcherapi.com",

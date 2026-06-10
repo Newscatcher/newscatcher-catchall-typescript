@@ -35,6 +35,7 @@ export * from "./DeliveryStatus.js";
 export * from "./EndDate.js";
 export * from "./EnrichmentSchema.js";
 export * from "./EnrichmentType.js";
+export * from "./EntityAssociationType.js";
 export * from "./EntityListResponse.js";
 export * from "./EntityResponse.js";
 export * from "./EntitySortBy.js";
