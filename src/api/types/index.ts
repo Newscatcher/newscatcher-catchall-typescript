@@ -8,6 +8,7 @@ export * from "./BearerAuthDto.js";
 export * from "./Citation.js";
 export * from "./CompanyAttributes.js";
 export * from "./CompanyEnrichmentOutput.js";
+export * from "./ConnectedDataset.js";
 export * from "./ConnectedEntity.js";
 export * from "./Context.js";
 export * from "./ContinueResponseDto.js";

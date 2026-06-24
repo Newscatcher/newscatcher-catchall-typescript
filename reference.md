@@ -398,6 +398,71 @@ await client.jobs.getJobResults({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">getJobResultsCsv</a>({ ...params }) -> string</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns a completed job's result records as a CSV download. One row per record, with enrichment fields as columns, citations as a JSON column, and connected entities split into `event_associated_entities` and `mention_entities` JSON columns.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.getJobResultsCsv({
+    job_id: "job_id"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.GetJobResultsCsvRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">continueJob</a>({ ...params }) -> CatchAllApi.ContinueResponseDto</code></summary>
 <dl>
 <dd>
@@ -715,6 +780,71 @@ await client.monitors.pullMonitorResults({
 <dd>
 
 **request:** `CatchAllApi.PullMonitorResultsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `MonitorsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">pullMonitorResultsCsv</a>({ ...params }) -> string</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns the most recent run's records as a CSV download. One row per record, with enrichment fields as columns, citations as a JSON column, and connected entities split into `event_associated_entities` and `mention_entities` JSON columns.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.monitors.pullMonitorResultsCsv({
+    monitor_id: "monitor_id"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.PullMonitorResultsCsvRequest` 
     
 </dd>
 </dl>

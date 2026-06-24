@@ -271,6 +271,88 @@ export class MonitorsClient {
     }
 
     /**
+     * Returns the most recent run's records as a CSV download. One row per record, with enrichment fields as columns, citations as a JSON column, and connected entities split into `event_associated_entities` and `mention_entities` JSON columns.
+     *
+     * @param {CatchAllApi.PullMonitorResultsCsvRequest} request
+     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.NotFoundError}
+     *
+     * @example
+     *     await client.monitors.pullMonitorResultsCsv({
+     *         monitor_id: "monitor_id"
+     *     })
+     */
+    public pullMonitorResultsCsv(
+        request: CatchAllApi.PullMonitorResultsCsvRequest,
+        requestOptions?: MonitorsClient.RequestOptions,
+    ): core.HttpResponsePromise<string> {
+        return core.HttpResponsePromise.fromPromise(this.__pullMonitorResultsCsv(request, requestOptions));
+    }
+
+    private async __pullMonitorResultsCsv(
+        request: CatchAllApi.PullMonitorResultsCsvRequest,
+        requestOptions?: MonitorsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<string>> {
+        const { monitor_id: monitorId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.CatchAllApiEnvironment.Default,
+                `catchAll/monitors/pull/${core.url.encodePathParam(monitorId)}/csv`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            responseType: "text",
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as string, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 403:
+                    throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.CatchAllApiError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/catchAll/monitors/pull/{monitor_id}/csv",
+        );
+    }
+
+    /**
      * Return all jobs executed by a monitor.
      *
      * @param {CatchAllApi.ListMonitorJobsRequest} request

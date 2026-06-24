@@ -24,6 +24,10 @@ export interface PullMonitorResponseDto {
     all_records?: CatchAllApi.MonitorRecord[] | undefined;
     /** Record limit applied to this monitor's jobs. */
     limit?: (number | null) | undefined;
+    /** Datasets used to narrow retrieval scope, each with `id` and `name`. */
+    connected_datasets?: CatchAllApi.ConnectedDataset[] | undefined;
+    /** True when the reference job was submitted as an all-news (watchlist-generic) query. */
+    is_all_news_query?: boolean | undefined;
 }
 
 export namespace PullMonitorResponseDto {

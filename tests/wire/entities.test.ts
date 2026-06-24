@@ -17,6 +17,7 @@ describe("EntitiesClient", () => {
                     organization_id: "e5d9e9b0-e415-4941-8ef0-916c5ee56207",
                     name: "NewsCatcher",
                     description: "AI-powered news data provider",
+                    external_entity_id: "crm-12345",
                     additional_attributes: {
                         company_attributes: {
                             domain: "newscatcherapi.com",
@@ -287,6 +288,7 @@ describe("EntitiesClient", () => {
             organization_id: "e5d9e9b0-e415-4941-8ef0-916c5ee56207",
             name: "NewsCatcher",
             description: "AI-powered news data provider",
+            external_entity_id: "crm-12345",
             additional_attributes: {
                 company_attributes: {
                     domain: "newscatcherapi.com",
@@ -429,6 +431,7 @@ describe("EntitiesClient", () => {
             organization_id: "e5d9e9b0-e415-4941-8ef0-916c5ee56207",
             name: "NewsCatcher",
             description: "AI-powered news data provider",
+            external_entity_id: "crm-12345",
             additional_attributes: {
                 company_attributes: {
                     domain: "newscatcherapi.com",

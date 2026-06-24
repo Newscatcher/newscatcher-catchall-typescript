@@ -5,5 +5,6 @@ export type { EnableMonitorRequestDto } from "./EnableMonitorRequestDto.js";
 export type { GetMonitorStatusHistoryRequest } from "./GetMonitorStatusHistoryRequest.js";
 export type { ListMonitorJobsRequest } from "./ListMonitorJobsRequest.js";
 export type { ListMonitorsRequest } from "./ListMonitorsRequest.js";
+export type { PullMonitorResultsCsvRequest } from "./PullMonitorResultsCsvRequest.js";
 export type { PullMonitorResultsRequest } from "./PullMonitorResultsRequest.js";
 export type { UpdateMonitorRequestDto } from "./UpdateMonitorRequestDto.js";

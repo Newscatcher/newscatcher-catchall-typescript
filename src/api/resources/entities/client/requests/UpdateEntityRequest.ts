@@ -21,5 +21,7 @@ export interface UpdateEntityRequest {
     name?: string;
     /** Updated description. */
     description?: string;
+    /** Updated external identifier for this entity. */
+    external_entity_id?: string;
     additional_attributes?: CatchAllApi.AdditionalAttributes;
 }
