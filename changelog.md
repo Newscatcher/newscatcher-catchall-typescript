@@ -1,3 +1,19 @@
+## [4.0.0] - 2026-06-24
+### Breaking Changes
+- **`CreateMonitorRequestDto.webhook`** — replaced by `webhook_ids?: string[]`; pass an array of pre-registered webhook IDs (e.g. `webhook_ids: ["<id>"]`) instead of an inline `WebhookDto` object.
+- **`UpdateMonitorRequestDto.webhook`** — replaced by `webhook_ids?: string[]`; update all `updateMonitor` calls to pass an array of webhook IDs instead of a `WebhookDto` object.
+
+### Added
+- **`WebhooksClient`** — new top-level client (`client.webhooks`) for creating, retrieving, updating, deleting, and test-firing reusable webhook endpoints; supports Slack, Microsoft Teams, and generic HTTP targets, plus resource assignment and delivery history retrieval.
+- **`ProjectsClient`** — new top-level client (`client.projects`) for creating, retrieving, updating, deleting, and managing resource associations (jobs, monitors, datasets) for projects.
+- **`JobsClient.validateQuery()`** — validates a plain-text query before job submission, returning a structured quality assessment with status, issues, and suggestions.
+- **`JobsClient.getJobResultsCsv()`** and **`MonitorsClient.pullMonitorResultsCsv()`** — download completed job or monitor run results as a CSV string.
+- **`project_id`** and **`webhook_ids`** optional fields — added to `SubmitRequestDto`, `CreateMonitorRequestDto`, and list-request types (`ListDatasetsRequest`, `GetUserJobsRequest`, `ListMonitorsRequest`) to scope and notify resources by project or webhook; new fields also added to `InitializeRequestDto`, `PullJobResponseDto`, `PullMonitorResponseDto`, and `CreateEntityRequest`/`EntityResponse`.
+- See full changelog for all changes
+
+### Fixed
+- **`getResponseBody`** — now pins the upstream `Response` object to prevent undici's garbage collector from cancelling in-flight body streams.
+
 ## 2.0.0 - 2026-05-19
 ### Breaking Changes
 * **`ListEntitiesInDatasetRequest`** has been renamed to `ListDatasetEntitiesRequest`; update all type references and imports to use the new name.
