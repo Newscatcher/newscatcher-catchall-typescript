@@ -12,5 +12,7 @@ export interface CreateEntityRequest {
     entity_type?: CatchAllApi.EntityType | undefined;
     /** Free-text description of the entity used for disambiguation when similar names exist. */
     description?: string | undefined;
+    /** Optional external identifier for this entity. Free-form string, not enforced as unique. Use it to store your own CRM, data warehouse, or internal database ID so you can join CatchAll results back to your systems. */
+    external_entity_id?: string | undefined;
     additional_attributes?: CatchAllApi.AdditionalAttributes | undefined;
 }

@@ -176,6 +176,10 @@ describe("MonitorsClient", () => {
                 },
             ],
             limit: 100,
+            connected_datasets: [
+                { id: "9f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d", name: "My Portfolio", is_deleted: false },
+            ],
+            is_all_news_query: true,
         };
 
         server

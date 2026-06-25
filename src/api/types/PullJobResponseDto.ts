@@ -40,6 +40,10 @@ export interface PullJobResponseDto {
     total_pages?: number | undefined;
     /** Processing mode used for this job. */
     mode?: PullJobResponseDto.Mode | undefined;
+    /** Datasets used to narrow retrieval scope, each with `id` and `name`. */
+    connected_datasets?: CatchAllApi.ConnectedDataset[] | undefined;
+    /** True when the query was submitted as an all-news (watchlist-generic) query. */
+    is_all_news_query?: boolean | undefined;
     /** Present when the job was shared with the authenticated user by another organization member. `null` when the user owns the job. */
     sharing_info?: (CatchAllApi.SharingInfo | null) | undefined;
     /** Array of extracted records with structured data and citations. */

@@ -446,6 +446,10 @@ describe("JobsClient", () => {
             page_size: 2,
             total_pages: 2,
             mode: "base",
+            connected_datasets: [
+                { id: "9f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d", name: "My Portfolio", is_deleted: false },
+            ],
+            is_all_news_query: true,
             sharing_info: { shared_at: "2026-04-15T12:00:00Z", permission: "view", shared_by: "John Doe" },
             all_records: [
                 {
@@ -482,6 +486,7 @@ describe("JobsClient", () => {
                             relation: "Lucid Gravity is positioned as a direct competitor to the Tesla Model X.",
                             association_type: "event_associated",
                             type: "company",
+                            external_entity_id: "crm-12345",
                             company: {
                                 domain: "newscatcherapi.com",
                                 description: "Provider of news and web search APIs for developers",

@@ -12,6 +12,8 @@ export interface EntityResponse {
     name: string;
     /** Free-text description. */
     description?: (string | null) | undefined;
+    /** External identifier for this entity. Null when not set. */
+    external_entity_id?: (string | null) | undefined;
     additional_attributes?: CatchAllApi.AdditionalAttributes | undefined;
     status: CatchAllApi.EntityStatus;
     /** ID of the user who created this entity. */

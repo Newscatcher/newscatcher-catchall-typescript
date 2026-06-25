@@ -601,6 +601,7 @@ describe("DatasetsClient", () => {
                     entity_type: "company",
                     status: "pending",
                     description: "AI-powered news data provider",
+                    external_entity_id: "crm-12345",
                     attributes: {
                         domain: "newscatcherapi.com",
                         description: "Provider of news and web search APIs for developers",

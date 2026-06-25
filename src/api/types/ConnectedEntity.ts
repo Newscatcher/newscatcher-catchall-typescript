@@ -29,6 +29,8 @@ export interface ConnectedEntity {
     association_type?: string | undefined;
     /** The entity type. */
     type: string;
+    /** External identifier for this entity. Null when not set. */
+    external_entity_id?: (string | null) | undefined;
     /**
      * The stored attributes for this entity. Present only when attributes exist in the database.
      *
