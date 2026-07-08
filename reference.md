@@ -1936,6 +1936,79 @@ await client.webhooks.listWebhooksForResource({
 </dl>
 </details>
 
+<details><summary><code>client.webhooks.<a href="/src/api/resources/webhooks/client/Client.ts">triggerWebhook</a>({ ...params }) -> void</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Manually dispatches a webhook delivery for a resource on demand, without
+waiting for the next job or monitor cycle.
+
+Use this to re-deliver results after a failed delivery, replay a specific
+job's results, or validate a webhook against live data. The webhook must
+already be assigned to the resource.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.webhooks.triggerWebhook({
+    resource_type: "job",
+    resource_id: "3fec5b07-8786-46d7-9486-d43ff67eccd4",
+    webhook_id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    job_id: "3fec5b07-8786-46d7-9486-d43ff67eccd4"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.TriggerWebhookRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `WebhooksClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.webhooks.<a href="/src/api/resources/webhooks/client/Client.ts">getWebhookDeliveryHistory</a>({ ...params }) -> CatchAllApi.DeliveryHistoryResponseDto</code></summary>
 <dl>
 <dd>
@@ -2084,10 +2157,10 @@ await client.entities.listEntities({
 
 Creates a new company entity and begins background enrichment.
 
+Each entity requires a `name` plus at least one of: a `description` or a `domain`. Providing both is recommended — `domain` is the highest-signal identifier because it is unambiguous; a well-written `description` is the best alternative when no domain is available.
+
 The entity status starts as `pending` and transitions to `ready` once
-enrichment completes. Provide as much identifying information as
-possible — `domain` is the highest-signal field because it is
-unambiguous.
+enrichment completes.
 </dd>
 </dl>
 </dd>
@@ -2105,12 +2178,12 @@ unambiguous.
 await client.entities.createEntity({
     name: "NewsCatcher",
     entity_type: "company",
-    description: "AI-powered news data provider",
+    description: "NewsCatcher is a data-as-a-service company providing news intelligence APIs including the CatchAll Web Search API (2B+ web pages indexed) and News API (140,000+ sources, 100+ countries).",
     additional_attributes: {
         company_attributes: {
             domain: "newscatcherapi.com",
             key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-            alternative_names: ["NC", "NewsCatcher API"]
+            alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API"]
         }
     }
 });
@@ -2162,6 +2235,8 @@ await client.entities.createEntity({
 <dd>
 
 Creates multiple entities in a single request. Each entity is processed independently — a failure in one does not affect others.
+
+Each entity requires a `name` plus at least one of: a `description` or a `domain`. See [Create entity](https://www.newscatcherapi.com/docs/web-search-api/api-reference/entities/create-entity) for the full field reference.
 
 Returns an array of `{id, status}` objects in the same order as the input array.
 </dd>
@@ -2400,7 +2475,7 @@ await client.entities.updateEntity({
     description: "Updated description",
     additional_attributes: {
         company_attributes: {
-            alternative_names: ["NC", "NewsCatcher API", "NCA"]
+            alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API", "NCA"]
         }
     }
 });
@@ -2518,7 +2593,9 @@ await client.datasets.listDatasets({
 <dl>
 <dd>
 
-Creates a new dataset from a list of existing entity IDs.
+Creates a new dataset from a list of existing entity IDs. The optional `description` field here describes the dataset itself — it is separate from the entity-level `description` used for matching.
+
+Entities must be created before adding them to a dataset. Each entity requires a `name` plus at least one of: a `description` or a `domain`. Use [Create entity](https://www.newscatcherapi.com/docs/web-search-api/api-reference/entities/create-entity) or [Create entities batch](https://www.newscatcherapi.com/docs/web-search-api/api-reference/entities/create-entities-batch) to create entities first.
 
 If any of the provided entity IDs do not exist or do not belong to
 your organization, the request fails with `400`. All entity IDs must
@@ -2592,12 +2669,12 @@ await client.datasets.createDataset({
 <dl>
 <dd>
 
-Creates a new dataset by uploading a CSV file. Each row in the CSV becomes an entity. The `name` and `domain`columns are required; all other columns are optional.
+Creates a new dataset by uploading a CSV file. Each row in the CSV becomes an entity. Each row requires a `name` plus at least one of: a `description` or a `domain`; all other columns are optional. Note: `description` in the CSV is the entity's matching description — it is separate from the dataset-level `description` field in the form data.
 
 **CSV format:**
 ```csv
 name,description,domain,alternative_names,key_persons
-NewsCatcher,"AI-powered news data provider",newscatcherapi.com,"NC;NewsCatcher API","Artem Bugara;Maksym Sugonyaka"
+NewsCatcher,"NewsCatcher is a data-as-a-service company providing news intelligence APIs including the CatchAll Web Search API (2B+ web pages indexed) and News API (140,000+ sources, 100+ countries).",newscatcherapi.com,"NewsCatcher CatchAll;NewsCatcher API","Artem Bugara;Maksym Sugonyaka"
 OpenAI,"Artificial intelligence research company",openai.com,"Open AI","Sam Altman"
 ```
 

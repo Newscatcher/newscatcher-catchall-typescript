@@ -8,4 +8,5 @@ export type { ListWebhooksForResourceRequest } from "./ListWebhooksForResourceRe
 export type { ListWebhooksRequest } from "./ListWebhooksRequest.js";
 export type { RemoveWebhookResourceRequest } from "./RemoveWebhookResourceRequest.js";
 export type { TestWebhookRequestDto } from "./TestWebhookRequestDto.js";
+export type { TriggerWebhookRequest } from "./TriggerWebhookRequest.js";
 export type { UpdateWebhookRequestDto } from "./UpdateWebhookRequestDto.js";

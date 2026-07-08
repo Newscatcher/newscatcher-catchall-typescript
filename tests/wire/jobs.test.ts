@@ -489,9 +489,8 @@ describe("JobsClient", () => {
                             external_entity_id: "crm-12345",
                             company: {
                                 domain: "newscatcherapi.com",
-                                description: "Provider of news and web search APIs for developers",
                                 key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-                                alternative_names: ["NC", "NewsCatcher API"],
+                                alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API"],
                             },
                         },
                     ],

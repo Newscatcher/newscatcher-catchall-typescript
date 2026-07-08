@@ -13,6 +13,21 @@ export interface DatasetResponse {
     description?: (string | null) | undefined;
     /** Total number of entities in this dataset. */
     entity_count?: number | undefined;
+    /**
+     * Count of entities grouped by processing status. Keys are status values
+     * (`ready`, `pending`, `enriching`, `failed`); values are entity counts.
+     */
+    entity_status_breakdown?: Record<string, number> | undefined;
+    /**
+     * Overall health score of the dataset, from 0 to 100. Reflects how many
+     * entities have sufficient identifying information for reliable matching.
+     */
+    health_score?: number | undefined;
+    /**
+     * Health scores broken down by entity type. Keys are entity types
+     * (e.g. `company`); values are scores from 0 to 100.
+     */
+    health_breakdown?: Record<string, number> | undefined;
     latest_status?: CatchAllApi.DatasetStatus | undefined;
     /** ID of the user who created this dataset. */
     created_by_user_id?: string | undefined;

@@ -45,6 +45,7 @@ export * from "./EntitySummary.js";
 export * from "./EntityType.js";
 export * from "./EntityValidationErrorBody.js";
 export * from "./Error_.js";
+export * from "./FormatterConfigDto.js";
 export * from "./GetPlanLimitsResponseDto.js";
 export * from "./GetWebhookResponseDto.js";
 export * from "./HttpMethod.js";

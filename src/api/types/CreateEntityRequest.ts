@@ -3,14 +3,16 @@
 import type * as CatchAllApi from "../index.js";
 
 /**
- * Request body for creating a single entity. Only `name` is required.
+ * Request body for creating a single entity. The `name` field is required.
+ * You must also provide at least one of: a top-level `description` or a `domain`
+ * inside `additional_attributes.company_attributes`.
  * The more fields you provide, the better the matching quality.
  */
 export interface CreateEntityRequest {
     /** The company or person name. Required and must be non-empty. */
     name: string;
     entity_type?: CatchAllApi.EntityType | undefined;
-    /** Free-text description of the entity used for disambiguation when similar names exist. */
+    /** Free-text description of the entity used for disambiguation when similar names exist. See [Writing effective descriptions](https://www.newscatcherapi.com/docs/web-search-api/concepts/company-search#writing-effective-descriptions) for guidance on improving matching quality. */
     description?: string | undefined;
     /** Optional external identifier for this entity. Free-form string, not enforced as unique. Use it to store your own CRM, data warehouse, or internal database ID so you can join CatchAll results back to your systems. */
     external_entity_id?: string | undefined;

@@ -4,6 +4,7 @@ import type { BaseClientOptions, BaseRequestOptions } from "../../../../BaseClie
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../BaseClient.js";
 import { mergeHeaders } from "../../../../core/headers.js";
 import * as core from "../../../../core/index.js";
+import { mergeAdditionalBodyParameters } from "../../../../core/requestBody.js";
 import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
@@ -123,10 +124,10 @@ export class EntitiesClient {
     /**
      * Creates a new company entity and begins background enrichment.
      *
+     * Each entity requires a `name` plus at least one of: a `description` or a `domain`. Providing both is recommended — `domain` is the highest-signal identifier because it is unambiguous; a well-written `description` is the best alternative when no domain is available.
+     *
      * The entity status starts as `pending` and transitions to `ready` once
-     * enrichment completes. Provide as much identifying information as
-     * possible — `domain` is the highest-signal field because it is
-     * unambiguous.
+     * enrichment completes.
      *
      * @param {CatchAllApi.CreateEntityRequest} request
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -138,12 +139,12 @@ export class EntitiesClient {
      *     await client.entities.createEntity({
      *         name: "NewsCatcher",
      *         entity_type: "company",
-     *         description: "AI-powered news data provider",
+     *         description: "NewsCatcher is a data-as-a-service company providing news intelligence APIs including the CatchAll Web Search API (2B+ web pages indexed) and News API (140,000+ sources, 100+ countries).",
      *         additional_attributes: {
      *             company_attributes: {
      *                 domain: "newscatcherapi.com",
      *                 key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-     *                 alternative_names: ["NC", "NewsCatcher API"]
+     *                 alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API"]
      *             }
      *         }
      *     })
@@ -177,7 +178,7 @@ export class EntitiesClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -211,6 +212,8 @@ export class EntitiesClient {
 
     /**
      * Creates multiple entities in a single request. Each entity is processed independently — a failure in one does not affect others.
+     *
+     * Each entity requires a `name` plus at least one of: a `description` or a `domain`. See [Create entity](https://www.newscatcherapi.com/docs/web-search-api/api-reference/entities/create-entity) for the full field reference.
      *
      * Returns an array of `{id, status}` objects in the same order as the input array.
      *
@@ -275,7 +278,7 @@ export class EntitiesClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -489,7 +492,7 @@ export class EntitiesClient {
      *         description: "Updated description",
      *         additional_attributes: {
      *             company_attributes: {
-     *                 alternative_names: ["NC", "NewsCatcher API", "NCA"]
+     *                 alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API", "NCA"]
      *             }
      *         }
      *     })
@@ -524,7 +527,7 @@ export class EntitiesClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: _body,
+            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
