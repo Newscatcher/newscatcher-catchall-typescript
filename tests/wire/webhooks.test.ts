@@ -939,6 +939,95 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
 
+    test("triggerWebhook (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhook/trigger/job/3fec5b07-8786-46d7-9486-d43ff67eccd4")
+            .respondWith()
+            .statusCode(200)
+            .build();
+
+        const response = await client.webhooks.triggerWebhook({
+            resource_type: "job",
+            resource_id: "3fec5b07-8786-46d7-9486-d43ff67eccd4",
+            webhook_id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            job_id: "3fec5b07-8786-46d7-9486-d43ff67eccd4",
+        });
+        expect(response).toEqual(undefined);
+    });
+
+    test("triggerWebhook (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhook/trigger/job/resource_id")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.triggerWebhook({
+                resource_type: "job",
+                resource_id: "resource_id",
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("triggerWebhook (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhook/trigger/job/resource_id")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.triggerWebhook({
+                resource_type: "job",
+                resource_id: "resource_id",
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
+    test("triggerWebhook (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhook/trigger/job/resource_id")
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.triggerWebhook({
+                resource_type: "job",
+                resource_id: "resource_id",
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
+    });
+
     test("getWebhookDeliveryHistory (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });

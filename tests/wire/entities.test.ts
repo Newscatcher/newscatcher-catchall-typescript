@@ -16,14 +16,14 @@ describe("EntitiesClient", () => {
                     entity_type: "company",
                     organization_id: "e5d9e9b0-e415-4941-8ef0-916c5ee56207",
                     name: "NewsCatcher",
-                    description: "AI-powered news data provider",
+                    description:
+                        "NewsCatcher is a data-as-a-service company providing news intelligence APIs including the CatchAll Web Search API (2B+ web pages indexed) and News API (140,000+ sources, 100+ countries).",
                     external_entity_id: "crm-12345",
                     additional_attributes: {
                         company_attributes: {
                             domain: "newscatcherapi.com",
-                            description: "Provider of news and web search APIs for developers",
                             key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-                            alternative_names: ["NC", "NewsCatcher API"],
+                            alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API"],
                         },
                     },
                     status: "pending",
@@ -64,12 +64,13 @@ describe("EntitiesClient", () => {
         const rawRequestBody = {
             name: "NewsCatcher",
             entity_type: "company",
-            description: "AI-powered news data provider",
+            description:
+                "NewsCatcher is a data-as-a-service company providing news intelligence APIs including the CatchAll Web Search API (2B+ web pages indexed) and News API (140,000+ sources, 100+ countries).",
             additional_attributes: {
                 company_attributes: {
                     domain: "newscatcherapi.com",
                     key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-                    alternative_names: ["NC", "NewsCatcher API"],
+                    alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API"],
                 },
             },
         };
@@ -87,12 +88,13 @@ describe("EntitiesClient", () => {
         const response = await client.entities.createEntity({
             name: "NewsCatcher",
             entity_type: "company",
-            description: "AI-powered news data provider",
+            description:
+                "NewsCatcher is a data-as-a-service company providing news intelligence APIs including the CatchAll Web Search API (2B+ web pages indexed) and News API (140,000+ sources, 100+ countries).",
             additional_attributes: {
                 company_attributes: {
                     domain: "newscatcherapi.com",
                     key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-                    alternative_names: ["NC", "NewsCatcher API"],
+                    alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API"],
                 },
             },
         });
@@ -287,14 +289,14 @@ describe("EntitiesClient", () => {
             entity_type: "company",
             organization_id: "e5d9e9b0-e415-4941-8ef0-916c5ee56207",
             name: "NewsCatcher",
-            description: "AI-powered news data provider",
+            description:
+                "NewsCatcher is a data-as-a-service company providing news intelligence APIs including the CatchAll Web Search API (2B+ web pages indexed) and News API (140,000+ sources, 100+ countries).",
             external_entity_id: "crm-12345",
             additional_attributes: {
                 company_attributes: {
                     domain: "newscatcherapi.com",
-                    description: "Provider of news and web search APIs for developers",
                     key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-                    alternative_names: ["NC", "NewsCatcher API"],
+                    alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API"],
                 },
             },
             status: "ready",
@@ -423,21 +425,23 @@ describe("EntitiesClient", () => {
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
             description: "Updated description",
-            additional_attributes: { company_attributes: { alternative_names: ["NC", "NewsCatcher API", "NCA"] } },
+            additional_attributes: {
+                company_attributes: { alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API", "NCA"] },
+            },
         };
         const rawResponseBody = {
             id: "854198fa-f702-49db-a381-0427fa87f173",
             entity_type: "company",
             organization_id: "e5d9e9b0-e415-4941-8ef0-916c5ee56207",
             name: "NewsCatcher",
-            description: "AI-powered news data provider",
+            description:
+                "NewsCatcher is a data-as-a-service company providing news intelligence APIs including the CatchAll Web Search API (2B+ web pages indexed) and News API (140,000+ sources, 100+ countries).",
             external_entity_id: "crm-12345",
             additional_attributes: {
                 company_attributes: {
                     domain: "newscatcherapi.com",
-                    description: "Provider of news and web search APIs for developers",
                     key_persons: ["Artem Bugara", "Maksym Sugonyaka"],
-                    alternative_names: ["NC", "NewsCatcher API"],
+                    alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API"],
                 },
             },
             status: "ready",
@@ -460,7 +464,7 @@ describe("EntitiesClient", () => {
             description: "Updated description",
             additional_attributes: {
                 company_attributes: {
-                    alternative_names: ["NC", "NewsCatcher API", "NCA"],
+                    alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API", "NCA"],
                 },
             },
         });

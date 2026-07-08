@@ -9,7 +9,7 @@ import type * as CatchAllApi from "../../../../index.js";
  *         description: "Updated description",
  *         additional_attributes: {
  *             company_attributes: {
- *                 alternative_names: ["NC", "NewsCatcher API", "NCA"]
+ *                 alternative_names: ["NewsCatcher CatchAll", "NewsCatcher API", "NCA"]
  *             }
  *         }
  *     }

@@ -7,7 +7,12 @@ export interface InitializeResponseDto {
     query: string;
     /** Echo of the context from the request. Null if not provided. */
     context?: (string | null) | undefined;
-    /** Suggested validators for filtering relevant web pages. */
+    /**
+     * Suggested validators for filtering relevant web pages. When the job is
+     * submitted, the system may inject additional validators during the `analyzing`
+     * stage — check the returned `validators[]` in the job status to see the
+     * complete applied set.
+     */
     validators: CatchAllApi.ValidatorSchema[];
     /** Suggested enrichment fields for data extraction. */
     enrichments: CatchAllApi.EnrichmentSchema[];

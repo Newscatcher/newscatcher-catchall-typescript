@@ -26,8 +26,8 @@ export interface UpdateWebhookRequestDto {
     params?: Record<string, string>;
     /** Updated authentication configuration. Replaces existing auth entirely. */
     auth?: CatchAllApi.UpdateWebhookRequestDtoAuth;
-    /** Updated formatter configuration. */
-    formatter_config?: Record<string, unknown> | null;
+    /** Updated custom payload formatter. Set only when `type` is `custom`. */
+    formatter_config?: CatchAllApi.FormatterConfigDto | null;
     /** Set to `false` to disable delivery without deleting the webhook. */
     is_active?: boolean;
 }

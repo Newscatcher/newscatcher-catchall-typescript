@@ -10,8 +10,6 @@ export interface CompanyAttributes {
      * The most reliable identifier — strongly recommended when available.
      */
     domain?: (string | null) | undefined;
-    /** Detailed description of the company used for matching. */
-    description?: (string | null) | undefined;
     /** Names of key people associated with the company (founders, executives, etc.). Improves matching for articles that mention people rather than the company name. */
     key_persons?: (string[] | null) | undefined;
     /** Alternative names, abbreviations, or aliases. Helps resolve common variations of the company name. */

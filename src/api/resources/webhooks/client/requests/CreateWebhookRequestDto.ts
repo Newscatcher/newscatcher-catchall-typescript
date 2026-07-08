@@ -40,6 +40,6 @@ export interface CreateWebhookRequestDto {
      * - `basic`: Adds an `Authorization: Basic <credentials>` header.
      */
     auth?: CatchAllApi.CreateWebhookRequestDtoAuth;
-    /** Custom payload transformation configuration. Required only when `type` is `custom`. */
-    formatter_config?: Record<string, unknown> | null;
+    /** Custom payload formatter. Required when `type` is `custom`. */
+    formatter_config?: CatchAllApi.FormatterConfigDto | null;
 }
