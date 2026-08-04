@@ -5,6 +5,8 @@ import * as errors from "../../errors/index.js";
 import type * as CatchAllApi from "../index.js";
 
 export class UnprocessableEntityError extends errors.CatchAllApiError {
+    public declare readonly body: CatchAllApi.ValidationErrorResponse;
+
     constructor(body: CatchAllApi.ValidationErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "UnprocessableEntityError",

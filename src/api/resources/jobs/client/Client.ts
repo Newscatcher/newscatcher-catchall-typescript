@@ -33,6 +33,8 @@ export class JobsClient {
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.getUserJobs({
@@ -50,13 +52,14 @@ export class JobsClient {
         request: CatchAllApi.GetUserJobsRequest = {},
         requestOptions?: JobsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListUserJobsResponseDto>> {
-        const { page, page_size: pageSize, search, ownership, project_id: projectId } = request;
+        const { page, page_size: pageSize, search, ownership, project_id: projectId, mode } = request;
         const _queryParams: Record<string, unknown> = {
             page,
             page_size: pageSize,
             search,
             ownership: ownership != null ? ownership : undefined,
             project_id: projectId,
+            mode: mode != null ? mode : undefined,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -117,6 +120,8 @@ export class JobsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.validateQuery({
@@ -195,6 +200,8 @@ export class JobsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.initialize({
@@ -275,6 +282,8 @@ export class JobsClient {
      * @throws {@link CatchAllApi.BadRequestError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.createJob({
@@ -360,6 +369,8 @@ export class JobsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.getJobStatus({
@@ -436,6 +447,8 @@ export class JobsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.getJobResults({
@@ -513,13 +526,17 @@ export class JobsClient {
     }
 
     /**
-     * Returns a completed job's result records as a CSV download. One row per record, with enrichment fields as columns, citations as a JSON column, and connected entities split into `event_associated_entities` and `mention_entities` JSON columns.
+     * Returns a completed job's result records as a CSV download. One row per record, with enrichment fields as columns and citations as a JSON column.
+     *
+     * If the job used connected entity datasets, connected entities are split into `event_associated_entities` and `mention_entities` JSON columns. When no entity dataset was used, those two columns are omitted from the export entirely.
      *
      * @param {CatchAllApi.GetJobResultsCsvRequest} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.getJobResultsCsv({
@@ -598,6 +615,8 @@ export class JobsClient {
      * @throws {@link CatchAllApi.BadRequestError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.continueJob({
@@ -683,6 +702,8 @@ export class JobsClient {
      *
      * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.jobs.deleteJob({

@@ -367,6 +367,7 @@ describe("ProjectsClient", () => {
                 monitors: { key: "value" },
                 datasets: { total: 2 },
                 monitor_groups: { total: 0 },
+                webhooks: { total: 1 },
             },
         };
 

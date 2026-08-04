@@ -7,8 +7,8 @@ export interface DeliveryHistoryItemDto {
     id: number;
     /** Identifier of the webhook that was dispatched. */
     webhook_id: string;
-    /** Type of the resource that triggered the delivery. */
-    resource_type: CatchAllApi.MappableResourceType;
+    /** Type of the resource that triggered the delivery. `test` indicates a manual test delivery not tied to a real resource. */
+    resource_type: CatchAllApi.WebhookHistoryResourceType;
     /** Identifier of the resource that triggered the delivery. */
     resource_id: string;
     /** Extra context about the triggering event, such as job query or monitor schedule. */

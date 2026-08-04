@@ -30,6 +30,9 @@ export class MetaClient {
      *
      * @param {MetaClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
+     *
      * @example
      *     await client.meta.healthCheck()
      */
@@ -78,6 +81,9 @@ export class MetaClient {
      * Returns current API version.
      *
      * @param {MetaClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.meta.getVersion()
@@ -129,6 +135,8 @@ export class MetaClient {
      * @param {MetaClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.meta.getPlanLimits()

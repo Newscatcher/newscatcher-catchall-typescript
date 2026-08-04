@@ -5,6 +5,8 @@ import * as errors from "../../errors/index.js";
 import type * as CatchAllApi from "../index.js";
 
 export class UnauthorizedError extends errors.CatchAllApiError {
+    public declare readonly body: CatchAllApi.Error_;
+
     constructor(body: CatchAllApi.Error_, rawResponse?: core.RawResponse) {
         super({
             message: "UnauthorizedError",

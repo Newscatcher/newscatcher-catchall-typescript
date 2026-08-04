@@ -4,6 +4,7 @@ export * from "./entities/client/requests/index.js";
 export * as entities from "./entities/index.js";
 export * from "./jobs/client/requests/index.js";
 export * as jobs from "./jobs/index.js";
+export * from "./jobs/types/index.js";
 export * as meta from "./meta/index.js";
 export * from "./meta/types/index.js";
 export * from "./monitors/client/requests/index.js";
