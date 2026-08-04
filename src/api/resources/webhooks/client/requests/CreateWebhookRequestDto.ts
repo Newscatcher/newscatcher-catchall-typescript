@@ -8,7 +8,8 @@ import type * as CatchAllApi from "../../../../index.js";
  *         name: "Layoffs Alert",
  *         url: "https://hooks.slack.com/services/T000/B000/xxx",
  *         type: "slack",
- *         delivery_mode: "full"
+ *         delivery_mode: "full",
+ *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
  *     }
  */
 export interface CreateWebhookRequestDto {
@@ -42,4 +43,13 @@ export interface CreateWebhookRequestDto {
     auth?: CatchAllApi.CreateWebhookRequestDtoAuth;
     /** Custom payload formatter. Required when `type` is `custom`. */
     formatter_config?: CatchAllApi.FormatterConfigDto | null;
+    /**
+     * Optional project to attach this webhook to at creation time. Equivalent
+     * to creating the webhook and then calling
+     * [`POST /catchAll/projects/{project_id}/resources`](https://www.newscatcherapi.com/docs/web-search-api/api-reference/projects/add-resource)
+     * with `resource_type: webhook`.
+     *
+     * The project must belong to your organization.
+     */
+    project_id?: string | null;
 }

@@ -37,6 +37,8 @@ export class DatasetsClient {
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.listDatasets({
@@ -142,6 +144,8 @@ export class DatasetsClient {
      * @throws {@link CatchAllApi.BadRequestError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.createDataset({
@@ -235,6 +239,8 @@ export class DatasetsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     import { createReadStream } from "fs";
@@ -324,6 +330,8 @@ export class DatasetsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.getDataset({
@@ -407,6 +415,8 @@ export class DatasetsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.deleteDataset({
@@ -489,6 +499,8 @@ export class DatasetsClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.updateDataset({
@@ -581,6 +593,8 @@ export class DatasetsClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.addEntitiesToDataset({
@@ -674,6 +688,8 @@ export class DatasetsClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.removeEntitiesFromDataset({
@@ -767,6 +783,8 @@ export class DatasetsClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.listEntitiesInDataset({
@@ -866,6 +884,8 @@ export class DatasetsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.datasets.getDatasetStatusHistory({
@@ -953,6 +973,8 @@ export class DatasetsClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     import { createReadStream } from "fs";

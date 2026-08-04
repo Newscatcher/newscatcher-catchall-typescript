@@ -40,6 +40,8 @@ export class WebhooksClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.listWebhooks()
@@ -118,18 +120,24 @@ export class WebhooksClient {
     /**
      * Creates a new webhook endpoint for the organization.
      *
+     * Optionally pass `project_id` to attach the webhook to a project in the same request.
+     *
      * @param {CatchAllApi.CreateWebhookRequestDto} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.createWebhook({
      *         name: "Layoffs Alert",
      *         url: "https://hooks.slack.com/services/T000/B000/xxx",
      *         type: "slack",
-     *         delivery_mode: "full"
+     *         delivery_mode: "full",
+     *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
      *     })
      */
     public createWebhook(
@@ -179,6 +187,11 @@ export class WebhooksClient {
                         _response.error.body as CatchAllApi.Error_,
                         _response.rawResponse,
                     );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 422:
                     throw new CatchAllApi.UnprocessableEntityError(
                         _response.error.body as CatchAllApi.ValidationErrorResponse,
@@ -205,6 +218,8 @@ export class WebhooksClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.getWebhook({
@@ -293,6 +308,8 @@ export class WebhooksClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.deleteWebhook({
@@ -375,6 +392,8 @@ export class WebhooksClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.updateWebhook({
@@ -469,6 +488,8 @@ export class WebhooksClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.testWebhook({
@@ -563,6 +584,8 @@ export class WebhooksClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.listWebhookResources({
@@ -667,6 +690,8 @@ export class WebhooksClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.assignWebhookResource({
@@ -765,6 +790,8 @@ export class WebhooksClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.removeWebhookResource({
@@ -849,6 +876,8 @@ export class WebhooksClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.listWebhooksForResource({
@@ -957,6 +986,8 @@ export class WebhooksClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.triggerWebhook({
@@ -1057,6 +1088,8 @@ export class WebhooksClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.webhooks.getWebhookDeliveryHistory({

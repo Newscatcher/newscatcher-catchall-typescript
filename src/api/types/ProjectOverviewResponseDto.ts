@@ -18,5 +18,6 @@ export namespace ProjectOverviewResponseDto {
         monitors: CatchAllApi.ProjectOverviewCountsDto;
         datasets: CatchAllApi.ProjectOverviewCountsDto;
         monitor_groups: CatchAllApi.ProjectOverviewCountsDto;
+        webhooks: CatchAllApi.ProjectOverviewCountsDto;
     }
 }

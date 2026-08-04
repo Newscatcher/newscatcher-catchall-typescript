@@ -18,4 +18,6 @@ export interface GetUserJobsRequest {
     ownership?: CatchAllApi.OwnershipFilter;
     /** Filter results to resources belonging to this project. */
     project_id?: string;
+    /** Filter results by processing mode. Returns only jobs that ran in the specified mode. */
+    mode?: CatchAllApi.GetUserJobsRequestMode;
 }

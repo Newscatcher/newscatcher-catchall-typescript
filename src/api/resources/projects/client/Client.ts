@@ -38,6 +38,8 @@ export class ProjectsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.listProjects({
@@ -124,6 +126,8 @@ export class ProjectsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.createProject({
@@ -203,6 +207,8 @@ export class ProjectsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.getProject({
@@ -279,11 +285,15 @@ export class ProjectsClient {
     /**
      * Deletes a project. By default, assigned resources are unassigned but not deleted.
      *
+     * Webhooks are an exception: they are never deleted by this operation, even when `delete_resources` is `true`. Any attached webhook is detached from the project and continues to exist and deliver, because the same webhook may be attached to other projects.
+     *
      * @param {CatchAllApi.DeleteProjectRequest} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.deleteProject({
@@ -373,6 +383,8 @@ export class ProjectsClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.updateProject({
@@ -458,13 +470,15 @@ export class ProjectsClient {
     /**
      * Returns resource counts for a project, grouped by type and status.
      *
-     * For `jobs` and `monitors`, counts are broken down by status (for example, `completed`, `failed`). For `datasets` and `monitor_groups`, only a `total` count is returned.
+     * For `jobs` and `monitors`, counts are broken down by status (for example, `completed`, `failed`). For `datasets`, `monitor_groups`, and `webhooks`, only a `total` count is returned.
      *
      * @param {CatchAllApi.GetProjectOverviewRequest} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.getProjectOverview({
@@ -550,6 +564,8 @@ export class ProjectsClient {
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.listProjectResources({
@@ -649,6 +665,8 @@ export class ProjectsClient {
      * @throws {@link CatchAllApi.BadRequestError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.addResourceToProject({
@@ -740,6 +758,8 @@ export class ProjectsClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.projects.removeResourceFromProject({

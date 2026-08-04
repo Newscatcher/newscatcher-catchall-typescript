@@ -11,7 +11,7 @@ export interface ProjectResourceDto {
     resource_id: string;
     /**
      * Resource display name. For jobs, this is the original query
-     * string. For monitors and datasets, this is the resource name.
+     * string. For monitors, datasets, and webhooks, this is the resource name.
      */
     name?: string | undefined;
     /** Resource creation timestamp. */

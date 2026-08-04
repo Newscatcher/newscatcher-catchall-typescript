@@ -16,6 +16,12 @@ export interface WebhookResponseDto {
     headers?: Record<string, string> | undefined;
     /** Query parameters appended to the webhook URL. */
     params?: Record<string, string> | undefined;
+    /**
+     * Authentication configured for this webhook, discriminated by `type`.
+     * Secret values (`token`, `value`, `password`) are masked — the full
+     * credentials are never returned. Null when no authentication is set.
+     */
+    auth?: (CatchAllApi.WebhookResponseDtoAuth | null) | undefined;
     /** Custom payload formatter. Set only when `type` is `custom`. */
     formatter_config?: (CatchAllApi.FormatterConfigDto | null) | undefined;
     /** True if the webhook is active; false otherwise. */

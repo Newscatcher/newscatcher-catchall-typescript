@@ -410,7 +410,9 @@ await client.jobs.getJobResults({
 <dl>
 <dd>
 
-Returns a completed job's result records as a CSV download. One row per record, with enrichment fields as columns, citations as a JSON column, and connected entities split into `event_associated_entities` and `mention_entities` JSON columns.
+Returns a completed job's result records as a CSV download. One row per record, with enrichment fields as columns and citations as a JSON column.
+
+If the job used connected entity datasets, connected entities are split into `event_associated_entities` and `mention_entities` JSON columns. When no entity dataset was used, those two columns are omitted from the export entirely.
 </dd>
 </dl>
 </dd>
@@ -811,7 +813,9 @@ await client.monitors.pullMonitorResults({
 <dl>
 <dd>
 
-Returns the most recent run's records as a CSV download. One row per record, with enrichment fields as columns, citations as a JSON column, and connected entities split into `event_associated_entities` and `mention_entities` JSON columns.
+Returns the most recent run's records as a CSV download. One row per record, with enrichment fields as columns and citations as a JSON column.
+
+If the monitor's reference job used connected entity datasets, connected entities are split into `event_associated_entities` and `mention_entities` JSON columns. When no entity dataset was used, those two columns are omitted from the export entirely.
 </dd>
 </dl>
 </dd>
@@ -1340,6 +1344,8 @@ await client.webhooks.listWebhooks();
 <dd>
 
 Creates a new webhook endpoint for the organization.
+
+Optionally pass `project_id` to attach the webhook to a project in the same request.
 </dd>
 </dl>
 </dd>
@@ -1358,7 +1364,8 @@ await client.webhooks.createWebhook({
     name: "Layoffs Alert",
     url: "https://hooks.slack.com/services/T000/B000/xxx",
     type: "slack",
-    delivery_mode: "full"
+    delivery_mode: "full",
+    project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
 });
 
 ```
@@ -3483,7 +3490,9 @@ await client.projects.getProject({
 <dl>
 <dd>
 
-Deletes a project. By default, assigned resources are unassigned but not deleted. 
+Deletes a project. By default, assigned resources are unassigned but not deleted.
+
+Webhooks are an exception: they are never deleted by this operation, even when `delete_resources` is `true`. Any attached webhook is detached from the project and continues to exist and deliver, because the same webhook may be attached to other projects.
 </dd>
 </dl>
 </dd>
@@ -3616,7 +3625,7 @@ await client.projects.updateProject({
 
 Returns resource counts for a project, grouped by type and status.
 
-For `jobs` and `monitors`, counts are broken down by status (for example, `completed`, `failed`). For `datasets` and `monitor_groups`, only a `total` count is returned.
+For `jobs` and `monitors`, counts are broken down by status (for example, `completed`, `failed`). For `datasets`, `monitor_groups`, and `webhooks`, only a `total` count is returned.
 </dd>
 </dl>
 </dd>

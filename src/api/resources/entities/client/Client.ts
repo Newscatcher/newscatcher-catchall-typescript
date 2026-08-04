@@ -37,6 +37,8 @@ export class EntitiesClient {
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.entities.listEntities({
@@ -134,6 +136,8 @@ export class EntitiesClient {
      *
      * @throws {@link CatchAllApi.BadRequestError}
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.entities.createEntity({
@@ -222,6 +226,8 @@ export class EntitiesClient {
      *
      * @throws {@link CatchAllApi.BadRequestError}
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.entities.createEntitiesBatch({
@@ -321,6 +327,8 @@ export class EntitiesClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.entities.getEntity({
@@ -403,6 +411,8 @@ export class EntitiesClient {
      *
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.entities.deleteEntity({
@@ -485,6 +495,8 @@ export class EntitiesClient {
      * @throws {@link CatchAllApi.BadRequestError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link errors.CatchAllApiError}
+     * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.entities.updateEntity({

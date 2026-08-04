@@ -39,6 +39,7 @@ describe("WebhooksClient", () => {
                     method: "POST",
                     headers: { Authorization: "Bearer token123" },
                     params: { key: "value" },
+                    auth: { type: "api_key", header: "x-api-key", value: "sk-a***c123" },
                     is_active: true,
                     organization_id: "org-uuid-here",
                     created_by_user_id: "user-uuid-here",
@@ -88,6 +89,7 @@ describe("WebhooksClient", () => {
             url: "https://hooks.slack.com/services/T000/B000/xxx",
             type: "slack",
             delivery_mode: "full",
+            project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04",
         };
         const rawResponseBody = {
             success: true,
@@ -123,6 +125,7 @@ describe("WebhooksClient", () => {
             url: "https://hooks.slack.com/services/T000/B000/xxx",
             type: "slack",
             delivery_mode: "full",
+            project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04",
         });
         expect(response).toEqual(rawResponseBody);
     });
@@ -151,6 +154,29 @@ describe("WebhooksClient", () => {
     });
 
     test("createWebhook (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { name: "name", url: "url" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhooks")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.createWebhook({
+                name: "name",
+                url: "url",
+            });
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
+    test("createWebhook (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { name: "name", url: "url" };

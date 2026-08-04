@@ -9,6 +9,10 @@
 export interface DeleteProjectRequest {
     /** Unique project identifier. */
     project_id: string;
-    /** If true, permanently deletes all resources (jobs, monitors, datasets) assigned to the project. If false, the project is deleted and its resources are unassigned but not deleted. */
+    /**
+     * If true, permanently deletes all resources (jobs, monitors, datasets, monitor groups) assigned to the project. If false, the project is deleted and its resources are unassigned but not deleted.
+     *
+     * Webhooks are never deleted by either setting — they are only detached from the project.
+     */
     delete_resources?: boolean;
 }
