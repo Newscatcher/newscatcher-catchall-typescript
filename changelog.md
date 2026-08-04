@@ -1,3 +1,5 @@
+## [4.0.2] - 2026-08-04
+
 ## [4.0.0] - 2026-06-24
 ### Breaking Changes
 - **`CreateMonitorRequestDto.webhook`** — replaced by `webhook_ids?: string[]`; pass an array of pre-registered webhook IDs (e.g. `webhook_ids: ["<id>"]`) instead of an inline `WebhookDto` object.
