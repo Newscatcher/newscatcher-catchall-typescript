@@ -3,27 +3,27 @@
 import type * as CatchAllApi from "../index.js";
 
 /**
- * **First execution:** The initial webhook after monitor creation includes all records from the reference job, providing immediate access to collected data.
+ * **First execution:** The initial webhook after event monitor creation includes all records from the reference job, providing immediate access to collected data.
  *
  * **Subsequent executions:** Only new records (after deduplication) are included.
  */
 export interface WebhookPayload {
-    /** Monitor identifier. */
+    /** Event monitor identifier. */
     monitor_id?: string | undefined;
-    /** Reference job used as template for this monitor. */
+    /** Reference job used as template for this event monitor. */
     reference_job_id?: string | undefined;
     /** Job ID of the most recent execution. */
     latest_job_id?: string | undefined;
     /** Number of new records from latest job (after deduplication). */
     records_count?: number | undefined;
-    /** Total number of jobs executed by this monitor. */
+    /** Total number of jobs executed by this event monitor. */
     jobs_processed?: number | undefined;
     /** The date when the webhook was triggered in ISO 8601 format with UTC timezone. */
     updated_at?: string | undefined;
-    /** Cron expression defining the monitor schedule. */
+    /** Cron expression defining the event monitor schedule. */
     cron_expression?: string | undefined;
     /** Timezone for schedule execution. */
     timezone?: string | undefined;
-    /** Array of new records from the latest job execution (includes monitor-specific fields like added_on, updated_on). */
+    /** Array of new records from the latest job execution (includes event monitor-specific fields like added_on, updated_on). */
     records?: CatchAllApi.MonitorRecord[] | undefined;
 }

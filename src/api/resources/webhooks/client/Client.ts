@@ -20,8 +20,8 @@ export declare namespace WebhooksClient {
  * Operations to create and manage reusable webhook endpoints.
  *
  * A webhook is a named HTTP endpoint that receives a POST notification
- * when a job or monitor completes. Create webhooks once at the organization
- * level and attach them to any number of jobs or monitors via `webhook_ids`.
+ * when a job or event monitor completes. Create webhooks once at the organization
+ * level and attach them to any number of jobs or event monitors via `webhook_ids`.
  * Supports Slack, Microsoft Teams, and generic HTTP targets with configurable
  * delivery modes, authentication, and headers.
  */
@@ -38,13 +38,17 @@ export class WebhooksClient {
      * @param {CatchAllApi.ListWebhooksRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.webhooks.listWebhooks()
+     *     await client.webhooks.listWebhooks({
+     *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
+     *     })
      */
     public listWebhooks(
         request: CatchAllApi.ListWebhooksRequest = {},
@@ -57,11 +61,12 @@ export class WebhooksClient {
         request: CatchAllApi.ListWebhooksRequest = {},
         requestOptions?: WebhooksClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListWebhooksResponseDto>> {
-        const { page, page_size: pageSize, search } = request;
+        const { page, page_size: pageSize, search, project_id: projectId } = request;
         const _queryParams: Record<string, unknown> = {
             page,
             page_size: pageSize,
             search,
+            project_id: projectId,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -95,8 +100,18 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
                         _response.error.body as CatchAllApi.Error_,
                         _response.rawResponse,
                     );
@@ -125,6 +140,7 @@ export class WebhooksClient {
      * @param {CatchAllApi.CreateWebhookRequestDto} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -182,6 +198,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -215,6 +236,7 @@ export class WebhooksClient {
      * @param {CatchAllApi.GetWebhookRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -266,6 +288,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -301,11 +328,12 @@ export class WebhooksClient {
     /**
      * Permanently deletes a webhook and removes all resource assignments.
      *
-     * Assigned jobs and monitors no longer trigger delivery to this webhook. This operation cannot be undone.
+     * Assigned jobs and event monitors no longer trigger delivery to this webhook. This operation cannot be undone.
      *
      * @param {CatchAllApi.DeleteWebhookRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -356,6 +384,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -389,6 +422,7 @@ export class WebhooksClient {
      * @param {CatchAllApi.UpdateWebhookRequestDto} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -445,6 +479,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -480,11 +519,12 @@ export class WebhooksClient {
     /**
      * Sends a test HTTP request to the webhook URL using the webhook's configured method, headers, and auth. Returns the response from the target endpoint.
      *
-     * Use this to verify URL reachability and authentication before attaching the webhook to a live job or monitor.
+     * Use this to verify URL reachability and authentication before attaching the webhook to a live job or event monitor.
      *
      * @param {CatchAllApi.TestWebhookRequestDto} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -543,6 +583,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -581,6 +626,7 @@ export class WebhooksClient {
      * @param {CatchAllApi.ListWebhookResourcesRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -644,6 +690,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -677,7 +728,7 @@ export class WebhooksClient {
     }
 
     /**
-     * Attaches a job, monitor, or monitor group to the webhook. When the
+     * Attaches a job, event monitor, or event monitor group to the webhook. When the
      * resource completes, the webhook receives a delivery.
      *
      * A single webhook can be assigned to multiple resources. Each resource
@@ -687,6 +738,7 @@ export class WebhooksClient {
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -748,6 +800,11 @@ export class WebhooksClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new CatchAllApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -788,6 +845,7 @@ export class WebhooksClient {
      * @param {CatchAllApi.RemoveWebhookResourceRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -840,6 +898,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -873,6 +936,7 @@ export class WebhooksClient {
      * @param {CatchAllApi.ListWebhooksForResourceRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -940,6 +1004,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -974,7 +1043,7 @@ export class WebhooksClient {
 
     /**
      * Manually dispatches a webhook delivery for a resource on demand, without
-     * waiting for the next job or monitor cycle.
+     * waiting for the next job or event monitor cycle.
      *
      * Use this to re-deliver results after a failed delivery, replay a specific
      * job's results, or validate a webhook against live data. The webhook must
@@ -983,6 +1052,7 @@ export class WebhooksClient {
      * @param {CatchAllApi.TriggerWebhookRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -1045,6 +1115,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -1085,6 +1160,7 @@ export class WebhooksClient {
      * @param {CatchAllApi.GetWebhookDeliveryHistoryRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -1150,6 +1226,11 @@ export class WebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,

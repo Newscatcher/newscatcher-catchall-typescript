@@ -19,7 +19,7 @@ export declare namespace ProjectsClient {
 /**
  * Operations to create, organize, and manage projects.
  *
- * A project is a named container for jobs, monitors, and datasets. Group
+ * A project is a named container for jobs, event monitors, and datasets. Group
  * related resources by use case, team, or client, and share them with
  * teammates. Resources can be assigned at creation time or post-hoc.
  */
@@ -36,6 +36,7 @@ export class ProjectsClient {
      * @param {CatchAllApi.ListProjectsRequest} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
@@ -96,6 +97,11 @@ export class ProjectsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -124,6 +130,7 @@ export class ProjectsClient {
      * @param {CatchAllApi.CreateProjectRequestDto} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
@@ -177,6 +184,11 @@ export class ProjectsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -205,6 +217,7 @@ export class ProjectsClient {
      * @param {CatchAllApi.GetProjectRequest} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -255,6 +268,11 @@ export class ProjectsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -290,6 +308,7 @@ export class ProjectsClient {
      * @param {CatchAllApi.DeleteProjectRequest} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -347,6 +366,11 @@ export class ProjectsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -380,6 +404,7 @@ export class ProjectsClient {
      * @param {CatchAllApi.UpdateProjectRequestDto} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -435,6 +460,11 @@ export class ProjectsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -475,6 +505,7 @@ export class ProjectsClient {
      * @param {CatchAllApi.GetProjectOverviewRequest} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -528,6 +559,11 @@ export class ProjectsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -561,6 +597,7 @@ export class ProjectsClient {
      * @param {CatchAllApi.ListProjectResourcesRequest} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -624,6 +661,11 @@ export class ProjectsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -663,6 +705,7 @@ export class ProjectsClient {
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -722,6 +765,11 @@ export class ProjectsClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new CatchAllApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -756,6 +804,7 @@ export class ProjectsClient {
      * @param {CatchAllApi.RemoveResourceFromProjectRequest} request
      * @param {ProjectsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -811,6 +860,11 @@ export class ProjectsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,

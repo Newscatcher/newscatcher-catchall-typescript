@@ -7,6 +7,6 @@
  *     }
  */
 export interface GetMonitorStatusHistoryRequest {
-    /** Monitor identifier. */
+    /** Event monitor identifier. */
     monitor_id: string;
 }

@@ -41,6 +41,7 @@ describe("EntitiesClient", () => {
 
         const response = await client.entities.listEntities({
             search: "NewsCatcher",
+            project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04",
         });
         expect(response).toEqual(rawResponseBody);
     });
@@ -51,11 +52,50 @@ describe("EntitiesClient", () => {
 
         const rawResponseBody = {};
 
+        server.mockEndpoint().get("/catchAll/entities").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.entities.listEntities();
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listEntities (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
         server.mockEndpoint().get("/catchAll/entities").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
             return await client.entities.listEntities();
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
+    });
+
+    test("listEntities (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/catchAll/entities").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.entities.listEntities();
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
+    test("listEntities (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/catchAll/entities").respondWith().statusCode(422).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.entities.listEntities();
+        }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
 
     test("createEntity (1)", async () => {
@@ -124,6 +164,28 @@ describe("EntitiesClient", () => {
     });
 
     test("createEntity (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { name: "x" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/entities")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.entities.createEntity({
+                name: "x",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("createEntity (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { name: "x" };
@@ -262,6 +324,35 @@ describe("EntitiesClient", () => {
             .post("/catchAll/entities/batch")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.entities.createEntitiesBatch({
+                entities: [
+                    {
+                        name: "x",
+                    },
+                    {
+                        name: "x",
+                    },
+                ],
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("createEntitiesBatch (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { entities: [{ name: "x" }, { name: "x" }] };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/entities/batch")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -329,6 +420,27 @@ describe("EntitiesClient", () => {
             .mockEndpoint()
             .get("/catchAll/entities/entity_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.entities.getEntity({
+                entity_id: "entity_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getEntity (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/entities/entity_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -340,7 +452,7 @@ describe("EntitiesClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getEntity (3)", async () => {
+    test("getEntity (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -388,6 +500,27 @@ describe("EntitiesClient", () => {
             .mockEndpoint()
             .delete("/catchAll/entities/entity_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.entities.deleteEntity({
+                entity_id: "entity_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("deleteEntity (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/entities/entity_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -399,7 +532,7 @@ describe("EntitiesClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("deleteEntity (3)", async () => {
+    test("deleteEntity (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -504,6 +637,28 @@ describe("EntitiesClient", () => {
             .patch("/catchAll/entities/entity_id")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.entities.updateEntity({
+                entity_id: "entity_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("updateEntity (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .patch("/catchAll/entities/entity_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -515,7 +670,7 @@ describe("EntitiesClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("updateEntity (4)", async () => {
+    test("updateEntity (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};

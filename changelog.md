@@ -1,3 +1,19 @@
+## [5.0.0] - 2026-09-30
+### Breaking Changes
+- **`MonitorsClient`** — renamed to `EventMonitorsClient`; update all imports, instantiations, and type references to use `EventMonitorsClient`.
+- **`client.monitors`** — renamed to `client.eventMonitors`; update every call site from `client.monitors.*` to `client.eventMonitors.*`.
+- **`./monitors` subpath export** — renamed to `./eventMonitors` in `package.json`; update deep imports from `"newscatcher-catchall-sdk/monitors"` to `"newscatcher-catchall-sdk/eventMonitors"`.
+
+### Added
+- **`JobsClient.listSourceGroups()`** — new method returning a paginated list of curated domain allowlists (source groups); use a group's `slug` in `SubmitRequestDto.source_groups` (max 20) to scope job fetching.
+- **`SourceGroupRef`**, **`ListSourceGroupsResponseDto`**, and **`EventTags`** — new types supporting source groups and fixed-taxonomy event classification (`event_type`, `sector`) on `Record_`.
+- **`UpdateMonitorRequestDto.schedule`** and **`UpdateMonitorRequestDto.timezone`** — new optional fields to replace an event monitor's schedule in a single `updateMonitor` call.
+- **`UnauthorizedError` (HTTP 401)** — now thrown by all methods across `EventMonitorsClient`, `DatasetsClient`, `EntitiesClient`, `ProjectsClient`, `WebhooksClient`, `JobsClient`, and `MetaClient`.
+- **`ListEntitiesRequest.project_id`**, **`ListWebhooksRequest.project_id`**, and **`SubmitRequestDto.source_groups`** — new optional filter/scope fields added to their respective request types.
+
+### Changed
+- **`ProjectsClient` and `WebhooksClient` JSDoc** — references to "monitor" and "monitor group" updated to "event monitor" and "event monitor group" throughout method and field descriptions.
+
 ## [4.0.2] - 2026-08-04
 
 ## [4.0.0] - 2026-06-24

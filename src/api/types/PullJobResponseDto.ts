@@ -42,6 +42,11 @@ export interface PullJobResponseDto {
     mode?: PullJobResponseDto.Mode | undefined;
     /** Datasets used to narrow retrieval scope, each with `id` and `name`. */
     connected_datasets?: CatchAllApi.ConnectedDataset[] | undefined;
+    /**
+     * Source groups attached to this job, each with `slug`, `name`, and `description`.
+     * `null` when the job was not scoped to any source group.
+     */
+    source_groups?: (CatchAllApi.SourceGroupRef[] | null) | undefined;
     /** True when the query was submitted as an all-news (watchlist-generic) query. */
     is_all_news_query?: boolean | undefined;
     /** Present when the job was shared with the authenticated user by another organization member. `null` when the user owns the job. */

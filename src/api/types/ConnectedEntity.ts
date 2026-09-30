@@ -3,7 +3,7 @@
 import type * as CatchAllApi from "../index.js";
 
 /**
- * A company entity matched to a record in a Company Watchlist job, with a relevance score and explanation.
+ * A company entity matched to a record in a Company Monitors job, with a relevance score and explanation.
  *
  * Only entities with `ed_score` ≥ 1 appear in results. Entities scored 0 are filtered out before the response is returned. When `ed_score_min` is set at submission time, entities below that threshold are excluded.
  */

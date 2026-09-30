@@ -21,7 +21,7 @@ export declare namespace DatasetsClient {
  *
  * A dataset is a named collection of entities — think of it as a watchlist or
  * portfolio. Connect a dataset to a job via `connected_dataset_ids` to activate
- * Company Watchlist. Datasets can be reused across multiple jobs and monitors.
+ * Company Monitors. Datasets can be reused across multiple jobs and event monitors.
  */
 export class DatasetsClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<DatasetsClient.Options>;
@@ -36,6 +36,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.ListDatasetsRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
@@ -109,6 +110,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -142,6 +148,7 @@ export class DatasetsClient {
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
@@ -198,6 +205,11 @@ export class DatasetsClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new CatchAllApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -237,6 +249,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.CreateDatasetFromCsvRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
@@ -300,6 +313,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -328,6 +346,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.GetDatasetRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -378,6 +397,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -413,6 +437,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.DeleteDatasetRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -463,6 +488,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -496,6 +526,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.UpdateDatasetRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -552,6 +583,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -590,6 +626,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.AddEntitiesToDatasetRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -647,6 +684,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -685,6 +727,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.RemoveEntitiesFromDatasetRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -742,6 +785,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -780,6 +828,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.ListDatasetEntitiesRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -844,6 +893,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -882,6 +936,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.GetDatasetStatusHistoryRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -935,6 +990,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -970,6 +1030,7 @@ export class DatasetsClient {
      * @param {CatchAllApi.UploadCsvToDatasetRequest} request
      * @param {DatasetsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -1032,6 +1093,11 @@ export class DatasetsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,

@@ -51,11 +51,26 @@ describe("WebhooksClient", () => {
 
         server.mockEndpoint().get("/catchAll/webhooks").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
-        const response = await client.webhooks.listWebhooks();
+        const response = await client.webhooks.listWebhooks({
+            project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04",
+        });
         expect(response).toEqual(rawResponseBody);
     });
 
     test("listWebhooks (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/catchAll/webhooks").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.webhooks.listWebhooks();
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listWebhooks (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -68,7 +83,20 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("listWebhooks (3)", async () => {
+    test("listWebhooks (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/catchAll/webhooks").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.webhooks.listWebhooks();
+        }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
+    test("listWebhooks (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -141,6 +169,29 @@ describe("WebhooksClient", () => {
             .post("/catchAll/webhooks")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.createWebhook({
+                name: "name",
+                url: "url",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("createWebhook (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { name: "name", url: "url" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhooks")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -153,7 +204,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("createWebhook (3)", async () => {
+    test("createWebhook (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { name: "name", url: "url" };
@@ -176,7 +227,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("createWebhook (4)", async () => {
+    test("createWebhook (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { name: "name", url: "url" };
@@ -247,6 +298,27 @@ describe("WebhooksClient", () => {
             .mockEndpoint()
             .get("/catchAll/webhooks/webhook_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.getWebhook({
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getWebhook (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/webhooks/webhook_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -258,7 +330,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getWebhook (3)", async () => {
+    test("getWebhook (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -279,7 +351,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("getWebhook (4)", async () => {
+    test("getWebhook (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -327,6 +399,27 @@ describe("WebhooksClient", () => {
             .mockEndpoint()
             .delete("/catchAll/webhooks/webhook_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.deleteWebhook({
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("deleteWebhook (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/webhooks/webhook_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -338,7 +431,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("deleteWebhook (3)", async () => {
+    test("deleteWebhook (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -411,6 +504,28 @@ describe("WebhooksClient", () => {
             .patch("/catchAll/webhooks/webhook_id")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.updateWebhook({
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("updateWebhook (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .patch("/catchAll/webhooks/webhook_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -422,7 +537,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("updateWebhook (3)", async () => {
+    test("updateWebhook (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -444,7 +559,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("updateWebhook (4)", async () => {
+    test("updateWebhook (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -507,6 +622,28 @@ describe("WebhooksClient", () => {
             .post("/catchAll/webhooks/webhook_id/test")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.testWebhook({
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("testWebhook (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhooks/webhook_id/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -518,7 +655,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("testWebhook (3)", async () => {
+    test("testWebhook (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -540,7 +677,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("testWebhook (4)", async () => {
+    test("testWebhook (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -606,6 +743,27 @@ describe("WebhooksClient", () => {
             .mockEndpoint()
             .get("/catchAll/webhooks/webhook_id/resources")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.listWebhookResources({
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listWebhookResources (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/webhooks/webhook_id/resources")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -617,7 +775,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("listWebhookResources (3)", async () => {
+    test("listWebhookResources (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -638,7 +796,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("listWebhookResources (4)", async () => {
+    test("listWebhookResources (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -728,6 +886,30 @@ describe("WebhooksClient", () => {
             .post("/catchAll/webhooks/webhook_id/resources")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.assignWebhookResource({
+                webhook_id: "webhook_id",
+                resource_type: "job",
+                resource_id: "resource_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("assignWebhookResource (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { resource_type: "job", resource_id: "resource_id" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhooks/webhook_id/resources")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -741,7 +923,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("assignWebhookResource (4)", async () => {
+    test("assignWebhookResource (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { resource_type: "job", resource_id: "resource_id" };
@@ -765,7 +947,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("assignWebhookResource (5)", async () => {
+    test("assignWebhookResource (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { resource_type: "job", resource_id: "resource_id" };
@@ -820,6 +1002,29 @@ describe("WebhooksClient", () => {
             .mockEndpoint()
             .delete("/catchAll/webhooks/webhook_id/resources/job/resource_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.removeWebhookResource({
+                webhook_id: "webhook_id",
+                resource_type: "job",
+                resource_id: "resource_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("removeWebhookResource (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/webhooks/webhook_id/resources/job/resource_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -833,7 +1038,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("removeWebhookResource (3)", async () => {
+    test("removeWebhookResource (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -909,6 +1114,28 @@ describe("WebhooksClient", () => {
             .mockEndpoint()
             .get("/catchAll/resources/job/resource_id/webhooks")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.listWebhooksForResource({
+                resource_type: "job",
+                resource_id: "resource_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listWebhooksForResource (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/resources/job/resource_id/webhooks")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -921,7 +1148,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("listWebhooksForResource (3)", async () => {
+    test("listWebhooksForResource (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -943,7 +1170,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("listWebhooksForResource (4)", async () => {
+    test("listWebhooksForResource (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -995,6 +1222,29 @@ describe("WebhooksClient", () => {
             .mockEndpoint()
             .post("/catchAll/webhook/trigger/job/resource_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.triggerWebhook({
+                resource_type: "job",
+                resource_id: "resource_id",
+                webhook_id: "webhook_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("triggerWebhook (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/webhook/trigger/job/resource_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -1008,7 +1258,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("triggerWebhook (3)", async () => {
+    test("triggerWebhook (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -1031,7 +1281,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("triggerWebhook (4)", async () => {
+    test("triggerWebhook (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -1117,6 +1367,28 @@ describe("WebhooksClient", () => {
             .mockEndpoint()
             .get("/catchAll/webhook-history")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webhooks.getWebhookDeliveryHistory({
+                resource_type: "job",
+                resource_id: "resource_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getWebhookDeliveryHistory (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/webhook-history")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -1129,7 +1401,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getWebhookDeliveryHistory (3)", async () => {
+    test("getWebhookDeliveryHistory (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -1151,7 +1423,7 @@ describe("WebhooksClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("getWebhookDeliveryHistory (4)", async () => {
+    test("getWebhookDeliveryHistory (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 

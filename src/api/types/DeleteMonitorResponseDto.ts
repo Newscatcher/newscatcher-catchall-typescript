@@ -5,6 +5,6 @@ export interface DeleteMonitorResponseDto {
     success: boolean;
     /** Human-readable result message. */
     message: string | null;
-    /** ID of the deleted monitor. `null` on failure. */
+    /** ID of the deleted event monitor. `null` on failure. */
     monitor_id: string | null;
 }

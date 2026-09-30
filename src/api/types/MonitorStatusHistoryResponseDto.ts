@@ -7,7 +7,7 @@ export interface MonitorStatusHistoryResponseDto {
     success: boolean;
     /** Optional message. `null` on success. */
     message?: (string | null) | undefined;
-    /** Monitor identifier. `null` on failure. */
+    /** Event monitor identifier. `null` on failure. */
     monitor_id: string | null;
     /** Total number of status entries in the history. */
     total_statuses: number | null;

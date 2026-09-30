@@ -11,7 +11,7 @@ export interface DeliveryHistoryItemDto {
     resource_type: CatchAllApi.WebhookHistoryResourceType;
     /** Identifier of the resource that triggered the delivery. */
     resource_id: string;
-    /** Extra context about the triggering event, such as job query or monitor schedule. */
+    /** Extra context about the triggering event, such as job query or event monitor schedule. */
     additional_info?: Record<string, unknown> | undefined;
     /** HTTP response code returned by the webhook endpoint. */
     status_code: number;

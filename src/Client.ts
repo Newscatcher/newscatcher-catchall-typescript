@@ -2,9 +2,9 @@
 
 import { DatasetsClient } from "./api/resources/datasets/client/Client.js";
 import { EntitiesClient } from "./api/resources/entities/client/Client.js";
+import { EventMonitorsClient } from "./api/resources/eventMonitors/client/Client.js";
 import { JobsClient } from "./api/resources/jobs/client/Client.js";
 import { MetaClient } from "./api/resources/meta/client/Client.js";
-import { MonitorsClient } from "./api/resources/monitors/client/Client.js";
 import { ProjectsClient } from "./api/resources/projects/client/Client.js";
 import { WebhooksClient } from "./api/resources/webhooks/client/Client.js";
 import type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
@@ -20,7 +20,7 @@ export declare namespace CatchAllApiClient {
 export class CatchAllApiClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<CatchAllApiClient.Options>;
     protected _jobs: JobsClient | undefined;
-    protected _monitors: MonitorsClient | undefined;
+    protected _eventMonitors: EventMonitorsClient | undefined;
     protected _webhooks: WebhooksClient | undefined;
     protected _entities: EntitiesClient | undefined;
     protected _datasets: DatasetsClient | undefined;
@@ -35,8 +35,8 @@ export class CatchAllApiClient {
         return (this._jobs ??= new JobsClient(this._options));
     }
 
-    public get monitors(): MonitorsClient {
-        return (this._monitors ??= new MonitorsClient(this._options));
+    public get eventMonitors(): EventMonitorsClient {
+        return (this._eventMonitors ??= new EventMonitorsClient(this._options));
     }
 
     public get webhooks(): WebhooksClient {

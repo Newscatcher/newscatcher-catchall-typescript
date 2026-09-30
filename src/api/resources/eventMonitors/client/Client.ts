@@ -10,48 +10,49 @@ import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCode
 import * as errors from "../../../../errors/index.js";
 import * as CatchAllApi from "../../../index.js";
 
-export declare namespace MonitorsClient {
+export declare namespace EventMonitorsClient {
     export type Options = BaseClientOptions;
 
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
 /**
- * Operations to create, operate and retrieve monitor results.
+ * Operations to create, operate and retrieve event monitor results.
  */
-export class MonitorsClient {
-    protected readonly _options: NormalizedClientOptionsWithAuth<MonitorsClient.Options>;
+export class EventMonitorsClient {
+    protected readonly _options: NormalizedClientOptionsWithAuth<EventMonitorsClient.Options>;
 
-    constructor(options: MonitorsClient.Options = {}) {
+    constructor(options: EventMonitorsClient.Options = {}) {
         this._options = normalizeClientOptionsWithAuth(options);
     }
 
     /**
-     * Returns all monitors created by the authenticated user.
+     * Returns all event monitors created by the authenticated user.
      *
      * @param {CatchAllApi.ListMonitorsRequest} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.listMonitors({
+     *     await client.eventMonitors.listMonitors({
      *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
      *     })
      */
     public listMonitors(
         request: CatchAllApi.ListMonitorsRequest = {},
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.ListMonitorsResponseDto> {
         return core.HttpResponsePromise.fromPromise(this.__listMonitors(request, requestOptions));
     }
 
     private async __listMonitors(
         request: CatchAllApi.ListMonitorsRequest = {},
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListMonitorsResponseDto>> {
         const { page, page_size: pageSize, search, ownership, project_id: projectId } = request;
         const _queryParams: Record<string, unknown> = {
@@ -93,6 +94,11 @@ export class MonitorsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -116,17 +122,18 @@ export class MonitorsClient {
     }
 
     /**
-     * Create a scheduled monitor based on a reference job.
+     * Create a scheduled event monitor based on a reference job.
      *
      * @param {CatchAllApi.CreateMonitorRequestDto} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.createMonitor({
+     *     await client.eventMonitors.createMonitor({
      *         reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
      *         schedule: "every day at 12 PM",
      *         timezone: "UTC",
@@ -137,14 +144,14 @@ export class MonitorsClient {
      */
     public createMonitor(
         request: CatchAllApi.CreateMonitorRequestDto,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.CreateMonitorResponseDto> {
         return core.HttpResponsePromise.fromPromise(this.__createMonitor(request, requestOptions));
     }
 
     private async __createMonitor(
         request: CatchAllApi.CreateMonitorRequestDto,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.CreateMonitorResponseDto>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -177,6 +184,11 @@ export class MonitorsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 422:
                     throw new CatchAllApi.UnprocessableEntityError(
                         _response.error.body as CatchAllApi.ValidationErrorResponse,
@@ -195,31 +207,32 @@ export class MonitorsClient {
     }
 
     /**
-     * Retrieve aggregated results from all jobs executed by a monitor.
+     * Retrieve aggregated results from all jobs executed by an event monitor.
      *
      * @param {CatchAllApi.PullMonitorResultsRequest} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.pullMonitorResults({
+     *     await client.eventMonitors.pullMonitorResults({
      *         monitor_id: "monitor_id"
      *     })
      */
     public pullMonitorResults(
         request: CatchAllApi.PullMonitorResultsRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.PullMonitorResponseDto> {
         return core.HttpResponsePromise.fromPromise(this.__pullMonitorResults(request, requestOptions));
     }
 
     private async __pullMonitorResults(
         request: CatchAllApi.PullMonitorResultsRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.PullMonitorResponseDto>> {
         const { monitor_id: monitorId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -250,6 +263,11 @@ export class MonitorsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 404:
                     throw new CatchAllApi.NotFoundError(
                         _response.error.body as CatchAllApi.Error_,
@@ -280,31 +298,32 @@ export class MonitorsClient {
     /**
      * Returns the most recent run's records as a CSV download. One row per record, with enrichment fields as columns and citations as a JSON column.
      *
-     * If the monitor's reference job used connected entity datasets, connected entities are split into `event_associated_entities` and `mention_entities` JSON columns. When no entity dataset was used, those two columns are omitted from the export entirely.
+     * If the event monitor's reference job used connected entity datasets, connected entities are split into `event_associated_entities` and `mention_entities` JSON columns. When no entity dataset was used, those two columns are omitted from the export entirely.
      *
      * @param {CatchAllApi.PullMonitorResultsCsvRequest} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.pullMonitorResultsCsv({
+     *     await client.eventMonitors.pullMonitorResultsCsv({
      *         monitor_id: "monitor_id"
      *     })
      */
     public pullMonitorResultsCsv(
         request: CatchAllApi.PullMonitorResultsCsvRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<string> {
         return core.HttpResponsePromise.fromPromise(this.__pullMonitorResultsCsv(request, requestOptions));
     }
 
     private async __pullMonitorResultsCsv(
         request: CatchAllApi.PullMonitorResultsCsvRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<string>> {
         const { monitor_id: monitorId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -336,6 +355,11 @@ export class MonitorsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -364,31 +388,32 @@ export class MonitorsClient {
     }
 
     /**
-     * Return all jobs executed by a monitor.
+     * Return all jobs executed by an event monitor.
      *
      * @param {CatchAllApi.ListMonitorJobsRequest} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.listMonitorJobs({
+     *     await client.eventMonitors.listMonitorJobs({
      *         monitor_id: "monitor_id"
      *     })
      */
     public listMonitorJobs(
         request: CatchAllApi.ListMonitorJobsRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.ListMonitorJobsResponse> {
         return core.HttpResponsePromise.fromPromise(this.__listMonitorJobs(request, requestOptions));
     }
 
     private async __listMonitorJobs(
         request: CatchAllApi.ListMonitorJobsRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.ListMonitorJobsResponse>> {
         const { monitor_id: monitorId, sort } = request;
         const _queryParams: Record<string, unknown> = {
@@ -426,6 +451,11 @@ export class MonitorsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 404:
                     throw new CatchAllApi.NotFoundError(
                         _response.error.body as CatchAllApi.Error_,
@@ -454,10 +484,10 @@ export class MonitorsClient {
     }
 
     /**
-     * Returns the full execution history of a monitor as a list of status entries, ordered from newest to oldest.
+     * Returns the full execution history of an event monitor as a list of status entries, ordered from newest to oldest.
      *
      * @param {CatchAllApi.GetMonitorStatusHistoryRequest} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.NotFoundError}
@@ -465,20 +495,20 @@ export class MonitorsClient {
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.getMonitorStatusHistory({
+     *     await client.eventMonitors.getMonitorStatusHistory({
      *         monitor_id: "monitor_id"
      *     })
      */
     public getMonitorStatusHistory(
         request: CatchAllApi.GetMonitorStatusHistoryRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.MonitorStatusHistoryResponseDto> {
         return core.HttpResponsePromise.fromPromise(this.__getMonitorStatusHistory(request, requestOptions));
     }
 
     private async __getMonitorStatusHistory(
         request: CatchAllApi.GetMonitorStatusHistoryRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.MonitorStatusHistoryResponseDto>> {
         const { monitor_id: monitorId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -540,11 +570,12 @@ export class MonitorsClient {
     }
 
     /**
-     * Resume scheduled job execution for a monitor.
+     * Resume scheduled job execution for an event monitor.
      *
      * @param {CatchAllApi.EnableMonitorRequestDto} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -552,21 +583,21 @@ export class MonitorsClient {
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.enableMonitor({
+     *     await client.eventMonitors.enableMonitor({
      *         monitor_id: "monitor_id",
      *         backfill: true
      *     })
      */
     public enableMonitor(
         request: CatchAllApi.EnableMonitorRequestDto,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.EnableMonitorResponse> {
         return core.HttpResponsePromise.fromPromise(this.__enableMonitor(request, requestOptions));
     }
 
     private async __enableMonitor(
         request: CatchAllApi.EnableMonitorRequestDto,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.EnableMonitorResponse>> {
         const { monitor_id: monitorId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -600,6 +631,11 @@ export class MonitorsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -633,11 +669,12 @@ export class MonitorsClient {
     }
 
     /**
-     * Stop scheduled job execution for a monitor.
+     * Stop scheduled job execution for an event monitor.
      *
      * @param {CatchAllApi.DisableMonitorRequest} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -645,20 +682,20 @@ export class MonitorsClient {
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.disableMonitor({
+     *     await client.eventMonitors.disableMonitor({
      *         monitor_id: "monitor_id"
      *     })
      */
     public disableMonitor(
         request: CatchAllApi.DisableMonitorRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.DisableMonitorResponse> {
         return core.HttpResponsePromise.fromPromise(this.__disableMonitor(request, requestOptions));
     }
 
     private async __disableMonitor(
         request: CatchAllApi.DisableMonitorRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.DisableMonitorResponse>> {
         const { monitor_id: monitorId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -689,6 +726,11 @@ export class MonitorsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -722,17 +764,17 @@ export class MonitorsClient {
     }
 
     /**
-     * Soft-deletes a monitor. The monitor is flagged as deleted, stops
+     * Soft-deletes an event monitor. The event monitor is flagged as deleted, stops
      * executing scheduled jobs immediately, and no longer appears in list
      * results.
      *
-     * Only the monitor owner can delete a monitor. Returns `404` if the
-     * monitor is not found or does not belong to the authenticated user.
+     * Only the event monitor owner can delete an event monitor. Returns `404` if the
+     * event monitor is not found or does not belong to the authenticated user.
      *
-     * Deleting an already-deleted monitor returns `200`.
+     * Deleting an already-deleted event monitor returns `200`.
      *
      * @param {CatchAllApi.DeleteMonitorRequest} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.NotFoundError}
@@ -740,20 +782,20 @@ export class MonitorsClient {
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.deleteMonitor({
+     *     await client.eventMonitors.deleteMonitor({
      *         monitor_id: "monitor_id"
      *     })
      */
     public deleteMonitor(
         request: CatchAllApi.DeleteMonitorRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.DeleteMonitorResponseDto> {
         return core.HttpResponsePromise.fromPromise(this.__deleteMonitor(request, requestOptions));
     }
 
     private async __deleteMonitor(
         request: CatchAllApi.DeleteMonitorRequest,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.DeleteMonitorResponseDto>> {
         const { monitor_id: monitorId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -812,11 +854,17 @@ export class MonitorsClient {
     }
 
     /**
-     * Update the webhook configuration for an existing monitor.
+     * Update the webhook assignments, record limit, or schedule of an existing
+     * event monitor. Omitted fields are left unchanged.
+     *
+     * Passing `schedule` replaces the event monitor's current schedule. The new
+     * schedule takes effect from the next scheduler reload, and the old schedule
+     * stops firing. The reference job cannot be changed.
      *
      * @param {CatchAllApi.UpdateMonitorRequestDto} request
-     * @param {MonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {EventMonitorsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link CatchAllApi.UnprocessableEntityError}
@@ -824,21 +872,28 @@ export class MonitorsClient {
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
-     *     await client.monitors.updateMonitor({
+     *     await client.eventMonitors.updateMonitor({
      *         monitor_id: "monitor_id",
      *         webhook_ids: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"]
+     *     })
+     *
+     * @example
+     *     await client.eventMonitors.updateMonitor({
+     *         monitor_id: "monitor_id",
+     *         schedule: "every Monday at 9 AM",
+     *         timezone: "America/New_York"
      *     })
      */
     public updateMonitor(
         request: CatchAllApi.UpdateMonitorRequestDto,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): core.HttpResponsePromise<CatchAllApi.UpdateMonitorResponseDto> {
         return core.HttpResponsePromise.fromPromise(this.__updateMonitor(request, requestOptions));
     }
 
     private async __updateMonitor(
         request: CatchAllApi.UpdateMonitorRequestDto,
-        requestOptions?: MonitorsClient.RequestOptions,
+        requestOptions?: EventMonitorsClient.RequestOptions,
     ): Promise<core.WithRawResponse<CatchAllApi.UpdateMonitorResponseDto>> {
         const { monitor_id: monitorId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -872,6 +927,11 @@ export class MonitorsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,

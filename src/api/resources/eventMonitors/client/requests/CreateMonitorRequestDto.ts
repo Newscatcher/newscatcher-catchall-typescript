@@ -15,10 +15,10 @@ export interface CreateMonitorRequestDto {
     /**
      * Job ID to use as template for scheduled runs. Defines the query, validators, and enrichments used for each scheduled run.
      *
-     * If [`backfill`](https://www.newscatcherapi.com/docs/web-search-api/api-reference/monitors/create-monitor#body-backfill) is true, the job's `end_date` must be within the last 7 days.
+     * If [`backfill`](https://www.newscatcherapi.com/docs/web-search-api/api-reference/event-monitors/create-monitor#body-backfill) is true, the job's `end_date` must be within the last 7 days.
      */
     reference_job_id: string;
-    /** Monitor schedule in plain text format. Minimum frequency depends on your plan. */
+    /** Event monitor schedule in plain text format. Minimum frequency depends on your plan. */
     schedule: string;
     /**
      * The IANA timezone identifier used as the fallback when the `schedule` string does not include an explicit timezone.
@@ -30,10 +30,10 @@ export interface CreateMonitorRequestDto {
      * IDs of centralized webhooks to notify on each run completion.
      * Passing IDs here is equivalent to calling
      * `POST /catchAll/webhooks/{webhook_id}/resources` for each ID after creation.
-     * Maximum 5 per monitor.
+     * Maximum 5 per event monitor.
      */
     webhook_ids?: string[];
-    /** Maximum number of records per monitor run. If not provided, defaults to the plan limit. */
+    /** Maximum number of records per event monitor run. If not provided, defaults to the plan limit. */
     limit?: number;
     /**
      * If true, fills the data gap between the reference job's `end_date` and the first scheduled run. The reference job's `end_date` must be within the last 7 days.
@@ -41,6 +41,6 @@ export interface CreateMonitorRequestDto {
      * If false, no gap filling occurs and the first run uses the current cron window only — the reference job's age does not matter.
      */
     backfill?: boolean;
-    /** Project to assign this monitor to. The monitor appears in the project's resource list after creation. */
+    /** Project to assign this event monitor to. The event monitor appears in the project's resource list after creation. */
     project_id?: string;
 }

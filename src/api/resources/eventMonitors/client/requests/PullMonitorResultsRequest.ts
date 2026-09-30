@@ -7,6 +7,6 @@
  *     }
  */
 export interface PullMonitorResultsRequest {
-    /** Monitor identifier. */
+    /** Event monitor identifier. */
     monitor_id: string;
 }

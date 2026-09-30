@@ -40,6 +40,19 @@ describe("ProjectsClient", () => {
 
         const rawResponseBody = {};
 
+        server.mockEndpoint().get("/catchAll/projects").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.projects.listProjects();
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listProjects (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
         server.mockEndpoint().get("/catchAll/projects").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -47,7 +60,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("listProjects (3)", async () => {
+    test("listProjects (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -101,6 +114,28 @@ describe("ProjectsClient", () => {
             .post("/catchAll/projects")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.projects.createProject({
+                name: "x",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("createProject (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { name: "x" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/projects")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -112,7 +147,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("createProject (3)", async () => {
+    test("createProject (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { name: "x" };
@@ -173,6 +208,27 @@ describe("ProjectsClient", () => {
             .mockEndpoint()
             .get("/catchAll/projects/project_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.projects.getProject({
+                project_id: "project_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getProject (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/projects/project_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -184,7 +240,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getProject (3)", async () => {
+    test("getProject (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -232,6 +288,27 @@ describe("ProjectsClient", () => {
             .mockEndpoint()
             .delete("/catchAll/projects/project_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.projects.deleteProject({
+                project_id: "project_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("deleteProject (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/projects/project_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -243,7 +320,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("deleteProject (3)", async () => {
+    test("deleteProject (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -301,6 +378,28 @@ describe("ProjectsClient", () => {
             .patch("/catchAll/projects/project_id")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.projects.updateProject({
+                project_id: "project_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("updateProject (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .patch("/catchAll/projects/project_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -312,7 +411,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("updateProject (3)", async () => {
+    test("updateProject (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -334,7 +433,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("updateProject (4)", async () => {
+    test("updateProject (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -395,6 +494,27 @@ describe("ProjectsClient", () => {
             .mockEndpoint()
             .get("/catchAll/projects/project_id/overview")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.projects.getProjectOverview({
+                project_id: "project_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getProjectOverview (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/projects/project_id/overview")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -406,7 +526,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getProjectOverview (3)", async () => {
+    test("getProjectOverview (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -471,6 +591,27 @@ describe("ProjectsClient", () => {
             .mockEndpoint()
             .get("/catchAll/projects/project_id/resources")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.projects.listProjectResources({
+                project_id: "project_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listProjectResources (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/projects/project_id/resources")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -482,7 +623,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("listProjectResources (3)", async () => {
+    test("listProjectResources (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -503,7 +644,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("listProjectResources (4)", async () => {
+    test("listProjectResources (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -618,6 +759,43 @@ describe("ProjectsClient", () => {
             .post("/catchAll/projects/project_id/resources")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.projects.addResourceToProject({
+                project_id: "project_id",
+                resources: [
+                    {
+                        resource_type: "job",
+                        resource_id: "resource_id",
+                    },
+                    {
+                        resource_type: "job",
+                        resource_id: "resource_id",
+                    },
+                ],
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("addResourceToProject (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            resources: [
+                { resource_type: "job", resource_id: "resource_id" },
+                { resource_type: "job", resource_id: "resource_id" },
+            ],
+        };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/projects/project_id/resources")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -639,7 +817,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("addResourceToProject (4)", async () => {
+    test("addResourceToProject (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -710,6 +888,29 @@ describe("ProjectsClient", () => {
             .mockEndpoint()
             .delete("/catchAll/projects/project_id/resources/job/resource_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.projects.removeResourceFromProject({
+                project_id: "project_id",
+                resource_type: "job",
+                resource_id: "resource_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("removeResourceFromProject (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/projects/project_id/resources/job/resource_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -723,7 +924,7 @@ describe("ProjectsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("removeResourceFromProject (3)", async () => {
+    test("removeResourceFromProject (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 

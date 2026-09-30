@@ -2,7 +2,9 @@
 
 /**
  * @example
- *     {}
+ *     {
+ *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
+ *     }
  */
 export interface ListWebhooksRequest {
     /** Page number to retrieve. */
@@ -11,4 +13,6 @@ export interface ListWebhooksRequest {
     page_size?: number;
     /** Filter results by text (case-insensitive substring match). */
     search?: string;
+    /** Filter results to resources belonging to this project. */
+    project_id?: string;
 }

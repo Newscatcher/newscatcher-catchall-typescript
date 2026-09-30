@@ -19,7 +19,7 @@ export declare namespace EntitiesClient {
 /**
  * Operations to create, update, and delete company entities.
  *
- * Entities are the building blocks of Company Watchlist. Each entity represents
+ * Entities are the building blocks of Company Monitors. Each entity represents
  * a company (or person) you want to track. Add identifying information such as
  * domain, alternative names, and key persons to improve matching quality.
  */
@@ -36,13 +36,17 @@ export class EntitiesClient {
      * @param {CatchAllApi.ListEntitiesRequest} request
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
+     * @throws {@link CatchAllApi.NotFoundError}
+     * @throws {@link CatchAllApi.UnprocessableEntityError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
      *
      * @example
      *     await client.entities.listEntities({
-     *         search: "NewsCatcher"
+     *         search: "NewsCatcher",
+     *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
      *     })
      */
     public listEntities(
@@ -64,6 +68,7 @@ export class EntitiesClient {
             entity_type: entityType,
             sort_by: sortBy,
             sort_order: sortOrder,
+            project_id: projectId,
         } = request;
         const _queryParams: Record<string, unknown> = {
             page,
@@ -73,6 +78,7 @@ export class EntitiesClient {
             entity_type: entityType != null ? entityType : undefined,
             sort_by: sortBy != null ? sortBy : undefined,
             sort_order: sortOrder != null ? sortOrder : undefined,
+            project_id: projectId,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -106,9 +112,24 @@ export class EntitiesClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new CatchAllApi.NotFoundError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
+                case 422:
+                    throw new CatchAllApi.UnprocessableEntityError(
+                        _response.error.body as CatchAllApi.ValidationErrorResponse,
                         _response.rawResponse,
                     );
                 default:
@@ -135,6 +156,7 @@ export class EntitiesClient {
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
@@ -197,6 +219,11 @@ export class EntitiesClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new CatchAllApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -225,6 +252,7 @@ export class EntitiesClient {
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link errors.CatchAllApiError}
      * @throws {@link errors.CatchAllApiTimeoutError}
@@ -302,6 +330,11 @@ export class EntitiesClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new CatchAllApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -325,6 +358,7 @@ export class EntitiesClient {
      * @param {CatchAllApi.GetEntityRequest} request
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -375,6 +409,11 @@ export class EntitiesClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -409,6 +448,7 @@ export class EntitiesClient {
      * @param {CatchAllApi.DeleteEntityRequest} request
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -459,6 +499,11 @@ export class EntitiesClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,
@@ -493,6 +538,7 @@ export class EntitiesClient {
      * @param {EntitiesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link CatchAllApi.BadRequestError}
+     * @throws {@link CatchAllApi.UnauthorizedError}
      * @throws {@link CatchAllApi.ForbiddenError}
      * @throws {@link CatchAllApi.NotFoundError}
      * @throws {@link errors.CatchAllApiError}
@@ -554,6 +600,11 @@ export class EntitiesClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new CatchAllApi.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new CatchAllApi.UnauthorizedError(
+                        _response.error.body as CatchAllApi.Error_,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new CatchAllApi.ForbiddenError(
                         _response.error.body as CatchAllApi.Error_,

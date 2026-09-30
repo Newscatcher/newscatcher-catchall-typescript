@@ -5,7 +5,8 @@ import type * as CatchAllApi from "../../../../index.js";
 /**
  * @example
  *     {
- *         search: "NewsCatcher"
+ *         search: "NewsCatcher",
+ *         project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
  *     }
  */
 export interface ListEntitiesRequest {
@@ -19,4 +20,6 @@ export interface ListEntitiesRequest {
     entity_type?: CatchAllApi.EntityType;
     sort_by?: CatchAllApi.EntitySortBy;
     sort_order?: CatchAllApi.SortOrder;
+    /** Filter results to resources belonging to this project. */
+    project_id?: string;
 }

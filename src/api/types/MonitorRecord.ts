@@ -3,15 +3,15 @@
 import type * as CatchAllApi from "../index.js";
 
 /**
- * Record with monitor-specific metadata. Used in monitor results and webhook payloads.
+ * Record with event monitor-specific metadata. Used in event monitor results and webhook payloads.
  *
  * Includes timestamps tracking when records were added and updated, and citations include job tracking.
  */
 export interface MonitorRecord extends CatchAllApi.BaseRecord {
-    /** Source documents with monitor-specific metadata (job_id, added_on timestamps). */
+    /** Source documents with event monitor-specific metadata (job_id, added_on timestamps). */
     citations: CatchAllApi.MonitorCitation[];
-    /** The date when this record was first added to monitor results in ISO 8601 format with UTC timezone. */
+    /** The date when this record was first added to event monitor results in ISO 8601 format with UTC timezone. */
     added_on?: string | undefined;
-    /** The date when this record was last updated in monitor results in ISO 8601 format with UTC timezone. */
+    /** The date when this record was last updated in event monitor results in ISO 8601 format with UTC timezone. */
     updated_on?: string | undefined;
 }
