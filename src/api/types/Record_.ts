@@ -10,4 +10,12 @@ export interface Record_ extends CatchAllApi.BaseRecord {
      * Only present when the job was submitted with `connected_dataset_ids`.
      */
     connected_entities?: CatchAllApi.ConnectedEntity[] | undefined;
+    /**
+     * Fixed-taxonomy classification of the event, as `event_type` and `sector`.
+     *
+     * Only present for all-news watchlist jobs — those submitted with
+     * `fetch_all_watchlist_news: true`, which the job pull response reports as
+     * `is_all_news_query: true`. Absent or `null` for every other job.
+     */
+    tags?: (CatchAllApi.EventTags | null) | undefined;
 }

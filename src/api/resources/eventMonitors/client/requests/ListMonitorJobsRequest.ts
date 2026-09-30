@@ -9,7 +9,7 @@ import type * as CatchAllApi from "../../../../index.js";
  *     }
  */
 export interface ListMonitorJobsRequest {
-    /** Monitor identifier. */
+    /** Event monitor identifier. */
     monitor_id: string;
     /** Sort by start_date (asc or desc). */
     sort?: CatchAllApi.ListMonitorJobsRequestSort;

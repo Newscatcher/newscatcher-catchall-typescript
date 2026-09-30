@@ -3,8 +3,8 @@
 export interface MonitorJobItem {
     /** Unique identifier for this job execution. */
     job_id: string;
-    /** Start of the data collection time window for this job execution (based on monitor schedule) in ISO 8601 format with UTC timezone. */
+    /** Start of the data collection time window for this job execution (based on event monitor schedule) in ISO 8601 format with UTC timezone. */
     start_date: string;
-    /** End of the data collection time window for this job execution (based on monitor schedule) in ISO 8601 format with UTC timezone. */
+    /** End of the data collection time window for this job execution (based on event monitor schedule) in ISO 8601 format with UTC timezone. */
     end_date: string;
 }

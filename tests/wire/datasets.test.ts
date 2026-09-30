@@ -46,6 +46,19 @@ describe("DatasetsClient", () => {
 
         const rawResponseBody = {};
 
+        server.mockEndpoint().get("/catchAll/datasets").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.datasets.listDatasets();
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listDatasets (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
         server.mockEndpoint().get("/catchAll/datasets").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -126,6 +139,28 @@ describe("DatasetsClient", () => {
             .post("/catchAll/datasets")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.createDataset({
+                name: "x",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("createDataset (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { name: "x" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/datasets")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -137,7 +172,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("createDataset (4)", async () => {
+    test("createDataset (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { name: "x" };
@@ -202,6 +237,27 @@ describe("DatasetsClient", () => {
             .mockEndpoint()
             .get("/catchAll/datasets/dataset_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.getDataset({
+                dataset_id: "dataset_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getDataset (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/datasets/dataset_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -213,7 +269,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getDataset (3)", async () => {
+    test("getDataset (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -261,6 +317,27 @@ describe("DatasetsClient", () => {
             .mockEndpoint()
             .delete("/catchAll/datasets/dataset_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.deleteDataset({
+                dataset_id: "dataset_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("deleteDataset (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/datasets/dataset_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -272,7 +349,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("deleteDataset (3)", async () => {
+    test("deleteDataset (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -340,6 +417,28 @@ describe("DatasetsClient", () => {
             .patch("/catchAll/datasets/dataset_id")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.updateDataset({
+                dataset_id: "dataset_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("updateDataset (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .patch("/catchAll/datasets/dataset_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -351,7 +450,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("updateDataset (3)", async () => {
+    test("updateDataset (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -373,7 +472,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("updateDataset (4)", async () => {
+    test("updateDataset (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -430,6 +529,31 @@ describe("DatasetsClient", () => {
             .post("/catchAll/datasets/dataset_id/entities")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.addEntitiesToDataset({
+                dataset_id: "dataset_id",
+                body: {
+                    entity_ids: ["entity_ids", "entity_ids"],
+                },
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("addEntitiesToDataset (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { entity_ids: ["entity_ids", "entity_ids"] };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/datasets/dataset_id/entities")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -444,7 +568,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("addEntitiesToDataset (3)", async () => {
+    test("addEntitiesToDataset (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { entity_ids: ["entity_ids", "entity_ids"] };
@@ -469,7 +593,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("addEntitiesToDataset (4)", async () => {
+    test("addEntitiesToDataset (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { entity_ids: ["entity_ids", "entity_ids"] };
@@ -529,6 +653,31 @@ describe("DatasetsClient", () => {
             .delete("/catchAll/datasets/dataset_id/entities")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.removeEntitiesFromDataset({
+                dataset_id: "dataset_id",
+                body: {
+                    entity_ids: ["entity_ids", "entity_ids"],
+                },
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("removeEntitiesFromDataset (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { entity_ids: ["entity_ids", "entity_ids"] };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/catchAll/datasets/dataset_id/entities")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -543,7 +692,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("removeEntitiesFromDataset (3)", async () => {
+    test("removeEntitiesFromDataset (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { entity_ids: ["entity_ids", "entity_ids"] };
@@ -568,7 +717,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("removeEntitiesFromDataset (4)", async () => {
+    test("removeEntitiesFromDataset (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { entity_ids: ["entity_ids", "entity_ids"] };
@@ -660,6 +809,28 @@ describe("DatasetsClient", () => {
             .post("/catchAll/datasets/dataset_id/entities/list")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.listEntitiesInDataset({
+                dataset_id: "dataset_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listEntitiesInDataset (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/datasets/dataset_id/entities/list")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -671,7 +842,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("listEntitiesInDataset (3)", async () => {
+    test("listEntitiesInDataset (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -693,7 +864,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.NotFoundError);
     });
 
-    test("listEntitiesInDataset (4)", async () => {
+    test("listEntitiesInDataset (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -752,6 +923,27 @@ describe("DatasetsClient", () => {
             .mockEndpoint()
             .get("/catchAll/datasets/dataset_id/status")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.datasets.getDatasetStatusHistory({
+                dataset_id: "dataset_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getDatasetStatusHistory (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/datasets/dataset_id/status")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -763,7 +955,7 @@ describe("DatasetsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getDatasetStatusHistory (3)", async () => {
+    test("getDatasetStatusHistory (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 

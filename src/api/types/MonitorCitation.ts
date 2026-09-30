@@ -3,7 +3,7 @@
 import type * as CatchAllApi from "../index.js";
 
 /**
- * Citation with monitor-specific metadata. Used in monitor results and webhook payloads.
+ * Citation with event monitor-specific metadata. Used in event monitor results and webhook payloads.
  * Extends base citation with tracking information for job_id and timestamps.
  */
 export interface MonitorCitation extends CatchAllApi.Citation {

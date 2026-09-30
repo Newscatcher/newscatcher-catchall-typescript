@@ -8,7 +8,7 @@
  *     }
  */
 export interface EnableMonitorRequestDto {
-    /** Monitor identifier. */
+    /** Event monitor identifier. */
     monitor_id: string;
     /**
      * If true, fills the data gap between the last job's `end_date` and the first scheduled run after enabling. The last job's `end_date` must be within the last 7 days.

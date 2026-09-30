@@ -3,13 +3,13 @@
 import type * as CatchAllApi from "../../../index.js";
 
 export interface ListMonitorJobsResponse {
-    /** Monitor identifier. */
+    /** Event monitor identifier. */
     monitor_id: string;
     /** Sort order applied to results. */
     sort_order: ListMonitorJobsResponse.SortOrder;
-    /** Total number of jobs for this monitor. */
+    /** Total number of jobs for this event monitor. */
     total_jobs: number;
-    /** Array of job executions for this monitor. */
+    /** Array of job executions for this event monitor. */
     jobs: CatchAllApi.MonitorJobItem[];
 }
 

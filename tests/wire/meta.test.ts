@@ -81,6 +81,25 @@ describe("MetaClient", () => {
             .mockEndpoint()
             .post("/catchAll/user/limits")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.meta.getPlanLimits();
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getPlanLimits (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/user/limits")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();

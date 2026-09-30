@@ -4,9 +4,9 @@ export interface MonitorStatusEntry {
     /**
      * Type of lifecycle event.
      *
-     * - `created`: Monitor was created.
-     * - `enable`: Monitor was enabled.
-     * - `disable`: Monitor was disabled.
+     * - `created`: Event monitor was created.
+     * - `enable`: Event monitor was enabled.
+     * - `disable`: Event monitor was disabled.
      * - `scheduled`: A job was triggered for execution.
      *   `additional_information` contains `job_id`, `start_date`,
      *   and `end_date`.
@@ -41,7 +41,7 @@ export interface MonitorStatusEntry {
      *   }
      * }
      * ```
-     * The `webhook` key is only present if the monitor has a webhook configured.
+     * The `webhook` key is only present if the event monitor has a webhook configured.
      */
     additional_information?: (Record<string, unknown> | null) | undefined;
 }
@@ -50,9 +50,9 @@ export namespace MonitorStatusEntry {
     /**
      * Type of lifecycle event.
      *
-     * - `created`: Monitor was created.
-     * - `enable`: Monitor was enabled.
-     * - `disable`: Monitor was disabled.
+     * - `created`: Event monitor was created.
+     * - `enable`: Event monitor was enabled.
+     * - `disable`: Event monitor was disabled.
      * - `scheduled`: A job was triggered for execution.
      *   `additional_information` contains `job_id`, `start_date`,
      *   and `end_date`.

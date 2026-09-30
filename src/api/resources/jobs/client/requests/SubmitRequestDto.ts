@@ -43,7 +43,7 @@ export interface SubmitRequestDto {
      */
     mode?: SubmitRequestDto.Mode;
     /**
-     * Dataset IDs to connect to the job. When provided, this enables Company Watchlist mode — the job returns only events relevant to companies in the connected datasets. To set the minimum relevance threshold, use `ed_score_min`.
+     * Dataset IDs to connect to the job. When provided, this enables Company Monitors mode — the job returns only events relevant to companies in the connected datasets. To set the minimum relevance threshold, use `ed_score_min`.
      *
      * The dataset must have `latest_status: ready` before the job is submitted. Submitting with a non-existent or inaccessible dataset ID returns `400`.
      */
@@ -59,7 +59,7 @@ export interface SubmitRequestDto {
     /** IDs of webhooks to notify when the job completes. Maximum 5 per job. */
     webhook_ids?: string[];
     /**
-     * When true, retrieves all news for connected Company Watchlist entities
+     * When true, retrieves all news for connected Company Monitors entities
      * without topic filtering. Requires connected_dataset_ids to be set.
      */
     fetch_all_watchlist_news?: boolean;
@@ -70,6 +70,14 @@ export interface SubmitRequestDto {
      * connected_dataset_ids is set.
      */
     ed_association_type?: CatchAllApi.EntityAssociationType;
+    /**
+     * Slugs of source groups to scope fetching to their curated domain allowlists.
+     *
+     * Source groups are named domain lists maintained by NewsCatcher (for example "Top 100 US Finance"). Retrieve the groups available to your organization with [List source groups](https://www.newscatcherapi.com/docs/web-search-api/api-reference/jobs/list-source-groups).
+     *
+     * Domains are resolved when the job runs, so a group's current membership always applies. Maximum 20 groups per job. An unknown or inaccessible slug is rejected at submit time.
+     */
+    source_groups?: string[];
 }
 
 export namespace SubmitRequestDto {

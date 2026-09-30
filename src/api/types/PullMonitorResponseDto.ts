@@ -3,10 +3,10 @@
 import type * as CatchAllApi from "../index.js";
 
 export interface PullMonitorResponseDto {
-    /** Unique identifier for the monitor. */
+    /** Unique identifier for the event monitor. */
     monitor_id: string;
     /**
-     * The cron expression for a monitor schedule parsed from the text schedule you provide.
+     * The cron expression for an event monitor schedule parsed from the text schedule you provide.
      *
      * Standard cron format (minute hour day month day-of-week).
      */
@@ -14,15 +14,15 @@ export interface PullMonitorResponseDto {
     /** Timezone used for schedule execution. */
     timezone?: string | undefined;
     reference_job: CatchAllApi.ReferenceJob;
-    /** Execution time range for this monitor. */
+    /** Execution time range for this event monitor. */
     run_info?: PullMonitorResponseDto.RunInfo | undefined;
-    /** Total number of records collected across all monitor jobs. */
+    /** Total number of records collected across all event monitor jobs. */
     records?: number | undefined;
-    /** Current monitor status or error message if monitor creation failed. */
+    /** Current event monitor status or error message if event monitor creation failed. */
     status: string;
-    /** Aggregated records from all jobs executed by this monitor. Each record includes structured data extracted from web sources with citations. */
+    /** Aggregated records from all jobs executed by this event monitor. Each record includes structured data extracted from web sources with citations. */
     all_records?: CatchAllApi.MonitorRecord[] | undefined;
-    /** Record limit applied to this monitor's jobs. */
+    /** Record limit applied to this event monitor's jobs. */
     limit?: (number | null) | undefined;
     /** Datasets used to narrow retrieval scope, each with `id` and `name`. */
     connected_datasets?: CatchAllApi.ConnectedDataset[] | undefined;
@@ -32,7 +32,7 @@ export interface PullMonitorResponseDto {
 
 export namespace PullMonitorResponseDto {
     /**
-     * Execution time range for this monitor.
+     * Execution time range for this event monitor.
      */
     export interface RunInfo {
         /** Timestamp of the first job execution. */

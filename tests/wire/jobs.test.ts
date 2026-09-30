@@ -60,6 +60,25 @@ describe("JobsClient", () => {
             .mockEndpoint()
             .get("/catchAll/jobs/user")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getUserJobs();
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getUserJobs (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/jobs/user")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -114,6 +133,28 @@ describe("JobsClient", () => {
             .post("/catchAll/validate")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.validateQuery({
+                query: "query",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("validateQuery (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "query" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/validate")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -125,7 +166,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("validateQuery (3)", async () => {
+    test("validateQuery (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
@@ -219,6 +260,28 @@ describe("JobsClient", () => {
             .post("/catchAll/initialize")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.initialize({
+                query: "query",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("initialize (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "query" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/initialize")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -230,7 +293,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("initialize (3)", async () => {
+    test("initialize (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
@@ -318,6 +381,28 @@ describe("JobsClient", () => {
             .post("/catchAll/submit")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.createJob({
+                query: "query",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("createJob (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { query: "query" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/submit")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -329,7 +414,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("createJob (4)", async () => {
+    test("createJob (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { query: "query" };
@@ -393,6 +478,27 @@ describe("JobsClient", () => {
             .mockEndpoint()
             .get("/catchAll/status/job_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getJobStatus({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getJobStatus (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/status/job_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -404,7 +510,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getJobStatus (3)", async () => {
+    test("getJobStatus (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -448,6 +554,13 @@ describe("JobsClient", () => {
             mode: "base",
             connected_datasets: [
                 { id: "9f3a8b2c-1e4d-4a5b-9c8d-6e7f8a9b0c1d", name: "My Portfolio", is_deleted: false },
+            ],
+            source_groups: [
+                {
+                    slug: "top-100-us-finance",
+                    name: "Top 100 US Finance",
+                    description: "Leading US financial news and trade publications.",
+                },
             ],
             is_all_news_query: true,
             sharing_info: { shared_at: "2026-04-15T12:00:00Z", permission: "view", shared_by: "John Doe" },
@@ -494,6 +607,7 @@ describe("JobsClient", () => {
                             },
                         },
                     ],
+                    tags: { event_type: "deals.merger_acquisition", sector: "banking" },
                 },
             ],
         };
@@ -522,6 +636,27 @@ describe("JobsClient", () => {
             .mockEndpoint()
             .get("/catchAll/pull/job_id")
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.getJobResults({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("getJobResults (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/pull/job_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -533,7 +668,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("getJobResults (3)", async () => {
+    test("getJobResults (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
@@ -614,6 +749,28 @@ describe("JobsClient", () => {
             .post("/catchAll/continue")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.continueJob({
+                job_id: "job_id",
+            });
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("continueJob (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { job_id: "job_id" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/catchAll/continue")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -625,7 +782,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(CatchAllApi.ForbiddenError);
     });
 
-    test("continueJob (4)", async () => {
+    test("continueJob (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { job_id: "job_id" };
@@ -711,5 +868,77 @@ describe("JobsClient", () => {
                 job_id: "job_id",
             });
         }).rejects.toThrow(CatchAllApi.NotFoundError);
+    });
+
+    test("listSourceGroups (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            source_groups: [
+                {
+                    slug: "top-100-us-finance",
+                    name: "Top 100 US Finance",
+                    description: "Leading US financial news and trade publications.",
+                },
+                {
+                    slug: "global-tech-press",
+                    name: "Global Tech Press",
+                    description: "Major technology news outlets worldwide.",
+                },
+            ],
+            total: 2,
+            page: 1,
+            page_size: 100,
+        };
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/source-groups")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.listSourceGroups();
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("listSourceGroups (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/source-groups")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.listSourceGroups();
+        }).rejects.toThrow(CatchAllApi.UnauthorizedError);
+    });
+
+    test("listSourceGroups (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new CatchAllApiClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/catchAll/source-groups")
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.listSourceGroups();
+        }).rejects.toThrow(CatchAllApi.UnprocessableEntityError);
     });
 });

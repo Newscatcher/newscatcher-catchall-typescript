@@ -600,8 +600,7 @@ await client.jobs.deleteJob({
 </dl>
 </details>
 
-## Monitors
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">listMonitors</a>({ ...params }) -> CatchAllApi.ListMonitorsResponseDto</code></summary>
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">listSourceGroups</a>({ ...params }) -> CatchAllApi.ListSourceGroupsResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -613,7 +612,15 @@ await client.jobs.deleteJob({
 <dl>
 <dd>
 
-Returns all monitors created by the authenticated user.
+Returns a paginated list of source groups visible to your organization.
+
+A source group is a named, curated domain allowlist maintained by NewsCatcher — for
+example "Top 100 US Finance". Pass a group's `slug` in `source_groups` when creating
+a job to scope article fetching to that group's domains, instead of maintaining a
+long domain list yourself.
+
+The response covers public groups plus any restricted groups your organization has
+been granted access to. Each entry returns `slug`, `name`, and `description`.
 </dd>
 </dl>
 </dd>
@@ -628,7 +635,71 @@ Returns all monitors created by the authenticated user.
 <dd>
 
 ```typescript
-await client.monitors.listMonitors({
+await client.jobs.listSourceGroups();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CatchAllApi.ListSourceGroupsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Event Monitors
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">listMonitors</a>({ ...params }) -> CatchAllApi.ListMonitorsResponseDto</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns all event monitors created by the authenticated user.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.eventMonitors.listMonitors({
     project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
 });
 
@@ -654,7 +725,7 @@ await client.monitors.listMonitors({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -666,7 +737,7 @@ await client.monitors.listMonitors({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">createMonitor</a>({ ...params }) -> CatchAllApi.CreateMonitorResponseDto</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">createMonitor</a>({ ...params }) -> CatchAllApi.CreateMonitorResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -678,7 +749,7 @@ await client.monitors.listMonitors({
 <dl>
 <dd>
 
-Create a scheduled monitor based on a reference job.
+Create a scheduled event monitor based on a reference job.
 </dd>
 </dl>
 </dd>
@@ -693,7 +764,7 @@ Create a scheduled monitor based on a reference job.
 <dd>
 
 ```typescript
-await client.monitors.createMonitor({
+await client.eventMonitors.createMonitor({
     reference_job_id: "5f0c9087-85cb-4917-b3c7-e5a5eff73a0c",
     schedule: "every day at 12 PM",
     timezone: "UTC",
@@ -724,7 +795,7 @@ await client.monitors.createMonitor({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -736,7 +807,7 @@ await client.monitors.createMonitor({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">pullMonitorResults</a>({ ...params }) -> CatchAllApi.PullMonitorResponseDto</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">pullMonitorResults</a>({ ...params }) -> CatchAllApi.PullMonitorResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -748,7 +819,7 @@ await client.monitors.createMonitor({
 <dl>
 <dd>
 
-Retrieve aggregated results from all jobs executed by a monitor.
+Retrieve aggregated results from all jobs executed by an event monitor.
 </dd>
 </dl>
 </dd>
@@ -763,7 +834,7 @@ Retrieve aggregated results from all jobs executed by a monitor.
 <dd>
 
 ```typescript
-await client.monitors.pullMonitorResults({
+await client.eventMonitors.pullMonitorResults({
     monitor_id: "monitor_id"
 });
 
@@ -789,7 +860,7 @@ await client.monitors.pullMonitorResults({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -801,7 +872,7 @@ await client.monitors.pullMonitorResults({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">pullMonitorResultsCsv</a>({ ...params }) -> string</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">pullMonitorResultsCsv</a>({ ...params }) -> string</code></summary>
 <dl>
 <dd>
 
@@ -815,7 +886,7 @@ await client.monitors.pullMonitorResults({
 
 Returns the most recent run's records as a CSV download. One row per record, with enrichment fields as columns and citations as a JSON column.
 
-If the monitor's reference job used connected entity datasets, connected entities are split into `event_associated_entities` and `mention_entities` JSON columns. When no entity dataset was used, those two columns are omitted from the export entirely.
+If the event monitor's reference job used connected entity datasets, connected entities are split into `event_associated_entities` and `mention_entities` JSON columns. When no entity dataset was used, those two columns are omitted from the export entirely.
 </dd>
 </dl>
 </dd>
@@ -830,7 +901,7 @@ If the monitor's reference job used connected entity datasets, connected entitie
 <dd>
 
 ```typescript
-await client.monitors.pullMonitorResultsCsv({
+await client.eventMonitors.pullMonitorResultsCsv({
     monitor_id: "monitor_id"
 });
 
@@ -856,7 +927,7 @@ await client.monitors.pullMonitorResultsCsv({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -868,7 +939,7 @@ await client.monitors.pullMonitorResultsCsv({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">listMonitorJobs</a>({ ...params }) -> CatchAllApi.ListMonitorJobsResponse</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">listMonitorJobs</a>({ ...params }) -> CatchAllApi.ListMonitorJobsResponse</code></summary>
 <dl>
 <dd>
 
@@ -880,7 +951,7 @@ await client.monitors.pullMonitorResultsCsv({
 <dl>
 <dd>
 
-Return all jobs executed by a monitor.
+Return all jobs executed by an event monitor.
 </dd>
 </dl>
 </dd>
@@ -895,7 +966,7 @@ Return all jobs executed by a monitor.
 <dd>
 
 ```typescript
-await client.monitors.listMonitorJobs({
+await client.eventMonitors.listMonitorJobs({
     monitor_id: "monitor_id"
 });
 
@@ -921,7 +992,7 @@ await client.monitors.listMonitorJobs({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -933,7 +1004,7 @@ await client.monitors.listMonitorJobs({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">getMonitorStatusHistory</a>({ ...params }) -> CatchAllApi.MonitorStatusHistoryResponseDto</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">getMonitorStatusHistory</a>({ ...params }) -> CatchAllApi.MonitorStatusHistoryResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -945,7 +1016,7 @@ await client.monitors.listMonitorJobs({
 <dl>
 <dd>
 
-Returns the full execution history of a monitor as a list of status entries, ordered from newest to oldest.
+Returns the full execution history of an event monitor as a list of status entries, ordered from newest to oldest.
 </dd>
 </dl>
 </dd>
@@ -960,7 +1031,7 @@ Returns the full execution history of a monitor as a list of status entries, ord
 <dd>
 
 ```typescript
-await client.monitors.getMonitorStatusHistory({
+await client.eventMonitors.getMonitorStatusHistory({
     monitor_id: "monitor_id"
 });
 
@@ -986,7 +1057,7 @@ await client.monitors.getMonitorStatusHistory({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -998,7 +1069,7 @@ await client.monitors.getMonitorStatusHistory({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">enableMonitor</a>({ ...params }) -> CatchAllApi.EnableMonitorResponse</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">enableMonitor</a>({ ...params }) -> CatchAllApi.EnableMonitorResponse</code></summary>
 <dl>
 <dd>
 
@@ -1010,7 +1081,7 @@ await client.monitors.getMonitorStatusHistory({
 <dl>
 <dd>
 
-Resume scheduled job execution for a monitor.
+Resume scheduled job execution for an event monitor.
 </dd>
 </dl>
 </dd>
@@ -1025,7 +1096,7 @@ Resume scheduled job execution for a monitor.
 <dd>
 
 ```typescript
-await client.monitors.enableMonitor({
+await client.eventMonitors.enableMonitor({
     monitor_id: "monitor_id",
     backfill: true
 });
@@ -1052,7 +1123,7 @@ await client.monitors.enableMonitor({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -1064,7 +1135,7 @@ await client.monitors.enableMonitor({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">disableMonitor</a>({ ...params }) -> CatchAllApi.DisableMonitorResponse</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">disableMonitor</a>({ ...params }) -> CatchAllApi.DisableMonitorResponse</code></summary>
 <dl>
 <dd>
 
@@ -1076,7 +1147,7 @@ await client.monitors.enableMonitor({
 <dl>
 <dd>
 
-Stop scheduled job execution for a monitor.
+Stop scheduled job execution for an event monitor.
 </dd>
 </dl>
 </dd>
@@ -1091,7 +1162,7 @@ Stop scheduled job execution for a monitor.
 <dd>
 
 ```typescript
-await client.monitors.disableMonitor({
+await client.eventMonitors.disableMonitor({
     monitor_id: "monitor_id"
 });
 
@@ -1117,7 +1188,7 @@ await client.monitors.disableMonitor({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -1129,7 +1200,7 @@ await client.monitors.disableMonitor({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">deleteMonitor</a>({ ...params }) -> CatchAllApi.DeleteMonitorResponseDto</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">deleteMonitor</a>({ ...params }) -> CatchAllApi.DeleteMonitorResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -1141,14 +1212,14 @@ await client.monitors.disableMonitor({
 <dl>
 <dd>
 
-Soft-deletes a monitor. The monitor is flagged as deleted, stops
+Soft-deletes an event monitor. The event monitor is flagged as deleted, stops
 executing scheduled jobs immediately, and no longer appears in list
 results.
 
-Only the monitor owner can delete a monitor. Returns `404` if the
-monitor is not found or does not belong to the authenticated user.
+Only the event monitor owner can delete an event monitor. Returns `404` if the
+event monitor is not found or does not belong to the authenticated user.
 
-Deleting an already-deleted monitor returns `200`.
+Deleting an already-deleted event monitor returns `200`.
 </dd>
 </dl>
 </dd>
@@ -1163,7 +1234,7 @@ Deleting an already-deleted monitor returns `200`.
 <dd>
 
 ```typescript
-await client.monitors.deleteMonitor({
+await client.eventMonitors.deleteMonitor({
     monitor_id: "monitor_id"
 });
 
@@ -1189,7 +1260,7 @@ await client.monitors.deleteMonitor({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -1201,7 +1272,7 @@ await client.monitors.deleteMonitor({
 </dl>
 </details>
 
-<details><summary><code>client.monitors.<a href="/src/api/resources/monitors/client/Client.ts">updateMonitor</a>({ ...params }) -> CatchAllApi.UpdateMonitorResponseDto</code></summary>
+<details><summary><code>client.eventMonitors.<a href="/src/api/resources/eventMonitors/client/Client.ts">updateMonitor</a>({ ...params }) -> CatchAllApi.UpdateMonitorResponseDto</code></summary>
 <dl>
 <dd>
 
@@ -1213,7 +1284,12 @@ await client.monitors.deleteMonitor({
 <dl>
 <dd>
 
-Update the webhook configuration for an existing monitor.
+Update the webhook assignments, record limit, or schedule of an existing
+event monitor. Omitted fields are left unchanged.
+
+Passing `schedule` replaces the event monitor's current schedule. The new
+schedule takes effect from the next scheduler reload, and the old schedule
+stops firing. The reference job cannot be changed.
 </dd>
 </dl>
 </dd>
@@ -1228,7 +1304,7 @@ Update the webhook configuration for an existing monitor.
 <dd>
 
 ```typescript
-await client.monitors.updateMonitor({
+await client.eventMonitors.updateMonitor({
     monitor_id: "monitor_id",
     webhook_ids: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"]
 });
@@ -1255,7 +1331,7 @@ await client.monitors.updateMonitor({
 <dl>
 <dd>
 
-**requestOptions:** `MonitorsClient.RequestOptions` 
+**requestOptions:** `EventMonitorsClient.RequestOptions` 
     
 </dd>
 </dl>
@@ -1295,7 +1371,9 @@ Returns a paginated list of webhooks belonging to the organization.
 <dd>
 
 ```typescript
-await client.webhooks.listWebhooks();
+await client.webhooks.listWebhooks({
+    project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
+});
 
 ```
 </dd>
@@ -1481,7 +1559,7 @@ await client.webhooks.getWebhook({
 
 Permanently deletes a webhook and removes all resource assignments. 
 
-Assigned jobs and monitors no longer trigger delivery to this webhook. This operation cannot be undone.
+Assigned jobs and event monitors no longer trigger delivery to this webhook. This operation cannot be undone.
 </dd>
 </dl>
 </dd>
@@ -1615,7 +1693,7 @@ await client.webhooks.updateWebhook({
 
 Sends a test HTTP request to the webhook URL using the webhook's configured method, headers, and auth. Returns the response from the target endpoint.
 
-Use this to verify URL reachability and authentication before attaching the webhook to a live job or monitor.
+Use this to verify URL reachability and authentication before attaching the webhook to a live job or event monitor.
 </dd>
 </dl>
 </dd>
@@ -1749,7 +1827,7 @@ await client.webhooks.listWebhookResources({
 <dl>
 <dd>
 
-Attaches a job, monitor, or monitor group to the webhook. When the
+Attaches a job, event monitor, or event monitor group to the webhook. When the
 resource completes, the webhook receives a delivery.
 
 A single webhook can be assigned to multiple resources. Each resource
@@ -1956,7 +2034,7 @@ await client.webhooks.listWebhooksForResource({
 <dd>
 
 Manually dispatches a webhook delivery for a resource on demand, without
-waiting for the next job or monitor cycle.
+waiting for the next job or event monitor cycle.
 
 Use this to re-deliver results after a failed delivery, replay a specific
 job's results, or validate a webhook against live data. The webhook must
@@ -2113,7 +2191,8 @@ Returns a paginated list of entities belonging to the authenticated organization
 
 ```typescript
 await client.entities.listEntities({
-    search: "NewsCatcher"
+    search: "NewsCatcher",
+    project_id: "60a85db4-78ec-4b78-876a-bc7d9cdadd04"
 });
 
 ```

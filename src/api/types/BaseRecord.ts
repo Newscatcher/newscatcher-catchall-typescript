@@ -10,7 +10,7 @@ export interface BaseRecord {
      *
      * **Note:** The system always includes the `enrichment_confidence` field within the `enrichment` object, regardless of whether enrichments are generated or specified by you.
      *
-     *  For integration guidance, see [Dynamic schemas](https://www.newscatcherapi.com/docs/web-search-api/guides-and-concepts/dynamic-schemas)
+     *  For integration guidance, see [Dynamic schemas](https://www.newscatcherapi.com/docs/web-search-api/concepts/dynamic-schemas)
      */
     enrichment: BaseRecord.Enrichment;
 }
@@ -21,7 +21,7 @@ export namespace BaseRecord {
      *
      * **Note:** The system always includes the `enrichment_confidence` field within the `enrichment` object, regardless of whether enrichments are generated or specified by you.
      *
-     *  For integration guidance, see [Dynamic schemas](https://www.newscatcherapi.com/docs/web-search-api/guides-and-concepts/dynamic-schemas)
+     *  For integration guidance, see [Dynamic schemas](https://www.newscatcherapi.com/docs/web-search-api/concepts/dynamic-schemas)
      */
     export interface Enrichment {
         /** Overall confidence score for the enrichment extraction. */

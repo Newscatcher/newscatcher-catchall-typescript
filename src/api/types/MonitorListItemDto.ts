@@ -3,26 +3,26 @@
 import type * as CatchAllApi from "../index.js";
 
 export interface MonitorListItemDto {
-    /** Monitor identifier. */
+    /** Event monitor identifier. */
     monitor_id: string;
-    /** Job identifier used as a reference for this monitor. */
+    /** Job identifier used as a reference for this event monitor. */
     reference_job_id: string;
     /** Plain text query from the reference job. */
     reference_job_query: string;
-    /** True if the monitor is currently active; false otherwise. */
+    /** True if the event monitor is currently active; false otherwise. */
     enabled: boolean;
-    /** Cron expression for monitor schedule. */
+    /** Cron expression for event monitor schedule. */
     schedule?: string | undefined;
-    /** The monitor schedule in a plain text format. */
+    /** The event monitor schedule in a plain text format. */
     schedule_human_readable?: string | undefined;
     /** Timezone for schedule execution. */
     timezone?: string | undefined;
-    /** The date when the monitor was created. */
+    /** The date when the event monitor was created. */
     created_at?: string | undefined;
-    /** Webhook configuration for this monitor, or null if not set. */
+    /** Webhook configuration for this event monitor, or null if not set. */
     webhook?: (CatchAllApi.WebhookDto | null) | undefined;
-    /** Masked API key associated with this monitor. */
+    /** Masked API key associated with this event monitor. */
     user_key?: string | undefined;
-    /** Present when this monitor was shared with the authenticated user. Omitted when the user owns the monitor. */
+    /** Present when this event monitor was shared with the authenticated user. Omitted when the user owns the event monitor. */
     sharing_info?: CatchAllApi.SharingInfo | undefined;
 }
