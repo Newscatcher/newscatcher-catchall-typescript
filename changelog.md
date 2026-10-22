@@ -1,3 +1,5 @@
+## [5.0.1] - 2026-10-22
+
 ## [5.0.0] - 2026-09-30
 ### Breaking Changes
 - **`MonitorsClient`** — renamed to `EventMonitorsClient`; update all imports, instantiations, and type references to use `EventMonitorsClient`.
