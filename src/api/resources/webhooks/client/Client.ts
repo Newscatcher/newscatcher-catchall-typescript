@@ -271,7 +271,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/webhooks/${core.url.encodePathParam(webhookId)}`,
+                `catchAll/webhooks/${core.url.encodePathParam(webhookId, errors.CatchAllApiError)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -367,7 +367,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/webhooks/${core.url.encodePathParam(webhookId)}`,
+                `catchAll/webhooks/${core.url.encodePathParam(webhookId, errors.CatchAllApiError)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -459,7 +459,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/webhooks/${core.url.encodePathParam(webhookId)}`,
+                `catchAll/webhooks/${core.url.encodePathParam(webhookId, errors.CatchAllApiError)}`,
             ),
             method: "PATCH",
             headers: _headers,
@@ -563,7 +563,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/webhooks/${core.url.encodePathParam(webhookId)}/test`,
+                `catchAll/webhooks/${core.url.encodePathParam(webhookId, errors.CatchAllApiError)}/test`,
             ),
             method: "POST",
             headers: _headers,
@@ -666,7 +666,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/webhooks/${core.url.encodePathParam(webhookId)}/resources`,
+                `catchAll/webhooks/${core.url.encodePathParam(webhookId, errors.CatchAllApiError)}/resources`,
             ),
             method: "GET",
             headers: _headers,
@@ -775,7 +775,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/webhooks/${core.url.encodePathParam(webhookId)}/resources`,
+                `catchAll/webhooks/${core.url.encodePathParam(webhookId, errors.CatchAllApiError)}/resources`,
             ),
             method: "POST",
             headers: _headers,
@@ -881,7 +881,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/webhooks/${core.url.encodePathParam(webhookId)}/resources/${core.url.encodePathParam(resourceType)}/${core.url.encodePathParam(resourceId)}`,
+                `catchAll/webhooks/${core.url.encodePathParam(webhookId, errors.CatchAllApiError)}/resources/${core.url.encodePathParam(resourceType, errors.CatchAllApiError)}/${core.url.encodePathParam(resourceId, errors.CatchAllApiError)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -983,7 +983,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/resources/${core.url.encodePathParam(resourceType)}/${core.url.encodePathParam(resourceId)}/webhooks`,
+                `catchAll/resources/${core.url.encodePathParam(resourceType, errors.CatchAllApiError)}/${core.url.encodePathParam(resourceId, errors.CatchAllApiError)}/webhooks`,
             ),
             method: "GET",
             headers: _headers,
@@ -1094,7 +1094,7 @@ export class WebhooksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/webhook/trigger/${core.url.encodePathParam(resourceType)}/${core.url.encodePathParam(resourceId)}`,
+                `catchAll/webhook/trigger/${core.url.encodePathParam(resourceType, errors.CatchAllApiError)}/${core.url.encodePathParam(resourceId, errors.CatchAllApiError)}`,
             ),
             method: "POST",
             headers: _headers,

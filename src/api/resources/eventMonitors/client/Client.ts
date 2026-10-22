@@ -246,7 +246,7 @@ export class EventMonitorsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/monitors/pull/${core.url.encodePathParam(monitorId)}`,
+                `catchAll/monitors/pull/${core.url.encodePathParam(monitorId, errors.CatchAllApiError)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -337,7 +337,7 @@ export class EventMonitorsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/monitors/pull/${core.url.encodePathParam(monitorId)}/csv`,
+                `catchAll/monitors/pull/${core.url.encodePathParam(monitorId, errors.CatchAllApiError)}/csv`,
             ),
             method: "GET",
             headers: _headers,
@@ -430,7 +430,7 @@ export class EventMonitorsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/monitors/${core.url.encodePathParam(monitorId)}/jobs`,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId, errors.CatchAllApiError)}/jobs`,
             ),
             method: "GET",
             headers: _headers,
@@ -522,7 +522,7 @@ export class EventMonitorsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/monitors/${core.url.encodePathParam(monitorId)}/status`,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId, errors.CatchAllApiError)}/status`,
             ),
             method: "GET",
             headers: _headers,
@@ -611,7 +611,7 @@ export class EventMonitorsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/monitors/${core.url.encodePathParam(monitorId)}/enable`,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId, errors.CatchAllApiError)}/enable`,
             ),
             method: "POST",
             headers: _headers,
@@ -709,7 +709,7 @@ export class EventMonitorsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/monitors/${core.url.encodePathParam(monitorId)}/disable`,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId, errors.CatchAllApiError)}/disable`,
             ),
             method: "POST",
             headers: _headers,
@@ -809,7 +809,7 @@ export class EventMonitorsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/monitors/${core.url.encodePathParam(monitorId)}`,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId, errors.CatchAllApiError)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -907,7 +907,7 @@ export class EventMonitorsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/monitors/${core.url.encodePathParam(monitorId)}`,
+                `catchAll/monitors/${core.url.encodePathParam(monitorId, errors.CatchAllApiError)}`,
             ),
             method: "PATCH",
             headers: _headers,
