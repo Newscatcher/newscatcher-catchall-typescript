@@ -392,7 +392,7 @@ export class EntitiesClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/entities/${core.url.encodePathParam(entityId)}`,
+                `catchAll/entities/${core.url.encodePathParam(entityId, errors.CatchAllApiError)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -482,7 +482,7 @@ export class EntitiesClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/entities/${core.url.encodePathParam(entityId)}`,
+                `catchAll/entities/${core.url.encodePathParam(entityId, errors.CatchAllApiError)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -578,7 +578,7 @@ export class EntitiesClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/entities/${core.url.encodePathParam(entityId)}`,
+                `catchAll/entities/${core.url.encodePathParam(entityId, errors.CatchAllApiError)}`,
             ),
             method: "PATCH",
             headers: _headers,

@@ -380,7 +380,7 @@ export class DatasetsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(datasetId)}`,
+                `catchAll/datasets/${core.url.encodePathParam(datasetId, errors.CatchAllApiError)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -471,7 +471,7 @@ export class DatasetsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(datasetId)}`,
+                `catchAll/datasets/${core.url.encodePathParam(datasetId, errors.CatchAllApiError)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -563,7 +563,7 @@ export class DatasetsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(datasetId)}`,
+                `catchAll/datasets/${core.url.encodePathParam(datasetId, errors.CatchAllApiError)}`,
             ),
             method: "PATCH",
             headers: _headers,
@@ -664,7 +664,7 @@ export class DatasetsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(datasetId)}/entities`,
+                `catchAll/datasets/${core.url.encodePathParam(datasetId, errors.CatchAllApiError)}/entities`,
             ),
             method: "POST",
             headers: _headers,
@@ -765,7 +765,7 @@ export class DatasetsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(datasetId)}/entities`,
+                `catchAll/datasets/${core.url.encodePathParam(datasetId, errors.CatchAllApiError)}/entities`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -870,7 +870,7 @@ export class DatasetsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(datasetId)}/entities/list`,
+                `catchAll/datasets/${core.url.encodePathParam(datasetId, errors.CatchAllApiError)}/entities/list`,
             ),
             method: "POST",
             headers: _headers,
@@ -970,7 +970,7 @@ export class DatasetsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(datasetId)}/status`,
+                `catchAll/datasets/${core.url.encodePathParam(datasetId, errors.CatchAllApiError)}/status`,
             ),
             method: "GET",
             headers: _headers,
@@ -1070,7 +1070,7 @@ export class DatasetsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/datasets/${core.url.encodePathParam(request.dataset_id)}/upload`,
+                `catchAll/datasets/${core.url.encodePathParam(request.dataset_id, errors.CatchAllApiError)}/upload`,
             ),
             method: "POST",
             headers: _headers,

@@ -251,7 +251,7 @@ export class ProjectsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/projects/${core.url.encodePathParam(projectId)}`,
+                `catchAll/projects/${core.url.encodePathParam(projectId, errors.CatchAllApiError)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -345,7 +345,7 @@ export class ProjectsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/projects/${core.url.encodePathParam(projectId)}`,
+                `catchAll/projects/${core.url.encodePathParam(projectId, errors.CatchAllApiError)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -440,7 +440,7 @@ export class ProjectsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/projects/${core.url.encodePathParam(projectId)}`,
+                `catchAll/projects/${core.url.encodePathParam(projectId, errors.CatchAllApiError)}`,
             ),
             method: "PATCH",
             headers: _headers,
@@ -539,7 +539,7 @@ export class ProjectsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/projects/${core.url.encodePathParam(projectId)}/overview`,
+                `catchAll/projects/${core.url.encodePathParam(projectId, errors.CatchAllApiError)}/overview`,
             ),
             method: "GET",
             headers: _headers,
@@ -637,7 +637,7 @@ export class ProjectsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/projects/${core.url.encodePathParam(projectId)}/resources`,
+                `catchAll/projects/${core.url.encodePathParam(projectId, errors.CatchAllApiError)}/resources`,
             ),
             method: "GET",
             headers: _headers,
@@ -743,7 +743,7 @@ export class ProjectsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/projects/${core.url.encodePathParam(projectId)}/resources`,
+                `catchAll/projects/${core.url.encodePathParam(projectId, errors.CatchAllApiError)}/resources`,
             ),
             method: "POST",
             headers: _headers,
@@ -840,7 +840,7 @@ export class ProjectsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/projects/${core.url.encodePathParam(projectId)}/resources/${core.url.encodePathParam(resourceType)}/${core.url.encodePathParam(resourceId)}`,
+                `catchAll/projects/${core.url.encodePathParam(projectId, errors.CatchAllApiError)}/resources/${core.url.encodePathParam(resourceType, errors.CatchAllApiError)}/${core.url.encodePathParam(resourceId, errors.CatchAllApiError)}`,
             ),
             method: "DELETE",
             headers: _headers,

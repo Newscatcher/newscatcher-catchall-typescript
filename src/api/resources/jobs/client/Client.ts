@@ -425,7 +425,7 @@ export class JobsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/status/${core.url.encodePathParam(jobId)}`,
+                `catchAll/status/${core.url.encodePathParam(jobId, errors.CatchAllApiError)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -513,7 +513,7 @@ export class JobsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/pull/${core.url.encodePathParam(jobId)}`,
+                `catchAll/pull/${core.url.encodePathParam(jobId, errors.CatchAllApiError)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -603,7 +603,7 @@ export class JobsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/pull/${core.url.encodePathParam(jobId)}/csv`,
+                `catchAll/pull/${core.url.encodePathParam(jobId, errors.CatchAllApiError)}/csv`,
             ),
             method: "GET",
             headers: _headers,
@@ -781,7 +781,7 @@ export class JobsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.CatchAllApiEnvironment.Default,
-                `catchAll/jobs/${core.url.encodePathParam(jobId)}`,
+                `catchAll/jobs/${core.url.encodePathParam(jobId, errors.CatchAllApiError)}`,
             ),
             method: "DELETE",
             headers: _headers,
